@@ -2,6 +2,6 @@
 <ModMetaData>
   <name>Construction Pipeline Optimizer</name>
   <author>Coolnether123</author>
-  <targetVersion>0.14.1249</targetVersion>
+  <targetVersion>0.13.1137</targetVersion>
   <description>Reduces redundant work selection in the zero-cost terrain construction pipeline. Requires Harmony. No settings or save data.</description>
 </ModMetaData>

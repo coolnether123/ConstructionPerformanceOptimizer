@@ -11,7 +11,9 @@ if (-not $stagingBase.Equals($expectedStagingBase, [System.StringComparison]::Or
     throw "Unsafe staging path resolved outside the expected project location: $stagingBase"
 }
 
-$modernVersions = @('1.0', '1.1', '1.2', '1.3', '1.4', '1.5', '1.6')
+# The public 1.0.0 package supports RimWorld 1.6 only. Older API builds remain
+# repository engineering fixtures and are deliberately excluded from this archive.
+$modernVersions = @('1.6')
 & powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot 'Build-AllVersions.ps1') -Versions $modernVersions
 if ($LASTEXITCODE -ne 0)
 {

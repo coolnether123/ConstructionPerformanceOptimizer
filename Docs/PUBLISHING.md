@@ -2,6 +2,9 @@
 
 ## Before publishing
 
+The public package targets RimWorld 1.6 only. Older API assemblies are compile/static
+engineering fixtures and must not be copied into the Workshop archive.
+
 1. Close RimWorld or ensure the focused package is not being copied over while
    the game is loading assemblies.
 2. Confirm the version matches in:
@@ -19,6 +22,9 @@
 7. Test a save containing ordinary material-bearing construction and zero-cost
    terrain construction.
 8. Run a two-client Multiplayer desync test with identical DLLs and load order.
+9. Verify the startup diagnostic reports the expected adaptive state. Test once with
+   a controlled foreign owner on the exact validation predicate and confirm both the
+   cadence and completion guard remain off while continuation stays independent.
 
 ## Steam Workshop
 
@@ -49,8 +55,11 @@
 - No red errors during startup or construction.
 - No duplicate package-ID warning.
 - The legacy Construction Queue Optimizer is not active.
-- Ordinary frames retain normal behavior.
+- Ordinary material-bearing frames complete normally with the adaptive pair both on
+  and intentionally disabled.
 - Zero-cost terrain completes successfully.
 - Restart and Play Again/save-load behavior is unaffected.
 - Multiplayer remains synchronized in a real two-client run.
+- If the two-client test has not been completed, every public description explicitly
+  labels Multiplayer compatibility as expected but unverified.
 - The published ZIP checksum matches its `.sha256` sidecar.

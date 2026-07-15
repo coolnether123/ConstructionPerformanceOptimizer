@@ -148,7 +148,7 @@ function Set-LegacyAbout
   <name>Construction Pipeline Optimizer</name>
   <author>Coolnether123</author>
   <targetVersion>$targetVersion</targetVersion>
-  <description>Reduces redundant work selection in the zero-cost terrain construction pipeline. Requires Harmony. No settings or save data.</description>
+  <description>Reduces repeated active construction validation and redundant zero-cost terrain work selection. Requires Harmony. No settings or save data.</description>
 </ModMetaData>
 "@
     [System.IO.File]::WriteAllText((Join-Path $projectRoot 'About\About.xml'), $xml)

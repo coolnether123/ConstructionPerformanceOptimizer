@@ -48,7 +48,10 @@ namespace ConstructionPipelineOptimizer.Bootstrap
     {
         static ConstructionPipelineOptimizerStartup()
         {
-            ConstructionPipelineOptimizerMod.Initialize();
+            // Compatibility decisions should see patches installed by normal mod startup
+            // constructors. Queue inspection and installation until this load event ends;
+            // patches deliberately added after that point remain outside the startup snapshot.
+            LongEventHandler.ExecuteWhenFinished(ConstructionPipelineOptimizerMod.Initialize);
         }
     }
 #endif

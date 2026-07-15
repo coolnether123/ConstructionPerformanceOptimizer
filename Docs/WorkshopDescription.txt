@@ -1,12 +1,14 @@
 [h1]Construction Pipeline Optimizer[/h1]
 
-A focused RimWorld 1.6 performance mod for the zero-cost terrain construction pipeline used by Tilled Soil and similar mods.
+A focused RimWorld construction performance mod for active construction jobs and the zero-cost terrain pipeline used by Tilled Soil and similar mods.
 
 [h2]What it optimizes[/h2]
 [list]
 [*]Continues a completed no-cost frame directly into the vanilla FinishFrame job instead of returning immediately to global work selection.
-[*]Distributes the active finish job's repeated defensive construction validation over a deterministic cadence.
+[*]Asks the active construction work giver for the next job, preserving mod-supplied replacement and prerequisite jobs.
+[*]Distributes every active finish job's repeated defensive validation over a deterministic cadence when the exact vanilla hook has no direct Harmony conflict.
 [*]Preserves a final vanilla construction authorization immediately before the frame completes.
+[*]Fails closed: the cadence and completion guard disable as a pair if compatibility or exact IL checks fail.
 [/list]
 
 [h2]Compatibility[/h2]
@@ -14,8 +16,8 @@ A focused RimWorld 1.6 performance mod for the zero-cost terrain construction pi
 [*]Requires Harmony.
 [*]Supports RimWorld 1.6.
 [*]Tilled Soil is supported but not required.
-[*]No settings and no save data; safe to add or remove between saves.
-[*]Every Multiplayer peer must use the same version and load order.
+[*]No settings and no save data; normally safe to add or remove between sessions. Keep a normal save backup when changing mods.
+[*]Multiplayer compatibility is expected but has not been verified in a two-client session. Matching versions and load order are required for testing, not a support claim.
 [*][b]Do not enable this with Construction Queue Optimizer.[/b] The legacy package contains the same patches.
 [/list]
 
@@ -23,7 +25,7 @@ A focused RimWorld 1.6 performance mod for the zero-cost terrain construction pi
 This is intentionally not a broad performance overhaul. It contains no turret, pawn-health, refuelable, dissolution, mechanitor, rendering, or general tick patches. That narrow scope reduces overlap with established performance mods.
 
 [h2]Performance evidence[/h2]
-On the frozen construction stress fixture, the active-frame validation pass increased observed throughput from 117.81 TPS to 152.83 TPS while reducing repeated finish-validation calls from 18,232 to 1,825. A broader frozen-colony A/B measured 106.45 to 113.92 TPS. Results depend heavily on active construction workload and mod list.
+On a derived save with exactly 12,000 Tilled Soil blueprints, three fresh-process 30-second runs measured 132.25 median TPS for the current adaptive build versus 101.43 without a construction optimizer (+30.39%). The preserved legacy broad build measured 126.87 median TPS. The current build skipped 93.3% of repeated active-job validation opportunities. This is an extreme workload result, not a guarantee for ordinary colonies; Multiplayer still needs a two-client desync test.
 
 [h2]Reporting problems[/h2]
 Include your complete mod list, player log, RimWorld version, whether Multiplayer is active, and a reproducible construction example. Keep a save backup before changing a large mod list.

@@ -10,5 +10,6 @@
   <ItemGroup>
     <Compile Include="..\Source\Scheduling\ValidationCadence.cs" Link="Scheduling\ValidationCadence.cs" />
     <Compile Include="..\Source\Infrastructure\MethodCallInspector.cs" Link="Infrastructure\MethodCallInspector.cs" />
+    <Compile Include="..\Source\Compatibility\PatchOwnerPolicy.cs" Link="Compatibility\PatchOwnerPolicy.cs" />
   </ItemGroup>
 </Project>

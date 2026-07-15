@@ -8,7 +8,8 @@ optimizers patches any of Construction Pipeline Optimizer's three targets:
 1. `JobDriver_PlaceNoCostFrame.MakeNewToils`
 2. the `JobDriver_ConstructFinishFrame.MakeNewToils` defensive
    `CanConstruct` fail-condition lambda
-3. `Frame.CompleteConstruction`
+3. the generated `FinishFrame` completion action containing the exact
+   `Frame.CompleteConstruction` call
 
 Yet another Optimizer touches adjacent construction work selection, but it does
 not continue a zero-cost placement job into `FinishFrame`, distribute the active
@@ -49,10 +50,12 @@ search as proof of behavioral difference.
 
 ## Relative value on the measured colony
 
-The frozen construction stress fixture showed the active-frame validation change
-raising observed throughput from 117.81 TPS to 152.83 TPS (+29.7%) while reducing
-finish-validation calls from 18,232 to 1,825. A broader frozen-colony A/B showed
-106.45 to 113.92 TPS (+7.01%) for the construction package at that workload.
+The current adaptive build was remeasured on a derived save with exactly 12,000
+Tilled Soil blueprints. Three fresh-process 30-second samples produced 132.25 median
+TPS versus 101.43 without a construction optimizer (+30.39%); the preserved legacy
+broad build produced 126.87 median TPS. The current cadence skipped 93.3% of repeated
+active-job validation opportunities. A separate smaller frozen-colony test produced
+a 7.1% median gain. These are workload-specific observations, not universal claims.
 
 The exact object-scale pass from the broad package saved about 0.113 ms per
 simulated tick in total across refuelable, dissolution, and empty-health paths on
@@ -74,9 +77,13 @@ survey.
   Smarter Construction compatibility code confirms that construction work-giver
   replacement is an active compatibility surface.
 - Smarter Construction and any mod that replaces
-  `WorkGiver_ConstructFinishFrames.JobOnThing` need a dedicated play test. The
-  direct continuation intentionally bypasses that work-giver method after
-  repeating vanilla `GenConstruct.CanConstruct`.
+  `WorkGiver_ConstructFinishFrames.JobOnThing` still need a dedicated play test. The
+  direct continuation now calls the active work giver and preserves its exact returned
+  job, so approval, rejection, different targets, and prerequisite jobs remain in the
+  decision path.
+- A foreign Harmony owner directly on the generated validation predicate disables the
+  broad cadence and completion guard. Downstream patched methods remain composed and
+  are listed in the startup diagnostic.
 - All Multiplayer peers need the same DLL, load order, and settings. The focused
   mod uses no wall-clock time, random values, background threads, or save data.
 

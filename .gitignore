@@ -1,0 +1,12 @@
+Source/bin/
+Source/obj/
+.vs/
+Source/.vs/
+Tests/bin/
+Tests/obj/
+buildcheck/
+Releases/
+.release-staging/
+*/Assemblies/*.pdb
+Assemblies/*.pdb
+*.user

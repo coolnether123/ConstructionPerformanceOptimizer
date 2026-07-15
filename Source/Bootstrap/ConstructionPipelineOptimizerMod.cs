@@ -1,0 +1,55 @@
+using HarmonyLib;
+using Verse;
+
+namespace ConstructionPipelineOptimizer.Bootstrap
+{
+    /// <summary>
+    /// Installs the mod's Harmony patches after RimWorld finishes loading assemblies.
+    /// The mod has no settings or persistent save data.
+    /// </summary>
+    public static class ConstructionPipelineOptimizerMod
+    {
+        internal const string PackageId = "coolnether123.constructionpipelineoptimizer";
+        private static bool initialized;
+
+        internal static void Initialize()
+        {
+            if (initialized)
+            {
+                return;
+            }
+
+            initialized = true;
+            // Install each feature deliberately so a changed game method cannot leave a
+            // safety-dependent optimization partially active.
+            PatchInstallationReport report = PatchInstaller.Install(new Harmony(PackageId));
+            Log.Message($"[Construction Pipeline Optimizer] {report}");
+        }
+    }
+
+#if RW_ALPHA4
+    /// <summary>
+    /// Alpha 4 constructs custom Def subclasses while loading XML. This small Def is the
+    /// supported entry point because that release predates the modern startup attribute.
+    /// </summary>
+    public sealed class ConstructionPipelineOptimizerBootstrapDef : Def
+    {
+        public ConstructionPipelineOptimizerBootstrapDef()
+        {
+            ConstructionPipelineOptimizerMod.Initialize();
+        }
+    }
+#else
+    /// <summary>
+    /// RimWorld 0.13 and newer discover this type during static-constructor startup.
+    /// </summary>
+    [StaticConstructorOnStartup]
+    internal static class ConstructionPipelineOptimizerStartup
+    {
+        static ConstructionPipelineOptimizerStartup()
+        {
+            ConstructionPipelineOptimizerMod.Initialize();
+        }
+    }
+#endif
+}

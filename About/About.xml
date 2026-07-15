@@ -2,38 +2,6 @@
 <ModMetaData>
   <name>Construction Pipeline Optimizer</name>
   <author>Coolnether123</author>
-  <packageId>coolnether123.constructionpipelineoptimizer</packageId>
-  <modVersion>1.0.0</modVersion>
-  <supportedVersions>
-    <li>1.0</li>
-    <li>1.1</li>
-    <li>1.2</li>
-    <li>1.3</li>
-    <li>1.4</li>
-    <li>1.5</li>
-    <li>1.6</li>
-  </supportedVersions>
-  <description><![CDATA[Reduces redundant work selection and validation in the zero-cost construction pipeline used by Tilled Soil and similar terrain.
-
-The optimization asks the active construction work giver to continue a completed no-cost frame into its approved FinishFrame job, distributes repeated defensive validation over a deterministic cadence where that vanilla hook exists, and preserves a final authorization check immediately before completion.
-
-No settings or save data. Safe to add or remove between saves. For Multiplayer, every peer must use the same version and load order.
-
-Do not enable this with Construction Queue Optimizer; that legacy package contains the same construction patches.]]></description>
-  <modDependencies>
-    <li>
-      <packageId>brrainz.harmony</packageId>
-      <displayName>Harmony</displayName>
-      <steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
-      <downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
-    </li>
-  </modDependencies>
-  <loadAfter>
-    <li>brrainz.harmony</li>
-    <li>ludeon.rimworld</li>
-    <li>gt.sam.tilledsoil</li>
-  </loadAfter>
-  <incompatibleWith>
-    <li>coolnether123.constructionqueueoptimizer</li>
-  </incompatibleWith>
+  <targetVersion>0.18.1722</targetVersion>
+  <description>Reduces redundant work selection in the zero-cost terrain construction pipeline. Requires Harmony. No settings or save data.</description>
 </ModMetaData>

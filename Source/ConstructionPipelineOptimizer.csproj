@@ -91,14 +91,14 @@
     <PackageReference Include="Krafs.Rimworld.Ref" Version="$(RimWorldRefVersion)" />
   </ItemGroup>
   <ItemGroup Condition="'$(RimWorldRefVersion)' != '' And '$(EffectiveRimWorldVersion)' != '1.0'">
-    <PackageReference Include="Lib.Harmony" Version="2.4.2" />
+    <PackageReference Include="Lib.Harmony" Version="2.4.2" ExcludeAssets="runtime" />
   </ItemGroup>
   <ItemGroup Condition="'$(EffectiveRimWorldVersion)' == '1.0'">
     <Reference Include="0Harmony">
       <HintPath>$(NuGetPackageRoot)lib.harmony\2.3.6\lib\net35\0Harmony.dll</HintPath>
       <Private>false</Private>
     </Reference>
-    <PackageReference Include="Lib.Harmony" Version="2.3.6" ExcludeAssets="compile" />
+    <PackageReference Include="Lib.Harmony" Version="2.3.6" ExcludeAssets="compile;runtime" />
   </ItemGroup>
   <ItemGroup Condition="'$(LegacyRimWorldManagedDir)' != ''">
     <Reference Include="Assembly-CSharp">
@@ -113,7 +113,7 @@
       <HintPath>$(NuGetPackageRoot)lib.harmony\2.3.6\lib\net35\0Harmony.dll</HintPath>
       <Private>false</Private>
     </Reference>
-    <PackageReference Include="Lib.Harmony" Version="2.3.6" ExcludeAssets="compile" />
+    <PackageReference Include="Lib.Harmony" Version="2.3.6" ExcludeAssets="compile;runtime" />
   </ItemGroup>
   <ItemGroup Condition="'$(EffectiveRimWorldVersion)' == 'Alpha4' Or '$(EffectiveRimWorldVersion)' == '0.13' Or '$(EffectiveRimWorldVersion)' == '0.14' Or '$(EffectiveRimWorldVersion)' == '0.15' Or '$(EffectiveRimWorldVersion)' == '0.16' Or '$(EffectiveRimWorldVersion)' == '0.17'">
     <Compile Remove="Infrastructure\FinishFrameMethodTargets.cs" />

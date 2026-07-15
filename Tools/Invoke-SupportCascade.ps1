@@ -265,10 +265,12 @@ if (-not $SkipPayloadCopyBackToDev)
         Invoke-Git checkout "Support/$version" -- "$version/Assemblies"
     }
 
-    $payloadChanges = @(Get-GitOutput status --porcelain -- ($SupportVersions | ForEach-Object { "$_/Assemblies" }))
+    $payloadPaths = @($SupportVersions | ForEach-Object { "$_/Assemblies" })
+    $statusArguments = @('status', '--porcelain', '--') + $payloadPaths
+    $payloadChanges = @(Get-GitOutput @statusArguments)
     if ($payloadChanges.Count -gt 0)
     {
-        Invoke-Git add -- ($SupportVersions | ForEach-Object { "$_/Assemblies" })
+        Invoke-Git add -- @payloadPaths
         Invoke-Git commit -m "Update $SourceBranch support payloads for $ReleaseLabel" -m 'Copy only rebuilt versioned assemblies back from the completed support cascade.'
     }
 }

@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,8 +65,8 @@ namespace ConstructionPipelineOptimizer.Infrastructure
 
         internal static int CountCalls(MethodBase candidate, MethodInfo calledMethod)
         {
-            MethodBody body = candidate.GetMethodBody();
-            byte[] il = body?.GetILAsByteArray();
+            MethodBody? body = candidate.GetMethodBody();
+            byte[]? il = body?.GetILAsByteArray();
             if (il == null)
             {
                 return 0;
@@ -79,7 +80,7 @@ namespace ConstructionPipelineOptimizer.Infrastructure
                 if (opcode.OperandType == OperandType.InlineMethod)
                 {
                     int token = ReadInt32(il, ref offset);
-                    MethodBase resolved = ResolveMethod(candidate, token);
+                    MethodBase? resolved = ResolveMethod(candidate, token);
                     if (MethodsMatch(resolved, calledMethod))
                     {
                         callCount++;
@@ -106,12 +107,12 @@ namespace ConstructionPipelineOptimizer.Infrastructure
             }
         }
 
-        private static MethodBase ResolveMethod(MethodBase context, int metadataToken)
+        private static MethodBase? ResolveMethod(MethodBase context, int metadataToken)
         {
             try
             {
-                Type[] typeArguments = context.DeclaringType?.GetGenericArguments();
-                Type[] methodArguments = context.IsGenericMethod ? context.GetGenericArguments() : null;
+                Type[]? typeArguments = context.DeclaringType?.GetGenericArguments();
+                Type[]? methodArguments = context.IsGenericMethod ? context.GetGenericArguments() : null;
                 return context.Module.ResolveMethod(metadataToken, typeArguments, methodArguments);
             }
             catch (ArgumentException)
@@ -120,7 +121,7 @@ namespace ConstructionPipelineOptimizer.Infrastructure
             }
         }
 
-        private static bool MethodsMatch(MethodBase left, MethodBase right)
+        private static bool MethodsMatch(MethodBase? left, MethodBase right)
         {
             return left != null &&
                 left.Module == right.Module &&

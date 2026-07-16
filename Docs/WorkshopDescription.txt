@@ -25,7 +25,7 @@ A focused RimWorld construction performance mod for active construction jobs and
 This is intentionally not a broad performance overhaul. It contains no turret, pawn-health, refuelable, dissolution, mechanitor, rendering, or general tick patches. That narrow scope reduces overlap with established performance mods.
 
 [h2]Performance evidence[/h2]
-On a derived save with exactly 12,000 Tilled Soil blueprints, three fresh-process 30-second runs measured 132.25 median TPS for the current adaptive build versus 101.43 without a construction optimizer (+30.39%). The preserved legacy broad build measured 126.87 median TPS. The current build skipped 93.3% of repeated active-job validation opportunities. This is an extreme workload result, not a guarantee for ordinary colonies; Multiplayer still needs a two-client desync test.
+On a derived save with exactly 12,000 Tilled Soil blueprints, the exact committed 1.6 DLL completed nine fresh-process 60-second samples per arm in three randomized blocks. Adaptive measured 124.18 mean / 115.31 median TPS versus baseline 114.19 mean / 111.11 median TPS: +8.75% by mean and +3.78% by median. Block-mean gains were +7.10%, +18.84%, and +0.11%, and 93.357% of repeated validation opportunities were skipped. The 95% confidence intervals overlap, so the positive pooled result is not statistically established. This is an extreme workload observation, not a guarantee for ordinary colonies; Multiplayer remains unverified without a two-client test.
 
 [h2]Reporting problems[/h2]
 Include your complete mod list, player log, RimWorld version, whether Multiplayer is active, and a reproducible construction example. Keep a save backup before changing a large mod list.

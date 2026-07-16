@@ -25,11 +25,19 @@ The project follows Semantic Versioning.
 
 ### Benchmarked
 
-- On a derived 12,000 Tilled Soil blueprint save, three fresh-process 30-second
-  samples measured 132.25 median TPS for the adaptive build versus 101.43 without a
-  construction optimizer (+30.39%) and 126.87 for the preserved legacy broad build.
-- The adaptive cadence skipped 93.3% of repeated validation opportunities. Results
-  are specific to this extreme construction workload and do not establish two-client
+- The exact committed 1.6 DLL completed nine fresh-process 60-second samples per arm
+  in three randomized blocks on the 12,000-blueprint fixture.
+- Adaptive measured 124.18 mean / 115.31 median TPS versus baseline 114.19 mean /
+  111.11 median TPS: +8.75% by mean and +3.78% by median.
+- Adaptive block-mean gains were +7.10%, +18.84%, and +0.11%. The cadence skipped
+  93.357% of validation opportunities. Overlapping confidence intervals mean the
+  pooled improvement is positive but not statistically established by this run.
+- The preserved unsafe legacy build measured faster than adaptive in this run. It
+  remains a comparison artifact and is not the release candidate.
+- A controlled foreign owner disabled cadence and completion guard together while
+  continuation stayed active; ordinary wooden-wall construction completed with the
+  pair both enabled and disabled.
+- Results are specific to this extreme workload and do not establish two-client
   Multiplayer synchronization.
 
 ### Verified
@@ -37,6 +45,10 @@ The project follows Semantic Versioning.
 - Deterministic policy tests on .NET 8.
 - RimWorld 1.6 / .NET Framework 4.7.2 release build.
 - Exact generated-method resolution against the installed RimWorld 1.6 assembly.
+- Exact release-candidate DLL SHA-256:
+  `64E3FED700B75BA4B349867D98E783ED317EF50B434D1EF2E6AB783D5834D212`.
+- Reproducible assembly metadata: rebuilding before or after a Git commit produces
+  the same release DLL hash.
 - Multiplayer remains unverified until a two-client synchronization test is run.
 
 ## 0.1.0 - 2026-07-13

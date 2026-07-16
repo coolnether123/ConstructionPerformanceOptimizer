@@ -50,12 +50,16 @@ search as proof of behavioral difference.
 
 ## Relative value on the measured colony
 
-The current adaptive build was remeasured on a derived save with exactly 12,000
-Tilled Soil blueprints. Three fresh-process 30-second samples produced 132.25 median
-TPS versus 101.43 without a construction optimizer (+30.39%); the preserved legacy
-broad build produced 126.87 median TPS. The current cadence skipped 93.3% of repeated
-active-job validation opportunities. A separate smaller frozen-colony test produced
-a 7.1% median gain. These are workload-specific observations, not universal claims.
+The exact committed adaptive 1.6 DLL was remeasured on a derived save with exactly
+12,000 Tilled Soil blueprints using nine fresh-process 60-second samples per arm in
+three randomized blocks. Adaptive produced 124.18 mean / 115.31 median TPS versus
+baseline 114.19 mean / 111.11 median TPS: +8.75% by mean and +3.78% by median.
+The cadence skipped 93.357% of repeated validation opportunities. Adaptive block-mean
+gains were +7.10%, +18.84%, and +0.11%; the pooled confidence intervals overlap, so
+the positive result is not statistically established. The preserved unsafe legacy
+build measured faster than adaptive in this run. A separate smaller frozen-colony
+test produced a 7.1% median gain. These are workload-specific observations, not
+universal claims.
 
 The exact object-scale pass from the broad package saved about 0.113 ms per
 simulated tick in total across refuelable, dissolution, and empty-health paths on

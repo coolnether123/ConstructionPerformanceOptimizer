@@ -32,20 +32,24 @@ The package deliberately excludes every non-construction optimization from the e
 
 ## Current benchmark
 
-On the derived 12,000 Tilled Soil blueprint fixture, three fresh-process 30-second
-runs produced these median simulation rates with the same full mod profile and
-Better Work Tab disabled:
+On the derived 12,000 Tilled Soil blueprint fixture, the exact committed 1.6 DLL was
+tested in nine fresh-process 60-second samples per arm, randomized across three
+balanced blocks. Better Work Tab was disabled in every arm:
 
-| Variant | Median TPS | Range | Sample standard deviation |
-|---|---:|---:|---:|
-| No construction optimizer | 101.43 | 98.87-119.20 | 11.07 |
-| Preserved legacy broad build | 126.87 | 119.25-127.71 | 4.66 |
-| Current adaptive build | 132.25 | 125.77-132.83 | 3.92 |
+| Variant | Mean TPS | Median TPS | Range | Sample SD |
+|---|---:|---:|---:|---:|
+| No construction optimizer | 114.19 | 111.11 | 99.25-137.82 | 13.79 |
+| Preserved legacy broad build | 137.48 | 139.00 | 118.95-153.89 | 12.16 |
+| Exact adaptive release candidate | 124.18 | 115.31 | 100.22-154.44 | 18.46 |
 
-The current build was **30.39% above the baseline median** and skipped 93.3% of
-the repeated active-job validation opportunities. This is a workload-specific
-stress result, not a guarantee for ordinary colonies. The complete protocol, raw
-captures, save hash, exclusions, and known unrelated log errors are in
+The adaptive build was **8.75% above baseline by mean and 3.78% by median**.
+Its block-mean gains were +7.10%, +18.84%, and +0.11%. It skipped 93.357% of
+repeated active-job validation opportunities. The 95% confidence intervals overlap,
+so this run shows a positive but not statistically established stress-fixture gain,
+not a guarantee for ordinary colonies. The unsafe preserved legacy build measured
+faster in this run; it is a comparison artifact, not the release. The complete
+protocol, all 27 samples, hashes, uncertainty, controlled foreign-owner test, and
+ordinary-material validation are in
 `Benchmarks/2026-07-15-adaptive-broad/REPORT.md`.
 
 The implementation comparison against current open-source and Workshop-only

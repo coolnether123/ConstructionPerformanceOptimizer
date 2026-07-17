@@ -256,11 +256,14 @@ function Commit-BranchPayload
 {
     param([string]$Version)
 
-    $paths = @(
-        "$Version/Assemblies",
-        'Assemblies',
-        'About/About.xml',
-        'LoadFolders.xml')
+    $paths = @("$Version/Assemblies")
+    if ($Version -ne '1.6')
+    {
+        $paths += @(
+            'Assemblies',
+            'About/About.xml',
+            'LoadFolders.xml')
+    }
     if ($Version -eq 'Alpha4')
     {
         $paths += 'Defs/ConstructionPipelineOptimizerBootstrap'

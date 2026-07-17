@@ -76,9 +76,11 @@ IDs. It does not send independent UI commands or maintain peer-local gameplay st
 
 Release validation used Multiplayer's normal save-host path with two rendered RimWorld
 instances, 75 active mods, three maps, and more than 11,000 construction blueprints.
-Two CPO-enabled runs returned both peers to identical world/map clocks after active
-construction and reported no desync. A CPO-free control also passed. All players still
-need the same CPO version and mod list, as with any deterministic gameplay patch.
+Three CPO-enabled runs returned both peers to identical world/map clocks after active
+construction and reported no desync. The final run used the exact 1.1.0 release DLL,
+advanced 1,801 synchronized ticks, and completed 23 constructions. A CPO-free control
+also passed. All players still need the same CPO version and mod list, as with any
+deterministic gameplay patch.
 
 ## Installation
 
@@ -97,12 +99,15 @@ always keep a normal save backup when changing a large mod list.
 - RimWorld **1.6 is the supported public release target**.
 - Historical builds are produced from their matching `Support/<version>` branches.
   Their rebuilt DLL folders may be copied back to `Dev`, but their source-level API
-  adaptations are not carried in the 1.6 development tree.
+  adaptations are not carried in the 1.6 development tree. Each support branch also
+  carries target-specific metadata and a matching root payload so it can be installed
+  directly for that historical version.
 - Harmony is required.
 - Tilled Soil is supported but is not a required dependency.
 - RimWorld 1.6 Multiplayer is supported and ships the official optional API bridge.
-- RimWorld 1.5 Multiplayer remains compile-surface-only until a runnable 1.5 game
-  installation is available for a two-client test.
+- RimWorld 1.5 compiles against the official MultiplayerAPI 0.5 package used by
+  Multiplayer's open-source `rw-1.5` branch. Runtime multiplayer remains unverified
+  until a runnable 1.5 game installation is available for a two-client test.
 - Mods that patch `WorkGiver_ConstructFinishFrames.JobOnThing` remain in the
   continuation decision path. Full replacements still warrant a compatibility test.
 - A foreign Harmony owner present on the exact generated validation predicate when

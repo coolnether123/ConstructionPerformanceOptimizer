@@ -15,7 +15,7 @@ The project follows Semantic Versioning.
   from deterministic game ticks and pawn IDs.
 - Verified RimWorld 1.6 Multiplayer through normal save hosting with two rendered
   game instances, 75 active mods, three maps, and over 11,000 construction
-  blueprints. Two release-candidate runs completed synchronized construction with
+  blueprints. Three release-candidate runs completed synchronized construction with
   identical map clocks and no desync; a CPO-free control also passed.
 - Added a multi-instance host/client harness with isolated save data, executable and
   agent identities, authoritative Multiplayer simulation-clock barriers, WARP
@@ -32,6 +32,12 @@ The project follows Semantic Versioning.
 - Added off-game fluent transpiler tests for successful redirects, missing and ambiguous
   targets, unsafe hook signatures, input-stream atomicity, generated completion-guard
   control flow, and exception-handler rejection.
+- Rebuilt Alpha 4 through 1.6 on their owning support branches at version 1.1.0.
+  Historical branches now carry target-specific metadata and a matching root payload
+  so they are directly installable rather than compile artifacts only.
+- Added the official MultiplayerAPI 0.5 bridge to the RimWorld 1.5 branch. Its build
+  matches Multiplayer's open-source `rw-1.5` dependency; runtime remains unverified
+  because no runnable RimWorld 1.5 installation is present locally.
 
 ### Verified
 
@@ -39,8 +45,9 @@ The project follows Semantic Versioning.
 - RimWorld 1.6 release build with zero warnings and API-shape audit.
 - Isolated 75-mod single-player construction smoke with Better Work Tab and the
   legacy optimizer excluded.
-- Two repeatable normal-session Multiplayer construction passes with identical
-  host/client simulation clocks and no desync.
+- Three repeatable normal-session Multiplayer construction passes with identical
+  host/client simulation clocks and no desync. The final exact-artifact pass advanced
+  1,801 synchronized ticks and completed 23 constructions.
 - Exact 1.1.0 DLL SHA-256:
   `9D4FDA8F3F6EF33AE3D6F181BFDAB0E15D6B1A228C89F48A332E239471AC0EEA`.
 

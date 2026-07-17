@@ -4,6 +4,7 @@ using ConstructionPipelineOptimizer.Infrastructure;
 using HarmonyLib;
 using RimWorld;
 using Verse;
+using Verse.AI;
 #if RW_ALPHA4
 using FrameType = global::Frame;
 using FinishFrameDriverType = Verse.AI.JobDriver_ConstructFinishFrame;
@@ -29,11 +30,16 @@ namespace ConstructionPipelineOptimizer.Infrastructure
             typeof(GenConstruct),
             nameof(GenConstruct.CanConstruct),
             new[] { typeof(Thing), typeof(Pawn), typeof(bool) });
-#else
+#elif RW_CANCONSTRUCT_4
         internal static readonly MethodInfo CanConstruct = AccessTools.Method(
             typeof(GenConstruct),
             nameof(GenConstruct.CanConstruct),
             new[] { typeof(Thing), typeof(Pawn), typeof(bool), typeof(bool) });
+#else
+        internal static readonly MethodInfo CanConstruct = AccessTools.Method(
+            typeof(GenConstruct),
+            nameof(GenConstruct.CanConstruct),
+            new[] { typeof(Thing), typeof(Pawn), typeof(bool), typeof(bool), typeof(JobDef) });
 #endif
 
         internal static readonly MethodInfo CompleteConstruction = AccessTools.Method(

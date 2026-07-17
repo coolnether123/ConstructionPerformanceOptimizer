@@ -2,14 +2,10 @@
 
 ## Before publishing
 
-The public package and `Dev` source target RimWorld 1.6 only. Older API source remains
-on `Support/<version>` branches, while historical DLL folders in `Dev` are engineering
-artifacts and must not be copied into the Workshop archive.
-
-Historical branch releases are separate packages. The cascade gives each support
-branch target-specific About/load metadata and a root DLL matching its versioned
-payload. Do not combine that branch metadata or root assembly with the 1.6 Workshop
-archive.
+The public package from `Dev` targets RimWorld 1.6. This `Support/1.5` branch creates
+a separate `-rw1.5` package with target-specific About/load metadata and matching
+root/versioned assemblies. Do not combine this branch metadata or root assembly with
+the 1.6 Workshop archive.
 
 1. Close RimWorld or ensure the focused package is not being copied over while
    the game is loading assemblies.
@@ -24,16 +20,16 @@ archive.
    and Workshop performance text. Any transpiler or runtime source change requires a new
    in-game smoke and an explicit evidence update before publication.
 6. Use the generated runtime-only folder at
-   `Releases/ConstructionPipelineOptimizer-<version>/ConstructionPipelineOptimizer`.
+   `Releases/ConstructionPipelineOptimizer-<version>-rw1.5/ConstructionPipelineOptimizer`.
    The ZIP contains this same `ConstructionPipelineOptimizer` root.
-7. Test that extracted package in a fresh RimWorld 1.6 process with Harmony and
+7. Test that extracted package in a fresh RimWorld 1.5 process with Harmony and
    Tilled Soil.
 8. Test a save containing ordinary material-bearing construction and zero-cost
    terrain construction.
 9. Run the normal-save two-client smoke and verify identical paused simulation
    clocks, construction progress, and `desynced=False` on both peers. Do not enable
    the runtime Harmony construction probe in this acceptance run.
-10. Verify `About.xml` and the Workshop description describe RimWorld 1.6
+10. Verify `About.xml` and any 1.5 release description describe RimWorld 1.5
     Multiplayer support and require matching CPO versions/mod lists.
 11. Verify the startup diagnostic reports the expected adaptive state. Test once with
    a controlled foreign owner on the exact validation predicate and confirm both the
@@ -51,8 +47,9 @@ archive.
    upload action.
 4. Set Harmony as a required Workshop item. `About.xml` dependency metadata does
    not create Steam's Required Items relationship automatically.
-5. Paste `Docs/WorkshopDescription.txt` into the Workshop description.
-6. Select tags such as `Mod`, `1.6`, and `Performance` if available.
+5. Adapt `Docs/WorkshopDescription.txt` for the separate 1.5 listing; do not replace
+   the main 1.6 listing with support-branch metadata.
+6. Select tags such as `Mod`, `1.5`, and `Performance` if available.
 7. Publish as unlisted first, subscribe to the Workshop copy, remove or rename
    the local development junction, and test the downloaded artifact.
 8. Copy the generated `About/PublishedFileId.txt` from the runtime-only folder
@@ -73,5 +70,6 @@ archive.
 - Zero-cost terrain completes successfully.
 - Restart and Play Again/save-load behavior is unaffected.
 - `rwmt.multiplayer` is not declared incompatible, `0MultiplayerAPI.dll` is present
-  in the 1.6 runtime folder, and public descriptions match the verified support scope.
+  in both the root and 1.5 runtime folders, and public descriptions match the
+  verified support scope.
 - The published ZIP checksum matches its `.sha256` sidecar.

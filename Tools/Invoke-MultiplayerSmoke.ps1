@@ -1,8 +1,11 @@
 param(
+    [ValidateSet("1.5")]
+    [string]$Version = "1.5",
     [string]$ReplayName = "ZJC Conversion Baseline-preconvert",
-    [string]$SaveName = "SGTLMathews Story Colony - SP 12000 Tilled Soil Stress 1.6.4871",
+    [string]$SaveName = "CPO Multiplayer Construction 1.5.4409",
     [int]$Port = 30512,
     [int]$RunSeconds = 20,
+    [switch]$CreateSave,
     [switch]$TwoClient,
     [switch]$Singleplayer,
     [switch]$ExcludeMultiplayer,
@@ -25,12 +28,17 @@ if ($TwoClient -and $Probe) {
     throw "The runtime Harmony construction probe is not Multiplayer-safe. Use the synchronized construction fixture evidence instead."
 }
 $probeEnabled = $Probe -or (!$NoProbe -and !$TwoClient)
-$version = "1.6"
+$version = $Version
+$projectRoot = [IO.Path]::GetFullPath((Split-Path -Parent $PSScriptRoot))
 $rimWorld = "D:\Steam Library\steamapps\common\RimWorld\RimWorldWin64.exe"
 $rimWorldDirectory = Split-Path -Parent $rimWorld
 $clientExe = Join-Path $rimWorldDirectory "RimWorldClientWin64.exe"
 $clientData = Join-Path $rimWorldDirectory "RimWorldClientWin64_Data"
 $rimWorldData = Join-Path $rimWorldDirectory "RimWorldWin64_Data"
+$cpoAssembly = Join-Path $projectRoot "$version\Assemblies\Construction Pipeline Optimizer.dll"
+$multiplayerApiAssembly = Join-Path $projectRoot "$version\Assemblies\0MultiplayerAPI.dll"
+$multiplayerAssembly = "D:\Steam Library\steamapps\workshop\content\294100\2606448745\$version\AssembliesCustom\Multiplayer.dll"
+$aboutPath = Join-Path $projectRoot "About\About.xml"
 $config = Join-Path $env:USERPROFILE "AppData\LocalLow\Ludeon Studios\RimWorld by Ludeon Studios\Config\ModsConfig.xml"
 $saveDataRoot = Split-Path -Parent (Split-Path -Parent $config)
 $fullProfile = "$config.codex-before-cqo-optimized-20260713-132032"
@@ -57,6 +65,13 @@ $sourceSave = if ([string]::IsNullOrWhiteSpace($SaveName)) {
     $null
 } else {
     Join-Path (Join-Path $saveDataRoot "Saves") ($SaveName + ".rws")
+}
+$sourceSaveExists = $sourceSave -and (Test-Path -LiteralPath $sourceSave)
+$creatingSave = [bool]($CreateSave -and $sourceSave -and !$sourceSaveExists)
+$fixtureReportCommand = if ($version -eq "1.5") {
+    "construction-fixture report-material 100 Wall WoodLog"
+} else {
+    "construction-fixture report"
 }
 
 function Add-Evidence([string]$Text) {
@@ -143,6 +158,14 @@ function Set-IsolatedPrefs([string]$ConfigDirectory) {
     [xml]$prefs = Get-Content -Raw -LiteralPath $prefsPath
     $prefs.PrefsData.fullscreen = "False"
     $prefs.PrefsData.runInBackground = "True"
+    if ($version -eq "1.5") {
+        foreach ($name in @("rememberDrawStyles", "zoomSwitchWorldLayer", "gravshipCutscenes")) {
+            $node = $prefs.PrefsData.SelectSingleNode($name)
+            if ($node) {
+                [void]$prefs.PrefsData.RemoveChild($node)
+            }
+        }
+    }
     $settings = [Xml.XmlWriterSettings]::new()
     $settings.Indent = $true
     $settings.Encoding = [Text.UTF8Encoding]::new($false)
@@ -189,7 +212,12 @@ function Wait-ForDurableHeartbeat(
     $freshUpdates = 0
     do {
         if (Test-Path -LiteralPath $HeartbeatPath) {
-            $heartbeatWrite = (Get-Item -LiteralPath $HeartbeatPath).LastWriteTime
+            $heartbeatItem = Get-Item -LiteralPath $HeartbeatPath -ErrorAction SilentlyContinue
+            if (!$heartbeatItem) {
+                Start-Sleep -Milliseconds 200
+                continue
+            }
+            $heartbeatWrite = $heartbeatItem.LastWriteTime
             $ageSeconds = ((Get-Date) - $heartbeatWrite).TotalSeconds
             if ($ageSeconds -lt 3) {
                 if ($lastFreshWrite -ne $heartbeatWrite) {
@@ -243,18 +271,46 @@ function Assert-NoDesync {
     }
 }
 
-foreach ($required in @($rimWorld, $config, $fullProfile, $sender)) {
+foreach ($required in @(
+    $rimWorld,
+    $cpoAssembly,
+    $multiplayerApiAssembly,
+    $multiplayerAssembly,
+    $aboutPath,
+    $config,
+    $fullProfile,
+    $sender
+)) {
     if (!(Test-Path -LiteralPath $required)) { throw "Required path missing: $required" }
 }
-if ($sourceSave -and !(Test-Path -LiteralPath $sourceSave)) {
+if ($sourceSave -and !$sourceSaveExists -and !$creatingSave) {
     throw "Required save missing: $sourceSave"
 }
 
 Copy-Item -LiteralPath $config -Destination $backup -Force
 $originalHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $config).Hash
+$cpoHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $cpoAssembly).Hash
+$multiplayerApiHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $multiplayerApiAssembly).Hash
+$multiplayerVersion = [Reflection.AssemblyName]::GetAssemblyName($multiplayerAssembly).Version.ToString(3)
+$multiplayerApiAssemblyVersion = [Reflection.AssemblyName]::GetAssemblyName($multiplayerApiAssembly).Version
+$multiplayerApiVersion = "$($multiplayerApiAssemblyVersion.Major).$($multiplayerApiAssemblyVersion.Minor)"
+[xml]$about = Get-Content -Raw -LiteralPath $aboutPath
+$releaseVersion = [string]$about.ModMetaData.modVersion
+$releaseArchive = "ConstructionPipelineOptimizer-$releaseVersion-rw$version.zip"
+$gameVersion = "<unknown>"
+if ($sourceSaveExists) {
+    $gameVersionMatch = Select-String -LiteralPath $sourceSave -Pattern "<gameVersion>([^<]+)" |
+        Select-Object -First 1
+    if ($gameVersionMatch) {
+        $gameVersion = $gameVersionMatch.Matches[0].Groups[1].Value
+    }
+}
 
 try {
     [xml]$profile = Get-Content -Raw -LiteralPath $fullProfile
+    if ($version -eq "1.5") {
+        $profile.ModsConfigData.version = "1.5.4409 rev1120"
+    }
     $active = $profile.ModsConfigData.activeMods
     $forbiddenIds = @(
         "coolnether123.betterworktab",
@@ -262,6 +318,15 @@ try {
         "coolnether123.constructionpipelineoptimizer.benchmarklegacy",
         "benchmark.cpo.foreignvalidationowner"
     )
+    $versionExcludedIds = @()
+    if ($version -eq "1.5") {
+        $versionExcludedIds = @(
+            "ludeon.rimworld.odyssey",
+            "defi.stabilizebleeding",
+            "adamas.hospitalitycasino"
+        )
+        $forbiddenIds += $versionExcludedIds
+    }
     if ($ExcludeMultiplayer) {
         $forbiddenIds += @("rwmt.multiplayer", "rwmt.multiplayercompatibility")
     }
@@ -291,10 +356,19 @@ try {
     if ($forbidden.Count -ne 0) { throw "Forbidden test mods active: $($forbidden -join ', ')" }
     $cpoActive = $ids -contains "coolnether123.constructionpipelineoptimizer"
     if ($cpoActive -eq [bool]$ExcludeCpo) { throw "CPO profile state did not match ExcludeCpo=$([bool]$ExcludeCpo)." }
-    Add-Evidence "test.source=$(if ($sourceSave) { 'save' } else { 'replay' })"
+    Add-Evidence "test.version=$version"
+    Add-Evidence "game.version=$gameVersion"
+    Add-Evidence "multiplayer.version=$multiplayerVersion"
+    Add-Evidence "multiplayerApi.version=$multiplayerApiVersion"
+    Add-Evidence "artifact.cpoSha256=$cpoHash"
+    Add-Evidence "artifact.multiplayerApiSha256=$multiplayerApiHash"
+    Add-Evidence "artifact.releaseArchive=$releaseArchive"
+    Add-Evidence "test.source=$(if ($creatingSave) { 'quickstart-created-save' } elseif ($sourceSaveExists) { 'save' } else { 'replay' })"
     Add-Evidence "test.save=$SaveName"
+    Add-Evidence "test.createSave=$creatingSave"
     Add-Evidence "test.replay=$ReplayName"
     Add-Evidence "test.activeMods=$($ids.Count)"
+    Add-Evidence "test.versionExcluded=$($versionExcludedIds -join ',')"
     Add-Evidence "test.cpo=$cpoActive"
     Add-Evidence "test.betterWorkTab=false"
     Add-Evidence "test.legacyOptimizer=false"
@@ -323,7 +397,7 @@ try {
     if (Test-Path -LiteralPath (Join-Path $saveDataRoot "HugsLib")) {
         Copy-Item -LiteralPath (Join-Path $saveDataRoot "HugsLib") -Destination (Join-Path $hostSaveData "HugsLib") -Recurse
     }
-    if ($sourceSave) {
+    if ($sourceSaveExists) {
         New-Item -ItemType Directory -Path (Join-Path $hostSaveData "Saves") | Out-Null
         Copy-Item -LiteralPath $sourceSave -Destination (Join-Path $hostSaveData "Saves")
     }
@@ -340,8 +414,29 @@ try {
     Set-ProcessForeground $process
 
     if ($TwoClient) {
-        if (Test-Path -LiteralPath $clientExe) { throw "Temporary client executable already exists: $clientExe" }
-        if (Test-Path -LiteralPath $clientData) { throw "Temporary client data path already exists: $clientData" }
+        if ((Test-Path -LiteralPath $clientExe) -or (Test-Path -LiteralPath $clientData)) {
+            $staleExeMatches =
+                (Test-Path -LiteralPath $clientExe) -and
+                ((Get-FileHash -Algorithm SHA256 -LiteralPath $clientExe).Hash -eq
+                    (Get-FileHash -Algorithm SHA256 -LiteralPath $rimWorld).Hash)
+            $staleDataItem = Get-Item -LiteralPath $clientData -Force -ErrorAction SilentlyContinue
+            $staleDataTarget = if ($staleDataItem -and $staleDataItem.Target) {
+                [IO.Path]::GetFullPath([string]$staleDataItem.Target[0])
+            } else {
+                $null
+            }
+            $staleDataMatches =
+                $staleDataItem -and
+                $staleDataItem.LinkType -eq "Junction" -and
+                $staleDataTarget -eq [IO.Path]::GetFullPath($rimWorldData)
+            if (!$staleExeMatches -or !$staleDataMatches) {
+                throw "Existing client paths are not recognized harness artifacts: $clientExe / $clientData"
+            }
+
+            [IO.Directory]::Delete($clientData, $false)
+            Remove-Item -LiteralPath $clientExe -Force
+            Add-Evidence "cleanup.staleClientArtifacts=true"
+        }
         Copy-Item -LiteralPath $rimWorld -Destination $clientExe
         $createdClientExe = $true
         New-Item -ItemType Junction -Path $clientData -Target $rimWorldData | Out-Null
@@ -416,7 +511,7 @@ try {
         }
     }
 
-    if ($sourceSave) {
+    if ($sourceSaveExists) {
         $loadQueued = Invoke-Agent -Instance "host" -Command "dev-run load-save `"$SaveName`" --pause-after-load" -TimeoutSeconds 300
         Add-Evidence $loadQueued
         if (!$loadQueued.StartsWith("load queued:", [StringComparison]::Ordinal)) {
@@ -442,6 +537,61 @@ try {
             Add-Evidence $queued
             if (!$queued.StartsWith("Multiplayer host requested", [StringComparison]::Ordinal)) {
                 throw "Loaded save did not start a Multiplayer host."
+            }
+        } else {
+            Add-Evidence "test.session=singleplayer"
+        }
+    } elseif ($creatingSave) {
+        Add-Evidence (Invoke-Agent -Instance "host" -Command "quickstart" -TimeoutSeconds 300)
+        $quickstartDeadline = (Get-Date).AddMinutes(8)
+        do {
+            Start-Sleep -Seconds 3
+            [void](Invoke-Agent -Instance "host" -Command "status")
+            $quickstartStatus = Get-Content -Raw -LiteralPath (Get-AgentPath "host" "status.txt")
+            Add-Evidence ("quickstart.poll=" + ($quickstartStatus.TrimEnd() -replace "`r?`n", "; "))
+            $quickstartReady =
+                (Get-OutputValue $quickstartStatus "programState") -eq "Playing" -and
+                (Get-OutputValue $quickstartStatus "mapReady") -eq "True"
+        } while (!$quickstartReady -and (Get-Date) -lt $quickstartDeadline)
+        if (!$quickstartReady) {
+            throw "RimWorld 1.5 quickstart did not create a playable map."
+        }
+
+        Add-Evidence (Invoke-Agent "host" "dev-run set-speed paused")
+        $fixtureBuild = Invoke-Agent "host" "dev-run construction-fixture build-material 100 Wall WoodLog"
+        Add-Evidence ("construction.created:`n" + $fixtureBuild)
+        $createdTotal = 0
+        if (![int]::TryParse((Get-OutputValue $fixtureBuild "constructionFixture.total"), [ref]$createdTotal) -or
+            $createdTotal -le 0) {
+            throw "The RimWorld 1.5 construction fixture was not created."
+        }
+
+        $isolatedSave = Join-Path (Join-Path $hostSaveData "Saves") ($SaveName + ".rws")
+        $saveQueuedAt = Get-Date
+        $saveResult = Invoke-Agent "host" "dev-run save-game `"$SaveName`"" -TimeoutSeconds 300
+        Add-Evidence $saveResult
+        if (!$saveResult.StartsWith("save queued:", [StringComparison]::Ordinal)) {
+            throw "The RimWorld 1.5 fixture save did not queue."
+        }
+        Wait-Until -TimeoutSeconds 300 -FailureMessage "The RimWorld 1.5 fixture save did not finish." -Condition {
+            try {
+                (Test-Path -LiteralPath $isolatedSave) -and
+                    (Get-Item -LiteralPath $isolatedSave).LastWriteTime -ge $saveQueuedAt -and
+                    (Select-String -LiteralPath $isolatedSave -Pattern "<gameVersion>1.5." -SimpleMatch -Quiet)
+            } catch {
+                $false
+            }
+        }
+        Copy-Item -LiteralPath $isolatedSave -Destination $sourceSave -Force
+        $sourceSaveExists = $true
+        Add-Evidence "test.createdSavePath=$sourceSave"
+        Add-Evidence "test.createdSaveSha256=$((Get-FileHash -Algorithm SHA256 -LiteralPath $sourceSave).Hash)"
+
+        if (!$Singleplayer) {
+            $queued = Invoke-Agent -Instance "host" -Command "dev-run mp-host $Port CPOReleaseTest" -TimeoutSeconds 300
+            Add-Evidence $queued
+            if (!$queued.StartsWith("Multiplayer host requested", [StringComparison]::Ordinal)) {
+                throw "Created save did not start a Multiplayer host."
             }
         } else {
             Add-Evidence "test.session=singleplayer"
@@ -525,7 +675,7 @@ try {
         $initialWorldTicks = $hostClock.WorldTicks
     }
 
-    $constructionBefore = Invoke-Agent "host" "dev-run construction-fixture report"
+    $constructionBefore = Invoke-Agent "host" "dev-run $fixtureReportCommand"
     Add-Evidence ("construction.before:`n" + $constructionBefore)
     $speedTool = if ($Singleplayer) { "set-speed" } else { "mp-set-speed" }
     Add-Evidence (Invoke-Agent "host" "dev-run $speedTool ultrafast")
@@ -565,7 +715,7 @@ try {
     if ($TwoClient) {
         Add-Evidence ("client.final:`n" + (Invoke-Agent "client" "dev-run mp-status"))
     }
-    $constructionAfter = Invoke-Agent "host" "dev-run construction-fixture report"
+    $constructionAfter = Invoke-Agent "host" "dev-run $fixtureReportCommand"
     Add-Evidence ("construction.after:`n" + $constructionAfter)
     $beforeTotal = 0
     $afterTotal = 0

@@ -11,10 +11,9 @@ if (-not $stagingBase.Equals($expectedStagingBase, [System.StringComparison]::Or
     throw "Unsafe staging path resolved outside the expected project location: $stagingBase"
 }
 
-# The public package supports RimWorld 1.6 only. Older API builds remain
-# repository engineering fixtures and are deliberately excluded from this archive.
-$modernVersions = @('1.6')
-& powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot 'Build-AllVersions.ps1') -Versions $modernVersions
+# This support branch publishes only its directly loadable RimWorld 1.5 payload.
+$targetVersions = @('1.5')
+& powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot 'Build-AllVersions.ps1') -Versions $targetVersions
 if ($LASTEXITCODE -ne 0)
 {
     throw "Build workflow failed with exit code $LASTEXITCODE."
@@ -24,15 +23,16 @@ if ($LASTEXITCODE -ne 0)
 $version = [string]$about.ModMetaData.modVersion
 $releaseDirectory = Join-Path $projectRoot 'Releases'
 $packageName = 'ConstructionPipelineOptimizer'
+$releaseName = "$packageName-$version-rw1.5"
 $stagedPackage = Join-Path $stagingBase $packageName
-$releaseVersionRoot = [System.IO.Path]::GetFullPath((Join-Path $releaseDirectory "$packageName-$version"))
+$releaseVersionRoot = [System.IO.Path]::GetFullPath((Join-Path $releaseDirectory $releaseName))
 $releaseDirectoryPrefix = [System.IO.Path]::GetFullPath($releaseDirectory).TrimEnd('\') + '\'
 if (-not $releaseVersionRoot.StartsWith($releaseDirectoryPrefix, [System.StringComparison]::OrdinalIgnoreCase))
 {
     throw "Unsafe release folder resolved outside the project release directory: $releaseVersionRoot"
 }
 $publishFolder = Join-Path $releaseVersionRoot $packageName
-$archivePath = Join-Path $releaseDirectory "$packageName-$version.zip"
+$archivePath = Join-Path $releaseDirectory "$releaseName.zip"
 $checksumPath = "$archivePath.sha256"
 
 if (((Test-Path -LiteralPath $archivePath) -or (Test-Path -LiteralPath $releaseVersionRoot)) -and -not $Force)
@@ -54,13 +54,16 @@ New-Item -ItemType Directory -Force -Path $stagedPackage, $releaseDirectory | Ou
 try
 {
     Copy-Item -LiteralPath (Join-Path $projectRoot 'About') -Destination $stagedPackage -Recurse
-    foreach ($modernVersion in $modernVersions)
+    foreach ($targetVersion in $targetVersions)
     {
-        $stagedAssemblies = Join-Path $stagedPackage "$modernVersion\Assemblies"
-        New-Item -ItemType Directory -Force -Path $stagedAssemblies | Out-Null
+        $stagedVersionedAssemblies = Join-Path $stagedPackage "$targetVersion\Assemblies"
+        $stagedRootAssemblies = Join-Path $stagedPackage 'Assemblies'
+        New-Item -ItemType Directory -Force -Path $stagedVersionedAssemblies, $stagedRootAssemblies | Out-Null
         foreach ($runtimeAssembly in 'Construction Pipeline Optimizer.dll', '0MultiplayerAPI.dll')
         {
-            Copy-Item -LiteralPath (Join-Path $projectRoot "$modernVersion\Assemblies\$runtimeAssembly") -Destination $stagedAssemblies
+            $sourceAssembly = Join-Path $projectRoot "$targetVersion\Assemblies\$runtimeAssembly"
+            Copy-Item -LiteralPath $sourceAssembly -Destination $stagedVersionedAssemblies
+            Copy-Item -LiteralPath $sourceAssembly -Destination $stagedRootAssemblies
         }
     }
 

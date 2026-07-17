@@ -106,8 +106,10 @@ always keep a normal save backup when changing a large mod list.
 - Tilled Soil is supported but is not a required dependency.
 - RimWorld 1.6 Multiplayer is supported and ships the official optional API bridge.
 - RimWorld 1.5 compiles against the official MultiplayerAPI 0.5 package used by
-  Multiplayer's open-source `rw-1.5` branch. Runtime multiplayer remains unverified
-  until a runnable 1.5 game installation is available for a two-client test.
+  Multiplayer's open-source `rw-1.5` branch. The `Support/1.5` payload passed a normal
+  two-client construction test with 72 active mods: both peers finished at identical
+  world/map tick 13,434 with no desync after 37 completed constructions. A 71-mod
+  CPO-free control also finished synchronized with no desync.
 - Mods that patch `WorkGiver_ConstructFinishFrames.JobOnThing` remain in the
   continuation decision path. Full replacements still warrant a compatibility test.
 - A foreign Harmony owner present on the exact generated validation predicate when
@@ -122,13 +124,13 @@ always keep a normal save backup when changing a large mod list.
 ## Build
 
 ```powershell
-& .\Tools\Build.ps1 -Configuration Release
+& .\Tools\Build.ps1 -Version 1.5
 ```
 
-To compile and API-audit the current RimWorld 1.6 source:
+To compile and API-audit the RimWorld 1.5 support source:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\Tools\Build-AllVersions.ps1
+powershell -ExecutionPolicy Bypass -File .\Tools\Build-AllVersions.ps1 -Versions 1.5
 ```
 
 The support cascade merges changes down through existing local `Support/*` branches,
@@ -145,8 +147,9 @@ To create the publishable runtime archive:
 & .\Tools\Release.ps1
 ```
 
-The release workflow runs the deterministic tests, builds the 1.6 DLL, validates
-metadata and assets, stages only runtime files, creates a Workshop-ready folder
-and ZIP under `Releases`, and writes a SHA-256 sidecar.
+On `Support/1.5`, the release workflow runs the deterministic tests, builds and
+audits the 1.5 DLL, validates metadata and assets, stages matching root and versioned
+runtime payloads, creates a Workshop-ready folder under `Releases`, and writes a
+SHA-256 sidecar beside the `-rw1.5.zip` archive.
 
 Do not enable this mod together with `coolnether123.constructionqueueoptimizer`; that package contains the same construction patches.

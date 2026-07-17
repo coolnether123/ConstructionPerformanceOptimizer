@@ -33,7 +33,7 @@ $PackageRoot = [System.IO.Path]::GetFullPath($PackageRoot)
 $aboutPath = Get-RequiredPath 'About\About.xml'
 $previewPath = Get-RequiredPath 'About\Preview.png'
 $loadFoldersPath = Get-RequiredPath 'LoadFolders.xml'
-$allowedVersions = @('1.6')
+$allowedVersions = @('1.5')
 [xml]$about = Get-Content -LiteralPath $aboutPath -Raw
 $metadata = $about.ModMetaData
 Assert-Condition ($null -ne $metadata) 'About.xml must have ModMetaData as its root element.'
@@ -49,6 +49,8 @@ foreach ($supportedVersion in $supportedVersions)
     $assemblyPaths[$supportedVersion] = Get-RequiredPath "$supportedVersion\Assemblies\Construction Pipeline Optimizer.dll"
     $null = Get-RequiredPath "$supportedVersion\Assemblies\0MultiplayerAPI.dll"
 }
+$rootAssemblyPath = Get-RequiredPath 'Assemblies\Construction Pipeline Optimizer.dll'
+$null = Get-RequiredPath 'Assemblies\0MultiplayerAPI.dll'
 $null = Get-RequiredPath 'LICENSE'
 $null = Get-RequiredPath 'README.md'
 $null = Get-RequiredPath 'CHANGELOG.md'
@@ -69,12 +71,12 @@ foreach ($supportedVersion in $supportedVersions)
 {
     $loadFolder = $loadFolders.loadFolders.("v$supportedVersion")
     Assert-Condition ($loadFolder.li -contains '/') "LoadFolders.xml must load the package root for $supportedVersion."
-    Assert-Condition ($loadFolder.li -contains $supportedVersion) "LoadFolders.xml must load the $supportedVersion runtime folder."
 
     $assemblyPath = $assemblyPaths[$supportedVersion]
     Assert-Condition ((Get-Item -LiteralPath $assemblyPath).Length -gt 0) "RimWorld $supportedVersion assembly is empty."
     $assemblyVersion = [System.Reflection.AssemblyName]::GetAssemblyName($assemblyPath).Version
     Assert-Condition ($assemblyVersion.ToString(3) -eq [string]$metadata.modVersion) "RimWorld $supportedVersion assembly version must match About.xml modVersion."
+    Assert-Condition ((Get-FileHash -LiteralPath $rootAssemblyPath -Algorithm SHA256).Hash -eq (Get-FileHash -LiteralPath $assemblyPath -Algorithm SHA256).Hash) "Root assembly must match the RimWorld $supportedVersion payload."
 }
 Assert-Condition (-not (Test-Path -LiteralPath (Join-Path $PackageRoot 'About\ModIcon.png'))) 'ModIcon.png must not be included in this icon-free package.'
 

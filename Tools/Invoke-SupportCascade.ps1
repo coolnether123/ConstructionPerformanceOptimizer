@@ -275,8 +275,8 @@ function Commit-BranchPayload
             return $true
         }
 
-        & git ls-files --error-unmatch -- $_ > $null 2> $null
-        return $LASTEXITCODE -eq 0
+        $tracked = @(& git ls-files -- $_)
+        return $tracked.Count -gt 0
     })
     if ($stagePaths.Count -gt 0)
     {

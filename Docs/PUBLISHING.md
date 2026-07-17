@@ -6,6 +6,11 @@ The public package and `Dev` source target RimWorld 1.6 only. Older API source r
 on `Support/<version>` branches, while historical DLL folders in `Dev` are engineering
 artifacts and must not be copied into the Workshop archive.
 
+Historical branch releases are separate packages. The cascade gives each support
+branch target-specific About/load metadata and a root DLL matching its versioned
+payload. Do not combine that branch metadata or root assembly with the 1.6 Workshop
+archive.
+
 1. Close RimWorld or ensure the focused package is not being copied over while
    the game is loading assemblies.
 2. Confirm the version matches in:

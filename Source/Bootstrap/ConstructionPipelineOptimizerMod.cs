@@ -1,5 +1,8 @@
 using HarmonyLib;
 using Verse;
+#if RW_MULTIPLAYER_API
+using Multiplayer.API;
+#endif
 
 namespace ConstructionPipelineOptimizer.Bootstrap
 {
@@ -20,6 +23,16 @@ namespace ConstructionPipelineOptimizer.Bootstrap
             }
 
             initialized = true;
+#if RW_MULTIPLAYER_API
+            if (MP.enabled)
+            {
+                Log.Message(
+                    "[Construction Pipeline Optimizer] Multiplayer API detected; " +
+                    "construction optimizations will run inside Multiplayer's " +
+                    "deterministic map-tick context.");
+            }
+#endif
+
             // Install each feature deliberately so a changed game method cannot leave a
             // safety-dependent optimization partially active.
             PatchInstallationReport report = PatchInstaller.Install(new Harmony(PackageId));
@@ -48,7 +61,10 @@ namespace ConstructionPipelineOptimizer.Bootstrap
     {
         static ConstructionPipelineOptimizerStartup()
         {
-            ConstructionPipelineOptimizerMod.Initialize();
+            // Compatibility decisions should see patches installed by normal mod startup
+            // constructors. Queue inspection and installation until this load event ends;
+            // patches deliberately added after that point remain outside the startup snapshot.
+            LongEventHandler.ExecuteWhenFinished(ConstructionPipelineOptimizerMod.Initialize);
         }
     }
 #endif

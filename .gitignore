@@ -10,3 +10,8 @@ Releases/
 */Assemblies/*.pdb
 Assemblies/*.pdb
 *.user
+Benchmarks/**/Results/
+Benchmarks/**/Randomized-*/
+Benchmarks/**/ForeignValidationOwner/Source/bin/
+Benchmarks/**/ForeignValidationOwner/Source/obj/
+Benchmarks/**/Variants/**/Assemblies/*.pdb

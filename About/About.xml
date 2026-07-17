@@ -5,11 +5,11 @@
   <packageId>coolnether123.constructionpipelineoptimizer</packageId>
   <modVersion>1.1.0</modVersion>
   <supportedVersions>
-    <li>1.5</li>
+    <li>1.4</li>
   </supportedVersions>
   <description><![CDATA[Reduces repeated active construction validation and redundant zero-cost terrain work selection.
 
-The branch is compiled against RimWorld 1.5. Includes the RimWorld 1.5 Multiplayer API 0.5 bridge. Every peer must use the same CPO build and mod list.
+The branch is compiled against RimWorld 1.4. Multiplayer is not runtime-verified on this historical RimWorld version.
 
 Requires Harmony. No settings or save data. Do not enable this with Construction Queue Optimizer because that legacy package contains the same patches.]]></description>
   <modDependencies>

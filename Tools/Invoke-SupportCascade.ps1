@@ -269,8 +269,26 @@ function Commit-BranchPayload
         $paths += 'Defs/ConstructionPipelineOptimizerBootstrap'
     }
 
-    Invoke-Git add -- @paths
-    $changes = @(Get-GitOutput status --porcelain -- @paths)
+    $stagePaths = @($paths | Where-Object {
+        if (Test-Path -LiteralPath $_)
+        {
+            return $true
+        }
+
+        $tracked = @(& git ls-files -- $_)
+        return $tracked.Count -gt 0
+    })
+    if ($stagePaths.Count -gt 0)
+    {
+        Invoke-Git add -- @stagePaths
+    }
+
+    $changes = @(
+        if ($stagePaths.Count -gt 0)
+        {
+            Get-GitOutput status --porcelain -- @stagePaths
+        }
+    )
     if ($changes.Count -eq 0)
     {
         Write-Host "No payload changes to commit for RimWorld $Version."

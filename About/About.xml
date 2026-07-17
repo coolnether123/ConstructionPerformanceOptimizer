@@ -3,5 +3,5 @@
   <name>Construction Pipeline Optimizer</name>
   <author>Coolnether123</author>
   <targetVersion>0.16.1393</targetVersion>
-  <description>Reduces redundant work selection in the zero-cost terrain construction pipeline. Requires Harmony. No settings or save data.</description>
+  <description>Reduces repeated active construction validation and redundant zero-cost terrain work selection. Requires Harmony. No settings or save data.</description>
 </ModMetaData>

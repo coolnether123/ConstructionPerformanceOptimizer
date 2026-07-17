@@ -33,21 +33,28 @@ $PackageRoot = [System.IO.Path]::GetFullPath($PackageRoot)
 $aboutPath = Get-RequiredPath 'About\About.xml'
 $previewPath = Get-RequiredPath 'About\Preview.png'
 $loadFoldersPath = Get-RequiredPath 'LoadFolders.xml'
-$supportedVersions = @('1.0', '1.1', '1.2', '1.3', '1.4', '1.5', '1.6')
+$allowedVersions = @('1.6')
+[xml]$about = Get-Content -LiteralPath $aboutPath -Raw
+$metadata = $about.ModMetaData
+Assert-Condition ($null -ne $metadata) 'About.xml must have ModMetaData as its root element.'
+$supportedVersions = @($metadata.supportedVersions.li | ForEach-Object { [string]$_ })
+Assert-Condition ($supportedVersions.Count -gt 0) 'About.xml must declare at least one supported RimWorld version.'
+foreach ($supportedVersion in $supportedVersions)
+{
+    Assert-Condition ($allowedVersions -contains $supportedVersion) "About.xml declares an unsupported version: $supportedVersion"
+}
 $assemblyPaths = @{}
 foreach ($supportedVersion in $supportedVersions)
 {
     $assemblyPaths[$supportedVersion] = Get-RequiredPath "$supportedVersion\Assemblies\Construction Pipeline Optimizer.dll"
+    $null = Get-RequiredPath "$supportedVersion\Assemblies\0MultiplayerAPI.dll"
 }
 $null = Get-RequiredPath 'LICENSE'
 $null = Get-RequiredPath 'README.md'
 $null = Get-RequiredPath 'CHANGELOG.md'
 
-[xml]$about = Get-Content -LiteralPath $aboutPath -Raw
 [xml]$loadFolders = Get-Content -LiteralPath $loadFoldersPath -Raw
-$metadata = $about.ModMetaData
 
-Assert-Condition ($null -ne $metadata) 'About.xml must have ModMetaData as its root element.'
 Assert-Condition ($metadata.name -eq 'Construction Pipeline Optimizer') 'Unexpected mod name in About.xml.'
 Assert-Condition ($metadata.author -eq 'Coolnether123') 'Unexpected author in About.xml.'
 Assert-Condition ($metadata.packageId -eq 'coolnether123.constructionpipelineoptimizer') 'Unexpected packageId in About.xml.'
@@ -93,4 +100,4 @@ if ($Distribution)
     Assert-Condition ($pdbFiles.Count -eq 0) 'Debug symbols must not be included in the public runtime archive.'
 }
 
-Write-Output "Package validation passed: $PackageRoot (version $($metadata.modVersion), RimWorld 1.0-1.6 assemblies)"
+Write-Output "Package validation passed: $PackageRoot (version $($metadata.modVersion), RimWorld $($supportedVersions -join ', ') assemblies)"

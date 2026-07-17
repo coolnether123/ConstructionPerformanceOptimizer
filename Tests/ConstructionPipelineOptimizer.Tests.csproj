@@ -10,5 +10,12 @@
   <ItemGroup>
     <Compile Include="..\Source\Scheduling\ValidationCadence.cs" Link="Scheduling\ValidationCadence.cs" />
     <Compile Include="..\Source\Infrastructure\MethodCallInspector.cs" Link="Infrastructure\MethodCallInspector.cs" />
+    <Compile Include="..\Source\Compatibility\PatchOwnerPolicy.cs" Link="Compatibility\PatchOwnerPolicy.cs" />
+    <Compile Include="..\Source\Infrastructure\Transpilers\FluentTranspiler.cs" Link="Transpilers\FluentTranspiler.cs" />
+    <Compile Include="..\Source\Infrastructure\Transpilers\FluentTranspilerCallRecipes.cs" Link="Transpilers\FluentTranspilerCallRecipes.cs" />
+    <Compile Include="..\Source\Infrastructure\Transpilers\FluentTranspilerValidation.cs" Link="Transpilers\FluentTranspilerValidation.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Lib.Harmony" Version="2.4.2" />
   </ItemGroup>
 </Project>

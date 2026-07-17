@@ -3,21 +3,17 @@
   <name>Construction Pipeline Optimizer</name>
   <author>Coolnether123</author>
   <packageId>coolnether123.constructionpipelineoptimizer</packageId>
-  <modVersion>1.0.0</modVersion>
+  <modVersion>1.1.0</modVersion>
   <supportedVersions>
-    <li>1.0</li>
-    <li>1.1</li>
-    <li>1.2</li>
-    <li>1.3</li>
-    <li>1.4</li>
-    <li>1.5</li>
     <li>1.6</li>
   </supportedVersions>
-  <description><![CDATA[Reduces redundant work selection and validation in the zero-cost construction pipeline used by Tilled Soil and similar terrain.
+  <description><![CDATA[Reduces redundant validation in active construction jobs and avoids one global work search in the zero-cost terrain pipeline.
 
-The optimization asks the active construction work giver to continue a completed no-cost frame into its approved FinishFrame job, distributes repeated defensive validation over a deterministic cadence where that vanilla hook exists, and preserves a final authorization check immediately before completion.
+The optimization asks the active construction work giver for the next job after a completed no-cost frame, preserving mod-supplied replacement and prerequisite jobs. When the exact vanilla validation hook is free of direct Harmony conflicts, it distributes repeated FinishFrame validation over a deterministic cadence and pairs that with a final authorization check immediately before completion. If compatibility or IL checks fail, the broad feature disables itself instead of guessing.
 
-No settings or save data. Safe to add or remove between saves. For Multiplayer, every peer must use the same version and load order.
+No settings or save data. Normally safe to add or remove between sessions, but keep a normal save backup when changing a mod list.
+
+RimWorld Multiplayer is supported on RimWorld 1.6. CPO uses the official Multiplayer API only for detection and keeps construction decisions inside Multiplayer's deterministic map-tick simulation. Every player must use the same CPO version and mod list.
 
 Do not enable this with Construction Queue Optimizer; that legacy package contains the same construction patches.]]></description>
   <modDependencies>

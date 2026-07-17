@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <name>CPO Foreign Validation Owner (Benchmark Only)</name>
+  <author>Coolnether123</author>
+  <packageId>benchmark.cpo.foreignvalidationowner</packageId>
+  <supportedVersions>
+    <li>1.6</li>
+  </supportedVersions>
+  <description>Decision-neutral benchmark fixture for verifying CPO's foreign-owner shutdown path. Never distribute or use in normal play.</description>
+  <modDependencies>
+    <li>
+      <packageId>brrainz.harmony</packageId>
+      <displayName>Harmony</displayName>
+    </li>
+  </modDependencies>
+  <loadBefore>
+    <li>coolnether123.constructionpipelineoptimizer</li>
+  </loadBefore>
+</ModMetaData>

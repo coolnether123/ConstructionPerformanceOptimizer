@@ -14,7 +14,6 @@ namespace ConstructionPipelineOptimizer.Bootstrap
     {
         internal static PatchInstallationReport Install(Harmony harmony)
         {
-#if RW_VALIDATION_THROTTLE
             ValidationPatchCompatibilityReport compatibility;
             try
             {
@@ -55,11 +54,6 @@ namespace ConstructionPipelineOptimizer.Bootstrap
                     harmony.Id);
                 completionGuard = false;
             }
-#else
-            string compatibility = "not available on this RimWorld version";
-            bool completionGuard = false;
-            bool validationThrottle = false;
-#endif
 
             // Direct continuation is independent: it still asks the vanilla work giver for
             // the next job and can remain enabled if the validation optimization is disabled.

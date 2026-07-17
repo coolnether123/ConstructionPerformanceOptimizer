@@ -1,126 +1,40 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
-    <Configurations>Debug;Release;Alpha4;0.13;0.14;0.15;0.16;0.17;0.18;0.19;1.0;1.1;1.2;1.3;1.4;1.5;1.6</Configurations>
+    <Configurations>Debug;Release;1.6</Configurations>
     <LangVersion>latest</LangVersion>
     <Nullable>disable</Nullable>
     <AssemblyName>Construction Pipeline Optimizer</AssemblyName>
     <RootNamespace>ConstructionPipelineOptimizer</RootNamespace>
-    <Version>1.0.0</Version>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
-    <InformationalVersion>1.0.0</InformationalVersion>
+    <Version>1.1.0</Version>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
+    <InformationalVersion>1.1.0</InformationalVersion>
     <!-- Keep release binaries reproducible before and after a Git commit. The
          benchmark and Workshop package can therefore use the exact same DLL. -->
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <Authors>Coolnether123</Authors>
-    <Description>Adaptive deterministic construction pipeline optimization for RimWorld.</Description>
+    <Description>Adaptive deterministic construction pipeline optimization for RimWorld 1.6.</Description>
     <Copyright>Copyright © 2026 Coolnether123</Copyright>
     <Deterministic>true</Deterministic>
     <DisableImplicitConfigurationDefines>true</DisableImplicitConfigurationDefines>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <EffectiveRimWorldVersion Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release'">1.6</EffectiveRimWorldVersion>
-    <EffectiveRimWorldVersion Condition="'$(EffectiveRimWorldVersion)' == ''">$(Configuration)</EffectiveRimWorldVersion>
-    <OutputPath>..\$(EffectiveRimWorldVersion)\Assemblies\</OutputPath>
+    <DebugType Condition="'$(Configuration)' != 'Debug'">None</DebugType>
+    <OutputPath>..\1.6\Assemblies\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(EffectiveRimWorldVersion)' == '1.0'">
-    <RimWorldRefVersion>1.0.2559</RimWorldRefVersion>
-    <DefineConstants>TRACE;RW_1_0;RW_CANCONSTRUCT_4;RW_WORKGIVER_FORCED;RW_VALIDATION_THROTTLE</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(EffectiveRimWorldVersion)' == '1.1'">
-    <RimWorldRefVersion>1.1.2654</RimWorldRefVersion>
-    <DefineConstants>TRACE;RW_1_1;RW_CANCONSTRUCT_4;RW_WORKGIVER_FORCED;RW_JOB_WORKGIVERDEF;RW_VALIDATION_THROTTLE</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(EffectiveRimWorldVersion)' == '1.2'">
-    <RimWorldRefVersion>1.2.3062</RimWorldRefVersion>
-    <DefineConstants>TRACE;RW_1_2;RW_CANCONSTRUCT_4;RW_WORKGIVER_FORCED;RW_JOB_WORKGIVERDEF;RW_VALIDATION_THROTTLE</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(EffectiveRimWorldVersion)' == '1.3'">
-    <RimWorldRefVersion>1.3.3389</RimWorldRefVersion>
-    <DefineConstants>TRACE;RW_1_3;RW_CANCONSTRUCT_4;RW_WORKGIVER_FORCED;RW_JOB_WORKGIVERDEF;RW_COSTLIST_PROPERTY;RW_VALIDATION_THROTTLE</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(EffectiveRimWorldVersion)' == '1.4'">
-    <RimWorldRefVersion>1.4.3901</RimWorldRefVersion>
-    <DefineConstants>TRACE;RW_1_4;RW_CANCONSTRUCT_4;RW_WORKGIVER_FORCED;RW_JOB_WORKGIVERDEF;RW_COSTLIST_PROPERTY;RW_VALIDATION_THROTTLE</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(EffectiveRimWorldVersion)' == '1.5'">
-    <RimWorldRefVersion>1.5.4409</RimWorldRefVersion>
-    <DefineConstants>TRACE;RW_1_5;RW_CANCONSTRUCT_5;RW_WORKGIVER_FORCED;RW_JOB_WORKGIVERDEF;RW_COSTLIST_PROPERTY;RW_VALIDATION_THROTTLE</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(EffectiveRimWorldVersion)' == '1.6'">
-    <RimWorldRefVersion>1.6.4850</RimWorldRefVersion>
-    <DefineConstants>TRACE;RW_1_6;RW_CANCONSTRUCT_5;RW_WORKGIVER_FORCED;RW_JOB_WORKGIVERDEF;RW_COSTLIST_PROPERTY;RW_VALIDATION_THROTTLE</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <LegacyRimWorldRoot>$(MSBuildThisFileDirectory)..\..\..\GitHub\Coolnether123\Better-Work-Tab\Decompiled\RimWorld</LegacyRimWorldRoot>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(EffectiveRimWorldVersion)' == 'Alpha4'">
-    <LegacyRimWorldManagedDir>$(LegacyRimWorldRoot)\SteamInstall_Alpha4\RimWorldWin_Data\Managed</LegacyRimWorldManagedDir>
-    <DefineConstants>TRACE;RW_ALPHA4;RW_PRE_1_0</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(EffectiveRimWorldVersion)' == '0.13'">
-    <LegacyRimWorldManagedDir>$(LegacyRimWorldRoot)\SteamInstall_0.13\RimWorldWin_Data\Managed</LegacyRimWorldManagedDir>
-    <DefineConstants>TRACE;RW_0_13;RW_PRE_1_0;RW_CANCONSTRUCT_2</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(EffectiveRimWorldVersion)' == '0.14'">
-    <LegacyRimWorldManagedDir>$(LegacyRimWorldRoot)\SteamInstall_0.14\RimWorldWin_Data\Managed</LegacyRimWorldManagedDir>
-    <DefineConstants>TRACE;RW_0_14;RW_PRE_1_0;RW_CANCONSTRUCT_2</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(EffectiveRimWorldVersion)' == '0.15'">
-    <LegacyRimWorldManagedDir>$(LegacyRimWorldRoot)\SteamInstall_0.15\RimWorldWin_Data\Managed</LegacyRimWorldManagedDir>
-    <DefineConstants>TRACE;RW_0_15;RW_PRE_1_0;RW_CANCONSTRUCT_2</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(EffectiveRimWorldVersion)' == '0.16'">
-    <LegacyRimWorldManagedDir>$(LegacyRimWorldRoot)\SteamInstall_0.16\RimWorldWin_Data\Managed</LegacyRimWorldManagedDir>
-    <DefineConstants>TRACE;RW_0_16;RW_PRE_1_0;RW_CANCONSTRUCT_2</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(EffectiveRimWorldVersion)' == '0.17'">
-    <LegacyRimWorldManagedDir>$(LegacyRimWorldRoot)\SteamInstall_0.17\RimWorldWin64_Data\Managed</LegacyRimWorldManagedDir>
-    <DefineConstants>TRACE;RW_0_17;RW_PRE_1_0;RW_CANCONSTRUCT_3;RW_WORKGIVER_FORCED</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(EffectiveRimWorldVersion)' == '0.18'">
-    <LegacyRimWorldManagedDir>$(LegacyRimWorldRoot)\SteamInstall_0.18\RimWorldWin64_Data\Managed</LegacyRimWorldManagedDir>
-    <DefineConstants>TRACE;RW_0_18;RW_PRE_1_0;RW_CANCONSTRUCT_3;RW_WORKGIVER_FORCED;RW_VALIDATION_THROTTLE</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(EffectiveRimWorldVersion)' == '0.19'">
-    <LegacyRimWorldManagedDir>$(LegacyRimWorldRoot)\SteamInstall_0.19\RimWorldWin64_Data\Managed</LegacyRimWorldManagedDir>
-    <DefineConstants>TRACE;RW_0_19;RW_PRE_1_0;RW_CANCONSTRUCT_4;RW_WORKGIVER_FORCED;RW_VALIDATION_THROTTLE</DefineConstants>
-  </PropertyGroup>
-
-  <ItemGroup Condition="'$(RimWorldRefVersion)' != ''">
-    <PackageReference Include="Krafs.Rimworld.Ref" Version="$(RimWorldRefVersion)" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(RimWorldRefVersion)' != '' And '$(EffectiveRimWorldVersion)' != '1.0'">
+  <ItemGroup>
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.4850" />
     <PackageReference Include="Lib.Harmony" Version="2.4.2" ExcludeAssets="runtime" />
+    <PackageReference Include="RimWorld.MultiplayerAPI" Version="0.6.0" />
   </ItemGroup>
-  <ItemGroup Condition="'$(EffectiveRimWorldVersion)' == '1.0'">
-    <Reference Include="0Harmony">
-      <HintPath>$(NuGetPackageRoot)lib.harmony\2.3.6\lib\net35\0Harmony.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <PackageReference Include="Lib.Harmony" Version="2.3.6" ExcludeAssets="compile;runtime" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(LegacyRimWorldManagedDir)' != ''">
-    <Reference Include="Assembly-CSharp">
-      <HintPath>$(LegacyRimWorldManagedDir)\Assembly-CSharp.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>$(LegacyRimWorldManagedDir)\UnityEngine.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="0Harmony">
-      <HintPath>$(NuGetPackageRoot)lib.harmony\2.3.6\lib\net35\0Harmony.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <PackageReference Include="Lib.Harmony" Version="2.3.6" ExcludeAssets="compile;runtime" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(EffectiveRimWorldVersion)' == 'Alpha4' Or '$(EffectiveRimWorldVersion)' == '0.13' Or '$(EffectiveRimWorldVersion)' == '0.14' Or '$(EffectiveRimWorldVersion)' == '0.15' Or '$(EffectiveRimWorldVersion)' == '0.16' Or '$(EffectiveRimWorldVersion)' == '0.17'">
-    <Compile Remove="Infrastructure\FinishFrameMethodTargets.cs" />
-    <Compile Remove="Patches\FinishFrameValidationThrottlePatch.cs" />
-    <Compile Remove="Patches\FinishFrameCompletionGuardPatch.cs" />
-  </ItemGroup>
+
+  <Target
+    Name="RejectHistoricalApiConfiguration"
+    BeforeTargets="PrepareForBuild"
+    Condition="'$(Configuration)' != 'Debug' And '$(Configuration)' != 'Release' And '$(Configuration)' != '1.6'">
+    <Error Text="Dev targets RimWorld 1.6 only. Build historical APIs from their Support/&lt;version&gt; branches." />
+  </Target>
 </Project>

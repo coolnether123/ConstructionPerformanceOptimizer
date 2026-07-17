@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 using ConstructionPipelineOptimizer.Infrastructure;
+using ConstructionPipelineOptimizer.Infrastructure.Transpilers;
 using ConstructionPipelineOptimizer.Scheduling;
 using HarmonyLib;
 using RimWorld;
@@ -20,69 +20,44 @@ namespace ConstructionPipelineOptimizer.Patches
     {
         internal const int ValidationInterval = 15;
 
+        private static readonly MethodInfo CadenceValidator = AccessTools.DeclaredMethod(
+            typeof(FinishFrameValidationThrottlePatch),
+            nameof(CanConstructOnCadence));
+
         private static MethodBase TargetMethod() => FinishFrameMethodTargets.ValidationPredicate();
 
-        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        private static IEnumerable<CodeInstruction> Transpiler(
+            IEnumerable<CodeInstruction> instructions,
+            MethodBase original)
         {
-            int replacements = 0;
-            foreach (CodeInstruction instruction in instructions)
-            {
-                if (instruction.Calls(FinishFrameMethodTargets.CanConstruct))
-                {
-                    instruction.opcode = System.Reflection.Emit.OpCodes.Call;
-                    instruction.operand = AccessTools.Method(
-                        typeof(FinishFrameValidationThrottlePatch),
-                        nameof(CanConstructOnCadence));
-                    replacements++;
-                }
-
-                yield return instruction;
-            }
-
-            if (replacements != 1)
-            {
-                throw new InvalidOperationException(
-                    $"Expected one CanConstruct call in FinishFrame validation; replaced {replacements}.");
-            }
+            return FluentTranspiler.Execute(instructions, original, null, transpiler =>
+                transpiler
+                    .ForCall(FinishFrameMethodTargets.CanConstruct)
+                    .ReplaceSingleWith(CadenceValidator));
         }
 
-#if RW_CANCONSTRUCT_3
-        private static bool CanConstructOnCadence(
-            Thing thing,
-            Pawn pawn,
-            bool forced)
-#elif RW_CANCONSTRUCT_4
-        private static bool CanConstructOnCadence(
-            Thing thing,
-            Pawn pawn,
-            bool checkSkills,
-            bool forced)
-#else
         private static bool CanConstructOnCadence(
             Thing thing,
             Pawn pawn,
             bool checkSkills,
             bool forced,
             JobDef jobForReservation)
-#endif
         {
-            if (ValidationCadence.ShouldValidate(
-                    Find.TickManager.TicksGame,
-                    pawn.thingIDNumber,
-                    ValidationInterval))
+            // Multiplayer supplies the ticking map's deterministic map tick through
+            // TickManager while this toil executes. The stable pawn ID distributes the
+            // cadence identically on every peer without consuming random state.
+            bool shouldValidate = ValidationCadence.ShouldValidate(
+                Find.TickManager.TicksGame,
+                pawn.thingIDNumber,
+                ValidationInterval);
+            if (shouldValidate)
             {
-#if RW_CANCONSTRUCT_3
-                return GenConstruct.CanConstruct(thing, pawn, forced);
-#elif RW_CANCONSTRUCT_4
-                return GenConstruct.CanConstruct(thing, pawn, checkSkills, forced);
-#else
                 return GenConstruct.CanConstruct(
                     thing,
                     pawn,
                     checkSkills,
                     forced,
                     jobForReservation);
-#endif
             }
 
             // The vanilla fail predicate negates this result; true therefore means "do not

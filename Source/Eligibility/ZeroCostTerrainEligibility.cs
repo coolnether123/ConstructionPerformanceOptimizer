@@ -1,12 +1,7 @@
 using Verse;
-#if RW_ALPHA4
-using FrameType = global::Frame;
-using TerrainDefType = Verse.TerrainDef;
-#else
 using RimWorld;
 using FrameType = RimWorld.Frame;
 using TerrainDefType = Verse.TerrainDef;
-#endif
 
 namespace ConstructionPipelineOptimizer.Eligibility
 {
@@ -26,11 +21,7 @@ namespace ConstructionPipelineOptimizer.Eligibility
                 return false;
             }
 
-#if RW_COSTLIST_PROPERTY
             return terrain.CostList == null || terrain.CostList.Count == 0;
-#else
-            return terrain.costList == null || terrain.costList.Count == 0;
-#endif
         }
     }
 }

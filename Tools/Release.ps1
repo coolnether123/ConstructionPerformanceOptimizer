@@ -11,7 +11,7 @@ if (-not $stagingBase.Equals($expectedStagingBase, [System.StringComparison]::Or
     throw "Unsafe staging path resolved outside the expected project location: $stagingBase"
 }
 
-# The public 1.0.0 package supports RimWorld 1.6 only. Older API builds remain
+# The public package supports RimWorld 1.6 only. Older API builds remain
 # repository engineering fixtures and are deliberately excluded from this archive.
 $modernVersions = @('1.6')
 & powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot 'Build-AllVersions.ps1') -Versions $modernVersions
@@ -58,7 +58,10 @@ try
     {
         $stagedAssemblies = Join-Path $stagedPackage "$modernVersion\Assemblies"
         New-Item -ItemType Directory -Force -Path $stagedAssemblies | Out-Null
-        Copy-Item -LiteralPath (Join-Path $projectRoot "$modernVersion\Assemblies\Construction Pipeline Optimizer.dll") -Destination $stagedAssemblies
+        foreach ($runtimeAssembly in 'Construction Pipeline Optimizer.dll', '0MultiplayerAPI.dll')
+        {
+            Copy-Item -LiteralPath (Join-Path $projectRoot "$modernVersion\Assemblies\$runtimeAssembly") -Destination $stagedAssemblies
+        }
     }
 
     foreach ($relativePath in 'LoadFolders.xml', 'LICENSE', 'README.md', 'CHANGELOG.md')

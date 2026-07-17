@@ -2,8 +2,9 @@
 
 ## Before publishing
 
-The public package targets RimWorld 1.6 only. Older API assemblies are compile/static
-engineering fixtures and must not be copied into the Workshop archive.
+The public package and `Dev` source target RimWorld 1.6 only. Older API source remains
+on `Support/<version>` branches, while historical DLL folders in `Dev` are engineering
+artifacts and must not be copied into the Workshop archive.
 
 1. Close RimWorld or ensure the focused package is not being copied over while
    the game is loading assemblies.
@@ -14,15 +15,22 @@ engineering fixtures and must not be copied into the Workshop archive.
 3. Run `Tools/Release.ps1` from PowerShell.
 4. Confirm the script reports successful tests, build, package validation, ZIP
    creation, and SHA-256 creation.
-5. Use the generated runtime-only folder at
+5. Confirm the generated DLL hash matches the artifact named by the current benchmark
+   and Workshop performance text. Any transpiler or runtime source change requires a new
+   in-game smoke and an explicit evidence update before publication.
+6. Use the generated runtime-only folder at
    `Releases/ConstructionPipelineOptimizer-<version>/ConstructionPipelineOptimizer`.
    The ZIP contains this same `ConstructionPipelineOptimizer` root.
-6. Test that extracted package in a fresh RimWorld 1.6 process with Harmony and
+7. Test that extracted package in a fresh RimWorld 1.6 process with Harmony and
    Tilled Soil.
-7. Test a save containing ordinary material-bearing construction and zero-cost
+8. Test a save containing ordinary material-bearing construction and zero-cost
    terrain construction.
-8. Run a two-client Multiplayer desync test with identical DLLs and load order.
-9. Verify the startup diagnostic reports the expected adaptive state. Test once with
+9. Run the normal-save two-client smoke and verify identical paused simulation
+   clocks, construction progress, and `desynced=False` on both peers. Do not enable
+   the runtime Harmony construction probe in this acceptance run.
+10. Verify `About.xml` and the Workshop description describe RimWorld 1.6
+    Multiplayer support and require matching CPO versions/mod lists.
+11. Verify the startup diagnostic reports the expected adaptive state. Test once with
    a controlled foreign owner on the exact validation predicate and confirm both the
    cadence and completion guard remain off while continuation stays independent.
 
@@ -59,7 +67,6 @@ engineering fixtures and must not be copied into the Workshop archive.
   and intentionally disabled.
 - Zero-cost terrain completes successfully.
 - Restart and Play Again/save-load behavior is unaffected.
-- Multiplayer remains synchronized in a real two-client run.
-- If the two-client test has not been completed, every public description explicitly
-  labels Multiplayer compatibility as expected but unverified.
+- `rwmt.multiplayer` is not declared incompatible, `0MultiplayerAPI.dll` is present
+  in the 1.6 runtime folder, and public descriptions match the verified support scope.
 - The published ZIP checksum matches its `.sha256` sidecar.

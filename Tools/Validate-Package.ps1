@@ -33,7 +33,7 @@ $PackageRoot = [System.IO.Path]::GetFullPath($PackageRoot)
 $aboutPath = Get-RequiredPath 'About\About.xml'
 $previewPath = Get-RequiredPath 'About\Preview.png'
 $loadFoldersPath = Get-RequiredPath 'LoadFolders.xml'
-$allowedVersions = @('1.0', '1.1', '1.2', '1.3', '1.4', '1.5', '1.6')
+$allowedVersions = @('1.6')
 [xml]$about = Get-Content -LiteralPath $aboutPath -Raw
 $metadata = $about.ModMetaData
 Assert-Condition ($null -ne $metadata) 'About.xml must have ModMetaData as its root element.'
@@ -47,6 +47,7 @@ $assemblyPaths = @{}
 foreach ($supportedVersion in $supportedVersions)
 {
     $assemblyPaths[$supportedVersion] = Get-RequiredPath "$supportedVersion\Assemblies\Construction Pipeline Optimizer.dll"
+    $null = Get-RequiredPath "$supportedVersion\Assemblies\0MultiplayerAPI.dll"
 }
 $null = Get-RequiredPath 'LICENSE'
 $null = Get-RequiredPath 'README.md'

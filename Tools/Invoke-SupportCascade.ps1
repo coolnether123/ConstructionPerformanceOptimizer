@@ -7,9 +7,10 @@ The cascade follows the same direction as Better Work Tab:
 
   Dev -> Support/1.5 -> ... -> Support/0.13 -> Support/Alpha4
 
-Each branch receives the previous branch, builds against its own RimWorld API,
-runs the shared API-shape audit, and commits only its payload/legacy metadata.
-Missing branches can be initialized locally. Nothing is pushed unless -Push is
+Dev contains only RimWorld 1.6 source and build references. Each Support/<version>
+branch owns the source and project adaptations for its historical API. The cascade
+merges modern changes downward, builds and audits on the owning branch, and copies
+only rebuilt versioned DLL folders back to Dev. Nothing is pushed unless -Push is
 provided explicitly.
 #>
 param(
@@ -19,7 +20,6 @@ param(
     [string[]]$SupportVersions = @(
         '1.5', '1.4', '1.3', '1.2', '1.1', '1.0', '0.19', '0.18',
         '0.17', '0.16', '0.15', '0.14', '0.13', 'Alpha4'),
-    [switch]$InitializeMissingBranches,
     [switch]$SkipSourceBuild,
     [switch]$SkipPayloadCopyBackToDev,
     [switch]$Push
@@ -234,12 +234,10 @@ foreach ($version in $SupportVersions)
     $branch = "Support/$version"
     if (-not (Test-BranchExists $branch))
     {
-        if (-not $InitializeMissingBranches)
-        {
-            throw "Missing branch $branch. Rerun with -InitializeMissingBranches to create it from $previousBranch."
-        }
-
-        Invoke-Git branch $branch $previousBranch
+        throw (
+            "Missing branch $branch. Historical API source must be created and reviewed " +
+            "on its own Support/<version> branch; the cascade will not synthesize it from " +
+            "$previousBranch.")
     }
 
     Invoke-Git checkout $branch

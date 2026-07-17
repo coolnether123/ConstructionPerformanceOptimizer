@@ -3,7 +3,7 @@
 A focused RimWorld construction performance mod that reduces repeated active-frame
 validation and avoids one global work search in the zero-cost terrain pipeline.
 
-Version: **1.0.0**
+Version: **1.1.0**
 
 Dependencies: **Harmony**
 
@@ -19,7 +19,7 @@ This mod asks the active `ConstructFinishFrames` work giver for the next job whe
 newly placed zero-cost terrain frame remains eligible. It preserves the returned job
 exactly, including replacement or prerequisite jobs supplied by another mod.
 
-Where vanilla has a repeated `CanConstruct` fail condition (0.18+), the mod can
+Where RimWorld 1.6 has a repeated `CanConstruct` fail condition, the mod can
 distribute that check across a deterministic 15-tick cadence for every active
 `FinishFrame` job. It enables this broad optimization only when the exact generated
 validation method has no foreign Harmony owner. Downstream patches remain in the
@@ -28,9 +28,20 @@ changes the expected method shape. A paired, targeted completion guard always ru
 the real construction authorization immediately before completion. If either half of
 that safety pair cannot install, neither remains active.
 
+Both IL rewrites run through a focused fluent transpiler layer adapted from Better Work
+Tab's `Spine.Harmony` framework. It rejects missing or ambiguous call sites, validates
+hook stack signatures before mutation, preserves labels and exception-block metadata,
+and lints branch targets before Harmony receives the rewritten method.
+
 The package deliberately excludes every non-construction optimization from the earlier all-in-one experiment.
 
 ## Current benchmark
+
+The figures below belong to the tagged pre-hardening 1.0.0 DLL with SHA-256
+`64E3FED700B75BA4B349867D98E783ED317EF50B434D1EF2E6AB783D5834D212`.
+They remain historical performance evidence rather than a claim about the hardened
+1.1.0 binary. The separately validated 1.1.0 DLL has SHA-256
+`9D4FDA8F3F6EF33AE3D6F181BFDAB0E15D6B1A228C89F48A332E239471AC0EEA`.
 
 On the derived 12,000 Tilled Soil blueprint fixture, the exact committed 1.6 DLL was
 tested in nine fresh-process 60-second samples per arm, randomized across three
@@ -59,11 +70,15 @@ optimizations from the earlier broad package have substantial alternatives.
 
 ## Multiplayer
 
-The cadence uses only `TicksGame` and pawn IDs, and the mod stores no save data.
-Multiplayer compatibility is expected from that deterministic design but has not
-been verified in a two-client session. It is therefore **not currently claimed as
-supported**. Anyone testing it must use the identical DLL and load order on every
-peer and report any desync.
+RimWorld 1.6 Multiplayer is supported. CPO uses the official Multiplayer API for
+detection and makes its cadence decisions from synchronized game ticks and stable pawn
+IDs. It does not send independent UI commands or maintain peer-local gameplay state.
+
+Release validation used Multiplayer's normal save-host path with two rendered RimWorld
+instances, 75 active mods, three maps, and more than 11,000 construction blueprints.
+Two CPO-enabled runs returned both peers to identical world/map clocks after active
+construction and reported no desync. A CPO-free control also passed. All players still
+need the same CPO version and mod list, as with any deterministic gameplay patch.
 
 ## Installation
 
@@ -80,21 +95,22 @@ always keep a normal save backup when changing a large mod list.
 ## Compatibility
 
 - RimWorld **1.6 is the supported public release target**.
-- RimWorld 1.0-1.5 builds are compile-surface experiments, not public support.
-- Alpha 4-0.19 static/compile fixtures remain separate legacy engineering artifacts,
-  not equally certified downloads.
+- Historical builds are produced from their matching `Support/<version>` branches.
+  Their rebuilt DLL folders may be copied back to `Dev`, but their source-level API
+  adaptations are not carried in the 1.6 development tree.
 - Harmony is required.
 - Tilled Soil is supported but is not a required dependency.
-- Multiplayer is unverified; matching versions and load order are requirements for
-  testing, not evidence of support.
+- RimWorld 1.6 Multiplayer is supported and ships the official optional API bridge.
+- RimWorld 1.5 Multiplayer remains compile-surface-only until a runnable 1.5 game
+  installation is available for a two-client test.
 - Mods that patch `WorkGiver_ConstructFinishFrames.JobOnThing` remain in the
   continuation decision path. Full replacements still warrant a compatibility test.
 - A foreign Harmony owner present on the exact generated validation predicate when
   CPO installs disables the broad cadence and its completion guard. Installation is
   deferred until the current long loading event finishes. The independent zero-cost
   continuation can remain enabled.
-- Compile success is not runtime certification. Alpha 4, 0.13-0.19, and the installed
-  1.6 assembly have static IL evidence; 1.0-1.5 are compile-surface verified only.
+- Compile success is not runtime certification. See the compatibility matrix for the
+  evidence attached to historical branch payloads.
 - The package is explicitly incompatible with the legacy
   `coolnether123.constructionqueueoptimizer` package.
 
@@ -104,17 +120,18 @@ always keep a normal save backup when changing a large mod list.
 & .\Tools\Build.ps1 -Configuration Release
 ```
 
-To compile and API-audit every locally available RimWorld API:
+To compile and API-audit the current RimWorld 1.6 source:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\Tools\Build-AllVersions.ps1
 ```
 
-The support cascade uses local `Dev` and `Support/*` branches and never pushes
-unless `-Push` is explicitly supplied:
+The support cascade merges changes down through existing local `Support/*` branches,
+where each branch owns its historical API source. It copies only rebuilt DLL folders
+back to `Dev` and never pushes unless `-Push` is explicitly supplied:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\Tools\Invoke-SupportCascade.ps1 -InitializeMissingBranches
+powershell -ExecutionPolicy Bypass -File .\Tools\Invoke-SupportCascade.ps1
 ```
 
 To create the publishable runtime archive:

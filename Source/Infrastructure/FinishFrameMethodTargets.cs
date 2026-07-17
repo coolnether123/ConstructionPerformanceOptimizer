@@ -5,13 +5,8 @@ using HarmonyLib;
 using RimWorld;
 using Verse;
 using Verse.AI;
-#if RW_ALPHA4
-using FrameType = global::Frame;
-using FinishFrameDriverType = Verse.AI.JobDriver_ConstructFinishFrame;
-#else
 using FrameType = RimWorld.Frame;
 using FinishFrameDriverType = RimWorld.JobDriver_ConstructFinishFrame;
-#endif
 
 namespace ConstructionPipelineOptimizer.Infrastructure
 {
@@ -20,36 +15,15 @@ namespace ConstructionPipelineOptimizer.Infrastructure
     /// </summary>
     internal static class FinishFrameMethodTargets
     {
-#if RW_CANCONSTRUCT_2
-        internal static readonly MethodInfo CanConstruct = AccessTools.Method(
-            typeof(GenConstruct),
-            nameof(GenConstruct.CanConstruct),
-            new[] { typeof(Thing), typeof(Pawn) });
-#elif RW_CANCONSTRUCT_3
-        internal static readonly MethodInfo CanConstruct = AccessTools.Method(
-            typeof(GenConstruct),
-            nameof(GenConstruct.CanConstruct),
-            new[] { typeof(Thing), typeof(Pawn), typeof(bool) });
-#elif RW_CANCONSTRUCT_4
-        internal static readonly MethodInfo CanConstruct = AccessTools.Method(
-            typeof(GenConstruct),
-            nameof(GenConstruct.CanConstruct),
-            new[] { typeof(Thing), typeof(Pawn), typeof(bool), typeof(bool) });
-#else
         internal static readonly MethodInfo CanConstruct = AccessTools.Method(
             typeof(GenConstruct),
             nameof(GenConstruct.CanConstruct),
             new[] { typeof(Thing), typeof(Pawn), typeof(bool), typeof(bool), typeof(JobDef) });
-#endif
 
         internal static readonly MethodInfo CompleteConstruction = AccessTools.Method(
             typeof(FrameType),
             nameof(FrameType.CompleteConstruction),
-#if RW_ALPHA4
-            Type.EmptyTypes);
-#else
             new[] { typeof(Pawn) });
-#endif
 
         internal static MethodBase ValidationPredicate()
         {

@@ -1,7 +1,5 @@
 param(
-    [string[]]$Versions = @(
-        'Alpha4', '0.13', '0.14', '0.15', '0.16', '0.17', '0.18', '0.19',
-        '1.0', '1.1', '1.2', '1.3', '1.4', '1.5', '1.6'),
+    [string[]]$Versions = @('1.6'),
     [switch]$SkipPolicyTests,
     [switch]$SkipApiSurfaceTest
 )
@@ -9,6 +7,15 @@ param(
 $ErrorActionPreference = 'Stop'
 $projectRoot = [System.IO.Path]::GetFullPath((Split-Path -Parent $PSScriptRoot))
 $project = Join-Path $projectRoot 'Source\ConstructionPipelineOptimizer.csproj'
+$unsupportedVersions = @($Versions | Where-Object { $_ -ne '1.6' })
+if ($unsupportedVersions.Count -gt 0)
+{
+    throw (
+        "The Dev source tree targets RimWorld 1.6 only. " +
+        "Build historical versions from their Support/<version> branches through " +
+        "Invoke-SupportCascade.ps1. Requested here: " +
+        ($unsupportedVersions -join ', '))
+}
 
 if (-not $SkipPolicyTests)
 {
@@ -21,7 +28,7 @@ if (-not $SkipPolicyTests)
 
 foreach ($version in $Versions)
 {
-    Write-Host "== Building RimWorld $version =="
+    Write-Host '== Building RimWorld 1.6 from Dev =='
     & dotnet build $project -c $version
     if ($LASTEXITCODE -ne 0)
     {

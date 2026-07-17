@@ -3,6 +3,47 @@
 All notable changes to Construction Pipeline Optimizer are documented here.
 The project follows Semantic Versioning.
 
+## 1.1.0 - 2026-07-17
+
+### Changed
+
+- Made `Dev` a strict RimWorld 1.6 source tree: removed historical API
+  conditionals, references, bootstrap data, and build configurations. Historical
+  source remains branch-owned under `Support/<version>`, while only rebuilt DLL
+  payload folders cascade back to `Dev`.
+- Added the official Multiplayer API and made the validation cadence derive only
+  from deterministic game ticks and pawn IDs.
+- Verified RimWorld 1.6 Multiplayer through normal save hosting with two rendered
+  game instances, 75 active mods, three maps, and over 11,000 construction
+  blueprints. Two release-candidate runs completed synchronized construction with
+  identical map clocks and no desync; a CPO-free control also passed.
+- Added a multi-instance host/client harness with isolated save data, executable and
+  agent identities, authoritative Multiplayer simulation-clock barriers, WARP
+  isolation for the second renderer, desync detection, exact profile restoration,
+  and automatic failure-artifact preservation.
+- Prohibited the Agent's runtime Harmony construction probe in two-client runs after
+  proving that dynamically repatching the system under test can itself desynchronize
+  the session. Multiplayer acceptance uses synchronized before/after fixture counts.
+- Replaced both hand-written IL mutation loops with a focused fluent transpiler layer
+  adapted from Better Work Tab's `Spine.Harmony` system.
+- Added exact single-call selection, pre-mutation stack-signature checks, atomic input
+  cloning, label and exception-block preservation, guarded structural-edit policy, and
+  whole-stream call/branch linting.
+- Added off-game fluent transpiler tests for successful redirects, missing and ambiguous
+  targets, unsafe hook signatures, input-stream atomicity, generated completion-guard
+  control flow, and exception-handler rejection.
+
+### Verified
+
+- Deterministic policy and fluent-transpiler tests.
+- RimWorld 1.6 release build with zero warnings and API-shape audit.
+- Isolated 75-mod single-player construction smoke with Better Work Tab and the
+  legacy optimizer excluded.
+- Two repeatable normal-session Multiplayer construction passes with identical
+  host/client simulation clocks and no desync.
+- Exact 1.1.0 DLL SHA-256:
+  `9D4FDA8F3F6EF33AE3D6F181BFDAB0E15D6B1A228C89F48A332E239471AC0EEA`.
+
 ## 1.0.0 - 2026-07-15
 
 ### Changed

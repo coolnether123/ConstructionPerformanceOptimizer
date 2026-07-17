@@ -1,4 +1,3 @@
-#if RW_VALIDATION_THROTTLE
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -7,15 +6,9 @@ using HarmonyLib;
 using RimWorld;
 using Verse;
 using Verse.AI;
-#if RW_ALPHA4
-using FrameType = global::Frame;
-using FinishFrameDriverType = Verse.AI.JobDriver_ConstructFinishFrame;
-using FinishFramesWorkGiverType = Verse.AI.WorkGiver_ConstructFinishFrames;
-#else
 using FrameType = RimWorld.Frame;
 using FinishFrameDriverType = RimWorld.JobDriver_ConstructFinishFrame;
 using FinishFramesWorkGiverType = RimWorld.WorkGiver_ConstructFinishFrames;
-#endif
 
 namespace ConstructionPipelineOptimizer.Compatibility
 {
@@ -116,4 +109,3 @@ namespace ConstructionPipelineOptimizer.Compatibility
         }
     }
 }
-#endif

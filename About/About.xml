@@ -3,7 +3,7 @@
   <name>Construction Pipeline Optimizer</name>
   <author>Coolnether123</author>
   <packageId>coolnether123.constructionpipelineoptimizer</packageId>
-  <modVersion>1.0.0</modVersion>
+  <modVersion>1.1.0</modVersion>
   <supportedVersions>
     <li>1.6</li>
   </supportedVersions>
@@ -13,7 +13,7 @@ The optimization asks the active construction work giver for the next job after 
 
 No settings or save data. Normally safe to add or remove between sessions, but keep a normal save backup when changing a mod list.
 
-Multiplayer compatibility is expected from the deterministic design but has not been verified in a two-client session. If testing Multiplayer, every peer must use the same version and load order.
+RimWorld Multiplayer is supported on RimWorld 1.6. CPO uses the official Multiplayer API only for detection and keeps construction decisions inside Multiplayer's deterministic map-tick simulation. Every player must use the same CPO version and mod list.
 
 Do not enable this with Construction Queue Optimizer; that legacy package contains the same construction patches.]]></description>
   <modDependencies>

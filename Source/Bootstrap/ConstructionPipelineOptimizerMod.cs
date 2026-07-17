@@ -1,4 +1,5 @@
 using HarmonyLib;
+using Multiplayer.API;
 using Verse;
 
 namespace ConstructionPipelineOptimizer.Bootstrap
@@ -20,6 +21,14 @@ namespace ConstructionPipelineOptimizer.Bootstrap
             }
 
             initialized = true;
+            if (MP.enabled)
+            {
+                Log.Message(
+                    "[Construction Pipeline Optimizer] Multiplayer API detected; " +
+                    "construction optimizations will run inside Multiplayer's " +
+                    "deterministic map-tick context.");
+            }
+
             // Install each feature deliberately so a changed game method cannot leave a
             // safety-dependent optimization partially active.
             PatchInstallationReport report = PatchInstaller.Install(new Harmony(PackageId));
@@ -27,21 +36,8 @@ namespace ConstructionPipelineOptimizer.Bootstrap
         }
     }
 
-#if RW_ALPHA4
     /// <summary>
-    /// Alpha 4 constructs custom Def subclasses while loading XML. This small Def is the
-    /// supported entry point because that release predates the modern startup attribute.
-    /// </summary>
-    public sealed class ConstructionPipelineOptimizerBootstrapDef : Def
-    {
-        public ConstructionPipelineOptimizerBootstrapDef()
-        {
-            ConstructionPipelineOptimizerMod.Initialize();
-        }
-    }
-#else
-    /// <summary>
-    /// RimWorld 0.13 and newer discover this type during static-constructor startup.
+    /// RimWorld 1.6 discovers this type during static-constructor startup.
     /// </summary>
     [StaticConstructorOnStartup]
     internal static class ConstructionPipelineOptimizerStartup
@@ -54,5 +50,4 @@ namespace ConstructionPipelineOptimizer.Bootstrap
             LongEventHandler.ExecuteWhenFinished(ConstructionPipelineOptimizerMod.Initialize);
         }
     }
-#endif
 }

@@ -60,6 +60,8 @@ Assert(foreignOwners.Length == 1 && foreignOwners[0] == "other.mod",
 Assert(PatchOwnerPolicy.ForeignOwners(Array.Empty<string>(), "self").Length == 0,
     "An unpatched vanilla method should be eligible for the broad optimization.");
 
+FluentTranspilerTests.Run();
+
 Console.WriteLine("ConstructionPipelineOptimizer deterministic policy tests passed.");
 
 internal static class CallTarget

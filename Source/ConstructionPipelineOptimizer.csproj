@@ -6,12 +6,15 @@
     <Nullable>disable</Nullable>
     <AssemblyName>Construction Pipeline Optimizer</AssemblyName>
     <RootNamespace>ConstructionPipelineOptimizer</RootNamespace>
-    <Version>1.0.0</Version>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
-    <InformationalVersion>1.0.0</InformationalVersion>
+    <Version>1.1.0</Version>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
+    <InformationalVersion>1.1.0</InformationalVersion>
+    <!-- Keep release binaries reproducible before and after a Git commit. The
+         benchmark and Workshop package can therefore use the exact same DLL. -->
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <Authors>Coolnether123</Authors>
-    <Description>Deterministic zero-cost construction pipeline optimization for RimWorld 1.6.</Description>
+    <Description>Adaptive deterministic construction pipeline optimization for RimWorld.</Description>
     <Copyright>Copyright © 2026 Coolnether123</Copyright>
     <Deterministic>true</Deterministic>
     <DisableImplicitConfigurationDefines>true</DisableImplicitConfigurationDefines>
@@ -44,11 +47,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(EffectiveRimWorldVersion)' == '1.5'">
     <RimWorldRefVersion>1.5.4409</RimWorldRefVersion>
-    <DefineConstants>TRACE;RW_1_5;RW_CANCONSTRUCT_4;RW_WORKGIVER_FORCED;RW_JOB_WORKGIVERDEF;RW_COSTLIST_PROPERTY;RW_VALIDATION_THROTTLE</DefineConstants>
+    <DefineConstants>TRACE;RW_1_5;RW_CANCONSTRUCT_5;RW_WORKGIVER_FORCED;RW_JOB_WORKGIVERDEF;RW_COSTLIST_PROPERTY;RW_VALIDATION_THROTTLE;RW_MULTIPLAYER_API</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(EffectiveRimWorldVersion)' == '1.6'">
     <RimWorldRefVersion>1.6.4850</RimWorldRefVersion>
-    <DefineConstants>TRACE;RW_1_6;RW_CANCONSTRUCT_4;RW_WORKGIVER_FORCED;RW_JOB_WORKGIVERDEF;RW_COSTLIST_PROPERTY;RW_VALIDATION_THROTTLE</DefineConstants>
+    <DefineConstants>TRACE;RW_1_6;RW_CANCONSTRUCT_5;RW_WORKGIVER_FORCED;RW_JOB_WORKGIVERDEF;RW_COSTLIST_PROPERTY;RW_VALIDATION_THROTTLE;RW_MULTIPLAYER_API</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -92,6 +95,12 @@
   </ItemGroup>
   <ItemGroup Condition="'$(RimWorldRefVersion)' != '' And '$(EffectiveRimWorldVersion)' != '1.0'">
     <PackageReference Include="Lib.Harmony" Version="2.4.2" ExcludeAssets="runtime" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(EffectiveRimWorldVersion)' == '1.5'">
+    <PackageReference Include="RimWorld.MultiplayerAPI" Version="0.5.0" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(EffectiveRimWorldVersion)' == '1.6'">
+    <PackageReference Include="RimWorld.MultiplayerAPI" Version="0.6.0" />
   </ItemGroup>
   <ItemGroup Condition="'$(EffectiveRimWorldVersion)' == '1.0'">
     <Reference Include="0Harmony">

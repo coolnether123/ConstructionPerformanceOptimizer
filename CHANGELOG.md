@@ -37,8 +37,10 @@ The project follows Semantic Versioning.
   so they are directly installable rather than compile artifacts only.
 - Added the official MultiplayerAPI 0.5 bridge to the RimWorld 1.5 branch. Its build
   matches Multiplayer's open-source `rw-1.5` dependency. A normal two-client
-  construction run with 72 active mods advanced 13,411 synchronized ticks, completed
+  construction run with 72 active mods advanced 14,356 synchronized ticks, completed
   37 constructions, and reported no desync; a 71-mod CPO-free control also passed.
+- Made the raw 1.5 smoke evidence self-identifying with the exact game,
+  Multiplayer/API versions, CPO/API hashes, and release archive name.
 
 ### Verified
 

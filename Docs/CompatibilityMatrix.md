@@ -30,8 +30,9 @@ Detailed RimWorld 1.5 runtime evidence is recorded in
 - The 1.5 branch references `Assembly-CSharp` 1.5 and MultiplayerAPI 0.5.0, matching
   the open-source Multiplayer `rw-1.5` branch. Its isolated 100-blueprint save passed
   single-player construction and normal two-client Multiplayer runs with Better Work
-  Tab and the legacy optimizer excluded. The CPO-enabled run advanced from tick 23 to
-  13,434, completed 37 constructions, and kept both peers synchronized with no desync.
+  Tab and the legacy optimizer excluded. The final committed CPO-enabled run advanced
+  from tick 23 to 14,379, completed 37 constructions, and kept both peers synchronized
+  with no desync.
   The CPO-free control advanced to tick 13,839, completed 81 constructions, and also
   kept both peers synchronized with no desync.
 - The cascade fails closed when a required compiler-generated method has zero or

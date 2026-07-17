@@ -20,7 +20,7 @@ Verified on 2026-07-17 against RimWorld 1.5.4409 rev1120 and Multiplayer
 | Run | Active mods | Simulation | Construction | Synchronization |
 |---|---:|---|---|---|
 | Single-player fixture check | 72 | 5 seconds at ultrafast | 27 completed; fixture reduced from 100 to 73 | Completed |
-| CPO two-client acceptance | 72 | Tick 23 to 13,434 | 37 completed; fixture reduced from 100 to 63 | Host/client world and map clocks identical; no desync |
+| CPO two-client acceptance | 72 | Tick 23 to 14,379 | 37 completed; fixture reduced from 100 to 63 | Host/client world and map clocks identical; no desync |
 | CPO-free two-client control | 71 | Tick 23 to 13,839 | 81 completed; fixture reduced from 100 to 19 | Host/client world and map clocks identical; no desync |
 
 Both Multiplayer runs used normal save hosting, two rendered RimWorld processes,
@@ -41,8 +41,24 @@ the session.
 - Source-package and staged-distribution validation: passed.
 - CPO DLL SHA-256:
   `5173F7CB342F0C75218060B0DCE3172B6C091775AF6387D1D9029E964A0F69E7`
-- Release archive SHA-256:
-  `7FC74BF936A40CCC29DDE1F40DDD6AFA15865E263B4F928678004276AE4844E8`
+- MultiplayerAPI DLL SHA-256:
+  `4689E799C50DB79411B00AD8855D7DF86721BF3CFE1E390B68038B6ABCD852EC`
+- Final raw smoke report: `CPO-MultiplayerSmoke-20260717-173422.txt`
+- Raw smoke report SHA-256:
+  `E6CCEB0508045F115FACA2F9EE05AAAC98C3515A6D6BB834F9C822A4908C74C2`
+- The final release archive hash is recorded in
+  [`ReleaseStatus-1.1.0-rw1.5.md`](ReleaseStatus-1.1.0-rw1.5.md).
+
+The raw report identifies its own evidence chain:
+
+```text
+game.version=1.5.4409 rev1120
+multiplayer.version=0.10.7
+multiplayerApi.version=0.5
+artifact.cpoSha256=5173F7CB342F0C75218060B0DCE3172B6C091775AF6387D1D9029E964A0F69E7
+artifact.multiplayerApiSha256=4689E799C50DB79411B00AD8855D7DF86721BF3CFE1E390B68038B6ABCD852EC
+artifact.releaseArchive=ConstructionPipelineOptimizer-1.1.0-rw1.5.zip
+```
 
 The large mod list emits existing renderer/asset-bundle, translation, and transient
 Multiplayer packet-handler messages while the client is loading. They occurred

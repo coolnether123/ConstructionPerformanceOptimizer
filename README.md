@@ -108,7 +108,7 @@ always keep a normal save backup when changing a large mod list.
 - RimWorld 1.5 compiles against the official MultiplayerAPI 0.5 package used by
   Multiplayer's open-source `rw-1.5` branch. The `Support/1.5` payload passed a normal
   two-client construction test with 72 active mods: both peers finished at identical
-  world/map tick 13,434 with no desync after 37 completed constructions. A 71-mod
+  world/map tick 14,379 with no desync after 37 completed constructions. A 71-mod
   CPO-free control also finished synchronized with no desync.
 - Mods that patch `WorkGiver_ConstructFinishFrames.JobOnThing` remain in the
   continuation decision path. Full replacements still warrant a compatibility test.

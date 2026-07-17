@@ -1,4 +1,6 @@
 using System;
+using ConstructionPipelineOptimizer.Compatibility;
+using ConstructionPipelineOptimizer.Infrastructure;
 using ConstructionPipelineOptimizer.Patches;
 using HarmonyLib;
 using Verse;
@@ -13,12 +15,48 @@ namespace ConstructionPipelineOptimizer.Bootstrap
         internal static PatchInstallationReport Install(Harmony harmony)
         {
 #if RW_VALIDATION_THROTTLE
-            bool completionGuard = TryPatch(harmony, typeof(FinishFrameCompletionGuardPatch));
+            ValidationPatchCompatibilityReport compatibility;
+            try
+            {
+                compatibility = ValidationPatchCompatibility.Inspect(
+                    ConstructionPipelineOptimizerMod.PackageId);
+            }
+            catch (Exception exception)
+            {
+                Log.Error(
+                    "[Construction Pipeline Optimizer] Disabled broad validation: " +
+                    $"compatibility inspection failed.\n{exception}");
+                compatibility = new ValidationPatchCompatibilityReport(
+                    new[] { "inspection failed" },
+                    Array.Empty<string>());
+            }
 
-            // Validation may only be reduced when the unconditional completion guard exists.
+            // The broad cadence and its final completion guard are a dependent pair. A foreign
+            // patch on the exact validation predicate disables both. Patches on methods that
+            // our wrappers still call remain composed; the transpilers themselves verify that
+            // the exact vanilla call sites survived that composition.
+            bool completionGuard = compatibility.AllowsBroadThrottle &&
+                TryPatch(harmony, typeof(FinishFrameCompletionGuardPatch));
             bool validationThrottle = completionGuard &&
                 TryPatch(harmony, typeof(FinishFrameValidationThrottlePatch));
+
+            if (completionGuard && !validationThrottle)
+            {
+                // The guard exists only to make the cadence throttle safe. If the second half
+                // cannot install, remove our ownership from both exact targets and leave
+                // vanilla construction behavior intact rather than running a partial pair.
+                harmony.Unpatch(
+                    FinishFrameMethodTargets.CompletionAction(),
+                    HarmonyPatchType.All,
+                    harmony.Id);
+                harmony.Unpatch(
+                    FinishFrameMethodTargets.ValidationPredicate(),
+                    HarmonyPatchType.All,
+                    harmony.Id);
+                completionGuard = false;
+            }
 #else
+            string compatibility = "not available on this RimWorld version";
             bool completionGuard = false;
             bool validationThrottle = false;
 #endif
@@ -30,7 +68,8 @@ namespace ConstructionPipelineOptimizer.Bootstrap
             return new PatchInstallationReport(
                 directContinuation,
                 validationThrottle,
-                completionGuard);
+                completionGuard,
+                compatibility.ToString());
         }
 
         private static bool TryPatch(Harmony harmony, Type patchType)
@@ -58,11 +97,13 @@ namespace ConstructionPipelineOptimizer.Bootstrap
         internal PatchInstallationReport(
             bool directContinuation,
             bool validationThrottle,
-            bool completionGuard)
+            bool completionGuard,
+            string compatibility)
         {
             DirectContinuation = directContinuation;
             ValidationThrottle = validationThrottle;
             CompletionGuard = completionGuard;
+            Compatibility = compatibility;
         }
 
         internal bool DirectContinuation { get; }
@@ -71,12 +112,15 @@ namespace ConstructionPipelineOptimizer.Bootstrap
 
         internal bool CompletionGuard { get; }
 
+        internal string Compatibility { get; }
+
         public override string ToString()
         {
             return "features: " +
                 $"continuation={(DirectContinuation ? "on" : "off")}, " +
-                $"validation throttle={(ValidationThrottle ? "on" : "off")}, " +
-                $"completion guard={(CompletionGuard ? "on" : "off")}.";
+                $"broad validation throttle={(ValidationThrottle ? "on" : "off")}, " +
+                $"completion guard={(CompletionGuard ? "on" : "off")}, " +
+                $"compatibility={Compatibility}.";
         }
     }
 }

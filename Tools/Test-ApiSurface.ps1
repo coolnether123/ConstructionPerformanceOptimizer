@@ -160,6 +160,11 @@ foreach ($version in $Versions)
         Assert-Condition (($placeDriver.Methods | Where-Object Name -eq 'MakeNewToils').Count -eq 1) "RimWorld $version has an unexpected PlaceNoCostFrame MakeNewToils shape"
 
         $expectsThrottle = $version -notin @('Alpha4', '0.13', '0.14', '0.15', '0.16', '0.17')
+        $genConstruct = if ($expectsThrottle) { $allTypes | Where-Object FullName -eq 'RimWorld.GenConstruct' | Select-Object -First 1 } else { $null }
+        if ($expectsThrottle)
+        {
+            Assert-Condition ($null -ne $genConstruct) "RimWorld $version is missing RimWorld.GenConstruct"
+        }
         $hasRuntimeBodies = $version -notin @('1.0', '1.1', '1.2', '1.3', '1.4', '1.5')
         $completionCalls = @()
         $validationCalls = @()
@@ -171,6 +176,25 @@ foreach ($version in $Versions)
             $validationCalls = @(Get-Calls $driver 'CanConstruct')
             $expectedValidationCount = if ($expectsThrottle) { 1 } else { 0 }
             Assert-Condition ($validationCalls.Count -eq $expectedValidationCount) "RimWorld $version expected $expectedValidationCount FinishFrame CanConstruct call(s); found $($validationCalls.Count)"
+
+            if ($expectsThrottle)
+            {
+                $expectedCanConstructParameters = if ($version -eq '0.18') { 3 } elseif ($version -in @('0.19', '1.0', '1.1', '1.2', '1.3', '1.4')) { 4 } else { 5 }
+                Assert-Condition ($validationCalls[0].Called.Parameters.Count -eq $expectedCanConstructParameters) "RimWorld $version FinishFrame calls a $($validationCalls[0].Called.Parameters.Count)-parameter CanConstruct overload; expected $expectedCanConstructParameters"
+            }
+        }
+
+        if ($expectsThrottle)
+        {
+            $expectedCanConstructParameters = if ($version -eq '0.18') { 3 } elseif ($version -in @('0.19', '1.0', '1.1', '1.2', '1.3', '1.4')) { 4 } else { 5 }
+            $matchingCanConstruct = @($genConstruct.Methods | Where-Object {
+                $_.Name -eq 'CanConstruct' -and
+                $_.Parameters.Count -eq $expectedCanConstructParameters -and
+                $_.Parameters[0].ParameterType.FullName -eq 'Verse.Thing' -and
+                $_.Parameters[1].ParameterType.FullName -eq 'Verse.Pawn' -and
+                $_.Parameters[2].ParameterType.FullName -eq 'System.Boolean'
+            })
+            Assert-Condition ($matchingCanConstruct.Count -eq 1) "RimWorld $version expected one boolean CanConstruct overload with $expectedCanConstructParameters parameters; found $($matchingCanConstruct.Count)"
         }
 
         $payload = Join-Path $projectRoot "$version\Assemblies\Construction Pipeline Optimizer.dll"

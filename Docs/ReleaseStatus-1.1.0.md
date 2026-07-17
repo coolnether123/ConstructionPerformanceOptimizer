@@ -1,0 +1,179 @@
+# Construction Pipeline Optimizer 1.1.0 Release Status
+
+## Executive status
+
+Construction Pipeline Optimizer (CPO) 1.1.0 is release-ready for RimWorld 1.6.
+The exact packaged DLL passed deterministic policy tests, fluent-transpiler tests,
+API-shape validation, package validation, single-player construction tests, and a
+normal-hosted two-client Multiplayer construction test.
+
+Historical targets from Alpha 4 through RimWorld 1.5 build on their owning
+`Support/<version>` branches and pass the available API-shape audits. Each historical
+branch contains target-specific metadata and a root DLL matching its versioned build,
+so the branch can be installed directly. Historical runtime certification is limited
+by the absence of runnable Alpha 4-1.5 game installations on the test machine.
+
+## Release artifacts
+
+| Artifact | SHA-256 |
+|---|---|
+| `1.6/Assemblies/Construction Pipeline Optimizer.dll` | `9D4FDA8F3F6EF33AE3D6F181BFDAB0E15D6B1A228C89F48A332E239471AC0EEA` |
+| `1.6/Assemblies/0MultiplayerAPI.dll` | `72260148E72D263AB42CC3B6DCBBADAC27CB218CB3045B09FE6ADC4807C0437D` |
+| `Releases/ConstructionPipelineOptimizer-1.1.0.zip` | `2B99AAAFF9D48FFF171290B69470DEF73BAC7B2DA7E75AB369AA2A6E4D8B2E60` |
+
+The archive contains only the 1.6 runtime payload, About metadata and preview,
+`LoadFolders.xml`, `README.md`, `CHANGELOG.md`, `LICENSE`, and the optional
+Multiplayer API bridge. Source, tests, tools, benchmark workspaces, and historical
+engineering payloads are excluded from the public archive.
+
+## Exact RimWorld 1.6 Multiplayer acceptance
+
+Final evidence:
+
+`C:\Users\PrecisionX\AppData\Local\Temp\CPO-MultiplayerSmoke-20260717-031553.txt`
+
+| Check | Result |
+|---|---|
+| CPO DLL | Exact 1.1.0 release hash `9D4FDA...0EEA` |
+| Game instances | Two rendered RimWorld processes |
+| Hosting path | Normal save hosting; replay path excluded |
+| Active mods | 75 |
+| Better Work Tab | Disabled |
+| Legacy construction optimizer | Disabled |
+| Maps | 3 |
+| Initial synchronized world tick | 9,332,890 |
+| Final synchronized world tick | 9,334,691 |
+| Synchronized ticks completed | 1,801 |
+| Construction before/after | 11,004 / 10,981 |
+| Constructions completed | 23 |
+| Host desync state | `False` |
+| Client desync state | `False` |
+| Final host/client map clocks | Identical on maps 0, 4, and 7 |
+| Profile restoration | Exact original SHA-256 restored |
+| Processes remaining | None |
+
+The startup diagnostics confirmed that continuation, broad validation throttling,
+and the completion guard were all enabled. Both clients loaded MultiplayerAPI 0.6.
+
+Earlier supporting runs:
+
+- CPO-free normal-host control: approximately 7,000 synchronized ticks with no desync.
+- CPO run: 2,686 synchronized ticks and 57 constructions completed with no desync.
+- CPO run: 2,731 synchronized ticks and 62 constructions completed with no desync.
+- Single-player with Multiplayer installed: construction progressed successfully.
+- Single-player with Multiplayer and Multiplayer Compatibility excluded: construction
+  progressed successfully using the bundled API fallback.
+
+## Multiplayer harness controls
+
+`Tools/Invoke-MultiplayerSmoke.ps1` now:
+
+- launches isolated host and client instances with separate Agent identities;
+- supports copied and renamed RimWorld executables;
+- starts instances sequentially and restores the exact original mod profile;
+- uses WARP for the second renderer to avoid a shared NVIDIA D3D11 deadlock;
+- validates real Multiplayer world/map desired speed and simulation clocks;
+- requires matching host/client map sets and final clocks;
+- detects and preserves desync artifacts;
+- confirms actual construction progress from synchronized fixture counts;
+- excludes Better Work Tab and the legacy construction optimizer;
+- supports Multiplayer, single-player, and Multiplayer-excluded test modes; and
+- prohibits the dynamic construction Harmony probe during two-client acceptance,
+  because runtime repatching was proven capable of creating its own diagnostic desync.
+
+## Fluent transpiler hardening
+
+The two construction IL rewrites use a focused fluent layer adapted from Better Work
+Tab's `Spine.Harmony` design. The implementation:
+
+- selects exactly one expected call site;
+- rejects missing or ambiguous targets;
+- validates complete replacement stack signatures before mutation;
+- clones the input instruction stream for atomic failure behavior;
+- preserves labels and exception-block metadata;
+- refuses structural guarded-return edits in exception-handler methods;
+- validates call operands and branch targets across the final stream; and
+- lets the patch installer roll back the cadence/guard pair if either patch fails.
+
+Off-game tests cover successful redirects, missing and duplicate calls, invalid hook
+signatures, input atomicity, malformed branches, generated guard control flow, and
+exception-handler rejection.
+
+## Cross-version build and API results
+
+| RimWorld | Continuation | Validation cadence | Completion guard/build |
+|---|---|---|---|
+| Alpha 4 | Verified | Not present in vanilla | Build/API audit passed |
+| 0.13-0.17 | Verified | Not present in vanilla | Build/API audit passed |
+| 0.18-0.19 | Verified | Verified | Build/API audit passed |
+| 1.0-1.4 | Verified | Compile surface verified | Build/API audit passed |
+| 1.5 | Verified | Compile surface verified | Build/API audit passed |
+| 1.6 | Verified | Verified | Build/API and runtime tests passed |
+
+All 15 targets report assembly version 1.1.0.0 and reference their corresponding
+RimWorld `Assembly-CSharp` version. The support cascade builds each target on its
+own branch and copies only rebuilt versioned assembly folders back to `Dev`.
+
+## RimWorld 1.5 Multiplayer status
+
+The 1.5 branch builds CPO against `Assembly-CSharp` 1.5 and
+`RimWorld.MultiplayerAPI` 0.5.0. Multiplayer's open-source `rw-1.5` branch uses the
+same API package. The resulting CPO DLL references MultiplayerAPI 0.5.0, and its
+branch package carries the corresponding `0MultiplayerAPI.dll`.
+
+This proves the intended 1.5 compile/API contract. It does not prove a live
+two-client session because no runnable RimWorld 1.5 installation is available
+locally. Public documentation therefore labels 1.5 Multiplayer runtime-unverified.
+
+## RimWorld Agent verification
+
+The Agent extensions used by the harness include persistent frame-deduplicated
+runtime pumping, real Multiplayer status and synchronized speed commands,
+construction fixture/probe tools, exact colony inspection, and isolated
+multi-instance bridge paths.
+
+Verification:
+
+- RimWorld Agent 1.6 build: passed with zero errors.
+- Known build warning: the existing cross-version status writer uses Unity's obsolete
+  `Application.loadedLevelName` property.
+- Colony inspection argument tests: passed.
+- The Agent powered the exact two-client acceptance run described above.
+
+## Known unrelated runtime log noise
+
+The accepted 75-mod run contained existing non-CPO diagnostics:
+
+- Multiplayer Compatibility failed while inspecting QualityBuilder.
+- A translation report contained one error.
+- Reflection-only inspection could not preload `UnityEngine.InputLegacyModule`.
+- The WARP client reported that dedicated video decoding fell back to software.
+
+Neither peer desynchronized, CPO installed all three features, construction advanced,
+and these messages are not attributed to CPO.
+
+## Reproduction commands
+
+```powershell
+# Deterministic and fluent-transpiler tests plus 1.6 build/package validation
+.\Tools\Build.ps1 -Configuration Release
+
+# All historical API-shape checks after the support cascade
+.\Tools\Test-ApiSurface.ps1
+
+# Full support-branch build cascade (does not push unless -Push is supplied)
+.\Tools\Invoke-SupportCascade.ps1 -ReleaseLabel v1.1.0
+
+# Exact normal-host two-client construction test
+.\Tools\Invoke-MultiplayerSmoke.ps1 -TwoClient -RunSeconds 15 -Port 30531
+
+# Regenerate the public archive
+.\Tools\Release.ps1 -Force
+```
+
+## Release decision
+
+- RimWorld 1.6 single-player: **release-ready**
+- RimWorld 1.6 Multiplayer: **release-ready**
+- Alpha 4-1.5 branch builds: **build/API verified and directly packageable**
+- RimWorld 1.5 Multiplayer: **correct API build; live runtime verification pending**

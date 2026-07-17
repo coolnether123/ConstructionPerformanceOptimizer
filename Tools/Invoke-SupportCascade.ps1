@@ -283,14 +283,12 @@ function Commit-BranchPayload
         Invoke-Git add -- @stagePaths
     }
 
-    $changes = if ($stagePaths.Count -gt 0)
-    {
-        @(Get-GitOutput status --porcelain -- @stagePaths)
-    }
-    else
-    {
-        @()
-    }
+    $changes = @(
+        if ($stagePaths.Count -gt 0)
+        {
+            Get-GitOutput status --porcelain -- @stagePaths
+        }
+    )
     if ($changes.Count -eq 0)
     {
         Write-Host "No payload changes to commit for RimWorld $Version."

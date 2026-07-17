@@ -87,9 +87,11 @@ function Merge-SupportSource
     }
 
     $unmerged = @(Get-GitOutput diff --name-only --diff-filter=U)
+    $versionedPayload = "$Version/Assemblies/$payloadName"
     $allowed = @($unmerged | Where-Object {
         $_ -eq 'About/About.xml' -or
-        $_ -eq 'Assemblies/Construction Pipeline Optimizer.dll'
+        $_ -eq 'Assemblies/Construction Pipeline Optimizer.dll' -or
+        $_ -eq $versionedPayload
     })
     $unexpected = @($unmerged | Where-Object { $_ -notin $allowed })
     if ($unmerged.Count -eq 0 -or $unexpected.Count -gt 0)

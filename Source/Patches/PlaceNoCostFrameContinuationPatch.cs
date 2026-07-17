@@ -71,10 +71,15 @@ namespace ConstructionPipelineOptimizer.Patches
                 Job finishJob = workGiver.JobOnThing(pawn, frame);
 #endif
 #endif
-                if (finishJob == null || finishJob.GetTarget(TargetIndex.A).Thing != frame)
+                if (finishJob == null)
                 {
                     return;
                 }
+
+                // Preserve the work giver's exact job, including prerequisite/blocking jobs
+                // and replacement targets supplied by another mod. The forced flag belongs to
+                // the transition rather than to a particular vanilla FinishFrame job shape.
+                finishJob.playerForced = currentJob.playerForced;
 
 #if RW_JOB_WORKGIVERDEF
                 if (finishJob.workGiverDef == null)

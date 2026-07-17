@@ -90,6 +90,7 @@ function Merge-SupportSource
     $versionedPayload = "$Version/Assemblies/$payloadName"
     $allowed = @($unmerged | Where-Object {
         $_ -eq 'About/About.xml' -or
+        $_ -eq 'LoadFolders.xml' -or
         $_ -eq 'Assemblies/Construction Pipeline Optimizer.dll' -or
         $_ -eq $versionedPayload
     })
@@ -124,7 +125,7 @@ function Build-Version
     }
 }
 
-function Set-LegacyAbout
+function Set-BranchMetadata
 {
     param([string]$Version)
 
@@ -138,13 +139,12 @@ function Set-LegacyAbout
         'Alpha4' = '0.4.460'
     }
 
-    if (-not $targetVersions.ContainsKey($Version))
+    $aboutPath = Join-Path $projectRoot 'About\About.xml'
+    $loadFoldersPath = Join-Path $projectRoot 'LoadFolders.xml'
+    if ($targetVersions.ContainsKey($Version))
     {
-        return
-    }
-
-    $targetVersion = $targetVersions[$Version]
-    $xml = @"
+        $targetVersion = $targetVersions[$Version]
+        $xml = @"
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
   <name>Construction Pipeline Optimizer</name>
@@ -153,7 +153,67 @@ function Set-LegacyAbout
   <description>Reduces repeated active construction validation and redundant zero-cost terrain work selection. Requires Harmony. No settings or save data.</description>
 </ModMetaData>
 "@
-    [System.IO.File]::WriteAllText((Join-Path $projectRoot 'About\About.xml'), $xml)
+        [System.IO.File]::WriteAllText($aboutPath, $xml)
+        if (Test-Path -LiteralPath $loadFoldersPath)
+        {
+            Remove-Item -LiteralPath $loadFoldersPath -Force
+        }
+        return
+    }
+
+    $multiplayerText = if ($Version -eq '1.5')
+    {
+        'Includes the RimWorld 1.5 Multiplayer API 0.5 bridge. Every peer must use the same CPO build and mod list.'
+    }
+    else
+    {
+        'Multiplayer is not runtime-verified on this historical RimWorld version.'
+    }
+
+    $xml = @"
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <name>Construction Pipeline Optimizer</name>
+  <author>Coolnether123</author>
+  <packageId>coolnether123.constructionpipelineoptimizer</packageId>
+  <modVersion>1.1.0</modVersion>
+  <supportedVersions>
+    <li>$Version</li>
+  </supportedVersions>
+  <description><![CDATA[Reduces repeated active construction validation and redundant zero-cost terrain work selection.
+
+The branch is compiled against RimWorld $Version. $multiplayerText
+
+Requires Harmony. No settings or save data. Do not enable this with Construction Queue Optimizer because that legacy package contains the same patches.]]></description>
+  <modDependencies>
+    <li>
+      <packageId>brrainz.harmony</packageId>
+      <displayName>Harmony</displayName>
+      <steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
+      <downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
+    </li>
+  </modDependencies>
+  <loadAfter>
+    <li>brrainz.harmony</li>
+    <li>ludeon.rimworld</li>
+    <li>gt.sam.tilledsoil</li>
+  </loadAfter>
+  <incompatibleWith>
+    <li>coolnether123.constructionqueueoptimizer</li>
+  </incompatibleWith>
+</ModMetaData>
+"@
+    [System.IO.File]::WriteAllText($aboutPath, $xml)
+
+    $loadFolders = @"
+<?xml version="1.0" encoding="utf-8"?>
+<loadFolders>
+  <v$Version>
+    <li>/</li>
+  </v$Version>
+</loadFolders>
+"@
+    [System.IO.File]::WriteAllText($loadFoldersPath, $loadFolders)
 }
 
 function Sync-BranchPayload
@@ -166,11 +226,19 @@ function Sync-BranchPayload
         throw "Built payload is missing: $versionedPayload"
     }
 
-    if ($Version -eq 'Alpha4' -or $Version.StartsWith('0.'))
+    $rootAssemblies = Join-Path $projectRoot 'Assemblies'
+    New-Item -ItemType Directory -Force -Path $rootAssemblies | Out-Null
+    Copy-Item -LiteralPath $versionedPayload -Destination (Join-Path $rootAssemblies $payloadName) -Force
+
+    $rootMultiplayerApi = Join-Path $rootAssemblies '0MultiplayerAPI.dll'
+    $versionedMultiplayerApi = Join-Path $projectRoot "$Version\Assemblies\0MultiplayerAPI.dll"
+    if (Test-Path -LiteralPath $versionedMultiplayerApi)
     {
-        $rootAssemblies = Join-Path $projectRoot 'Assemblies'
-        New-Item -ItemType Directory -Force -Path $rootAssemblies | Out-Null
-        Copy-Item -LiteralPath $versionedPayload -Destination (Join-Path $rootAssemblies $payloadName) -Force
+        Copy-Item -LiteralPath $versionedMultiplayerApi -Destination $rootMultiplayerApi -Force
+    }
+    elseif (Test-Path -LiteralPath $rootMultiplayerApi)
+    {
+        Remove-Item -LiteralPath $rootMultiplayerApi -Force
     }
 
     if ($Version -eq 'Alpha4')
@@ -181,7 +249,7 @@ function Sync-BranchPayload
         Copy-Item -LiteralPath $sourceDef -Destination (Join-Path $rootDefs 'ConstructionPipelineOptimizerBootstrap.xml') -Force
     }
 
-    Set-LegacyAbout $Version
+    Set-BranchMetadata $Version
 }
 
 function Commit-BranchPayload
@@ -189,21 +257,38 @@ function Commit-BranchPayload
     param([string]$Version)
 
     $paths = @("$Version/Assemblies")
-    if ($Version -eq 'Alpha4' -or $Version.StartsWith('0.'))
+    if ($Version -ne '1.6')
     {
-        $paths += 'Assemblies'
-    }
-    if ($Version -in @('0.18', '0.17', '0.16', '0.15', '0.14', '0.13', 'Alpha4'))
-    {
-        $paths += 'About/About.xml'
+        $paths += @(
+            'Assemblies',
+            'About/About.xml',
+            'LoadFolders.xml')
     }
     if ($Version -eq 'Alpha4')
     {
         $paths += 'Defs/ConstructionPipelineOptimizerBootstrap'
     }
 
-    Invoke-Git add -- @paths
-    $changes = @(Get-GitOutput status --porcelain -- @paths)
+    $stagePaths = @($paths | Where-Object {
+        if (Test-Path -LiteralPath $_)
+        {
+            return $true
+        }
+
+        $tracked = @(& git ls-files -- $_)
+        return $tracked.Count -gt 0
+    })
+    if ($stagePaths.Count -gt 0)
+    {
+        Invoke-Git add -- @stagePaths
+    }
+
+    $changes = @(
+        if ($stagePaths.Count -gt 0)
+        {
+            Get-GitOutput status --porcelain -- @stagePaths
+        }
+    )
     if ($changes.Count -eq 0)
     {
         Write-Host "No payload changes to commit for RimWorld $Version."

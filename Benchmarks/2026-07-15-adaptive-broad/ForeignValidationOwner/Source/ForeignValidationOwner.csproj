@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <AssemblyName>CPO Foreign Validation Owner</AssemblyName>
+    <RootNamespace>CpoForeignValidationOwner</RootNamespace>
+    <Version>1.0.0</Version>
+    <Deterministic>true</Deterministic>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>..\..\Variants\ForeignValidationOwner\1.6\Assemblies\</OutputPath>
+    <DefineConstants>TRACE;RW_1_6;RW_CANCONSTRUCT_5</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.4850" />
+    <PackageReference Include="Lib.Harmony" Version="2.4.2" ExcludeAssets="runtime" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\..\Source\Infrastructure\MethodCallInspector.cs" Link="Infrastructure\MethodCallInspector.cs" />
+    <Compile Include="..\..\..\..\Source\Infrastructure\FinishFrameMethodTargets.cs" Link="Infrastructure\FinishFrameMethodTargets.cs" />
+  </ItemGroup>
+</Project>

@@ -1,5 +1,6 @@
 using ConstructionPipelineOptimizer.Scheduling;
 using ConstructionPipelineOptimizer.Infrastructure;
+using ConstructionPipelineOptimizer.Compatibility;
 using System.Reflection;
 
 static void Assert(bool condition, string message)
@@ -50,6 +51,16 @@ catch (MissingMethodException)
 }
 
 Assert(rejectedAmbiguity, "The IL resolver must fail closed when multiple generated methods match.");
+
+string[] foreignOwners = PatchOwnerPolicy.ForeignOwners(
+    new[] { "other.mod", "coolnether123.constructionpipelineoptimizer", "other.mod" },
+    "coolnether123.constructionpipelineoptimizer");
+Assert(foreignOwners.Length == 1 && foreignOwners[0] == "other.mod",
+    "Compatibility policy should ignore only this mod and deduplicate foreign owners.");
+Assert(PatchOwnerPolicy.ForeignOwners(Array.Empty<string>(), "self").Length == 0,
+    "An unpatched vanilla method should be eligible for the broad optimization.");
+
+FluentTranspilerTests.Run();
 
 Console.WriteLine("ConstructionPipelineOptimizer deterministic policy tests passed.");
 

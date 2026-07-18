@@ -2,30 +2,6 @@
 <ModMetaData>
   <name>Construction Pipeline Optimizer</name>
   <author>Coolnether123</author>
-  <packageId>coolnether123.constructionpipelineoptimizer</packageId>
-  <modVersion>1.1.0</modVersion>
-  <supportedVersions>
-    <li>0.19</li>
-  </supportedVersions>
-  <description><![CDATA[Helps construction-heavy colonies run more smoothly by reducing repeated construction work while preserving normal RimWorld behavior.
-
-Supports RimWorld 0.19 single-player. Multiplayer support begins with the separate RimWorld 1.5 build.
-
-Requires Harmony. No settings or save data. Do not enable this with Construction Queue Optimizer because that legacy package contains the same patches.]]></description>
-  <modDependencies>
-    <li>
-      <packageId>brrainz.harmony</packageId>
-      <displayName>Harmony</displayName>
-      <steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
-      <downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
-    </li>
-  </modDependencies>
-  <loadAfter>
-    <li>brrainz.harmony</li>
-    <li>ludeon.rimworld</li>
-    <li>gt.sam.tilledsoil</li>
-  </loadAfter>
-  <incompatibleWith>
-    <li>coolnether123.constructionqueueoptimizer</li>
-  </incompatibleWith>
+  <targetVersion>0.19.2009</targetVersion>
+  <description>Helps construction-heavy colonies run more smoothly by reducing repeated construction work while preserving normal RimWorld behavior. Supports RimWorld 0.19 single-player. Requires Harmony. No settings or save data.</description>
 </ModMetaData>

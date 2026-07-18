@@ -3,13 +3,12 @@
   <name>Construction Pipeline Optimizer</name>
   <author>Coolnether123</author>
   <packageId>coolnether123.constructionpipelineoptimizer</packageId>
-  <modVersion>1.1.0</modVersion>
   <supportedVersions>
     <li>1.3</li>
   </supportedVersions>
-  <description><![CDATA[Reduces repeated active construction validation and redundant zero-cost terrain work selection.
+  <description><![CDATA[Helps construction-heavy colonies run more smoothly by reducing repeated construction work while preserving normal RimWorld behavior.
 
-The branch is compiled against RimWorld 1.3. Multiplayer is not runtime-verified on this historical RimWorld version.
+Supports RimWorld 1.3 single-player. Multiplayer support begins with the separate RimWorld 1.5 build.
 
 Requires Harmony. No settings or save data. Do not enable this with Construction Queue Optimizer because that legacy package contains the same patches.]]></description>
   <modDependencies>

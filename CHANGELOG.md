@@ -46,6 +46,9 @@ The project follows Semantic Versioning.
 - RimWorld 1.6 release build with zero warnings and API-shape audit.
 - RimWorld 1.5 support build with zero warnings, API-shape audit, single-player
   construction smoke, and normal-hosted two-client construction/control tests.
+- RimWorld 1.0 native quickstart with 50 colonists and 300 steel-wall blueprints:
+  25,512 simulation ticks, 186 new completed walls, 101 active frames, 13 blueprints
+  remaining, and no runtime exceptions or errors.
 - Isolated 75-mod single-player construction smoke with Better Work Tab and the
   legacy optimizer excluded.
 - Three repeatable normal-session Multiplayer construction passes with identical

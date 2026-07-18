@@ -122,7 +122,8 @@ exception-handler rejection.
 | Alpha 4 | Verified | Not present in vanilla | Build/API audit passed |
 | 0.13-0.17 | Verified | Not present in vanilla | Build/API audit passed |
 | 0.18-0.19 | Verified | Verified | Build/API audit passed |
-| 1.0-1.4 | Verified | Compile surface verified | Build/API audit passed |
+| 1.0 | Verified | Disabled for old Mono compatibility | Native single-player construction stress passed |
+| 1.1-1.4 | Verified | Compile surface verified | Build/API audit passed |
 | 1.5 | Verified | Compile surface verified | Build/API audit passed |
 | 1.6 | Verified | Verified | Build/API and runtime tests passed |
 
@@ -195,4 +196,5 @@ and these messages are not attributed to CPO.
 - RimWorld 1.6 Multiplayer: **release-ready**
 - RimWorld 1.5 single-player: **runtime-verified release candidate**
 - RimWorld 1.5 Multiplayer: **runtime-verified release candidate**
-- Alpha 4-1.4 branch builds: **build/API verified and directly packageable**
+- RimWorld 1.0 single-player: **runtime-verified historical candidate**
+- Alpha 4-0.19 and 1.1-1.4 branch builds: **build/API verified and directly packageable**

@@ -70,7 +70,7 @@ optimizations from the earlier broad package have substantial alternatives.
 
 ## Multiplayer
 
-RimWorld 1.6 Multiplayer is supported. CPO uses the official Multiplayer API for
+RimWorld 1.5 and 1.6 Multiplayer are supported. CPO uses the official Multiplayer API for
 detection and makes its cadence decisions from synchronized game ticks and stable pawn
 IDs. It does not send independent UI commands or maintain peer-local gameplay state.
 
@@ -109,6 +109,10 @@ always keep a normal save backup when changing a large mod list.
   Multiplayer's open-source `rw-1.5` branch. The `Support/1.5` package passed
   single-player construction and normal-hosted two-client Multiplayer tests with
   Better Work Tab and the legacy optimizer excluded.
+- Alpha 4 through RimWorld 1.4 are single-player-only historical builds. Multiplayer
+  is not supported on those versions.
+- RimWorld 1.0 passed a native quickstart construction stress test with 50 colonists
+  and 300 steel-wall blueprints.
 - Mods that patch `WorkGiver_ConstructFinishFrames.JobOnThing` remain in the
   continuation decision path. Full replacements still warrant a compatibility test.
 - A foreign Harmony owner present on the exact generated validation predicate when

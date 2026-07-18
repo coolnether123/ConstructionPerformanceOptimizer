@@ -111,6 +111,9 @@ always keep a normal save backup when changing a large mod list.
   is not supported on those versions.
 - RimWorld 1.0 passed a native quickstart construction stress test with 50 colonists
   and 300 steel-wall blueprints.
+- RimWorld 0.18 passed a native quicktest construction stress test with 50 colonists
+  and 300 steel-wall blueprints. Its old Mono runtime uses the independent
+  continuation feature without the fluent validation pair.
 - Mods that patch `WorkGiver_ConstructFinishFrames.JobOnThing` remain in the
   continuation decision path. Full replacements still warrant a compatibility test.
 - A foreign Harmony owner present on the exact generated validation predicate when

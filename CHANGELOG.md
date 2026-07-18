@@ -49,6 +49,9 @@ The project follows Semantic Versioning.
 - RimWorld 1.0 native quickstart with 50 colonists and 300 steel-wall blueprints:
   25,512 simulation ticks, 186 new completed walls, 101 active frames, 13 blueprints
   remaining, and no runtime exceptions or errors.
+- RimWorld 0.18 native quicktest with 50 colonists and 300 steel-wall blueprints:
+  all 300 constructions completed across 26,566 simulation ticks with no runtime
+  exceptions or construction pathing warnings.
 - Isolated 75-mod single-player construction smoke with Better Work Tab and the
   legacy optimizer excluded.
 - Three repeatable normal-session Multiplayer construction passes with identical

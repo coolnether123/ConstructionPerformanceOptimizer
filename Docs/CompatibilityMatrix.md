@@ -9,7 +9,8 @@ modern tree.
 |---|---:|---:|---:|---:|---|
 | Alpha 4 | Experimental | Not available in vanilla | Not needed | Not supported | Original game assembly IL + target build/API audit |
 | 0.13-0.17 | Experimental | Not available in vanilla | Not needed | Not supported | Original game assembly IL + target build/API audit |
-| 0.18-0.19 | Experimental | Experimental | Experimental | Not supported | Original game assembly IL + target build/API audit |
+| 0.18 | Verified | Disabled for old Mono compatibility | Not used | Not supported | Installed 0.18.1722 runtime + clean quicktest with 50 colonists and 300 steel-wall blueprints |
+| 0.19 | Experimental | Experimental | Experimental | Not supported | Original game assembly IL + target build/API audit |
 | 1.0 | Verified | Disabled for old Mono compatibility | Not used | Not supported | Installed 1.0.2559 runtime + clean quickstart with 50 colonists and 300 wall blueprints |
 | 1.1-1.4 | Experimental | Experimental | Experimental | Not supported | Reference assembly + target build/API audit |
 | 1.5 | Experimental | Experimental | Experimental | Supported | Installed 1.5 runtime + MultiplayerAPI 0.5 + single-player and normal two-client construction tests |
@@ -18,8 +19,11 @@ modern tree.
 ## Important limits
 
 - A successful reference build proves API compatibility, not runtime behavior.
-  No runnable Alpha 4-0.19 or 1.1-1.4 game installations are present locally, so those
-  versions remain build/API verified until tested in their games.
+  Untested historical versions remain build/API verified until exercised in their
+  installed games.
+- RimWorld 0.18 uses the same old-Mono compatibility boundary as RimWorld 1.0.
+  Its fluent validation pair is excluded; the independent construction continuation
+  remains enabled and runtime-verified.
 - Every historical support branch is directly loadable: its root assembly matches
   its target-specific versioned DLL, its About metadata names that RimWorld version,
   and legacy branches remove unsupported modern load-folder metadata.

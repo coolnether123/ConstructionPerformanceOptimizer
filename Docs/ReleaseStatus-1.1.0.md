@@ -21,7 +21,7 @@ installed on the test machine.
 |---|---|
 | `1.6/Assemblies/Construction Pipeline Optimizer.dll` | `9D4FDA8F3F6EF33AE3D6F181BFDAB0E15D6B1A228C89F48A332E239471AC0EEA` |
 | `1.6/Assemblies/0MultiplayerAPI.dll` | `72260148E72D263AB42CC3B6DCBBADAC27CB218CB3045B09FE6ADC4807C0437D` |
-| `Releases/ConstructionPipelineOptimizer-1.1.0.zip` | `4E416A14EB0C4DAB3C5E2950CBA6B1FB7BD41E6F6E2F33EB25D3A28203481013` |
+| `Releases/ConstructionPipelineOptimizer-1.1.0.zip` | `64F7CA38903B8A17A0539496AD0C2248E1E4F90D91CF1B30C96D85C912C0227C` |
 
 The archive contains only the 1.6 runtime payload, About metadata and preview,
 `LoadFolders.xml`, `README.md`, `CHANGELOG.md`, `LICENSE`, and the optional

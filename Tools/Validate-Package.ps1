@@ -2,6 +2,8 @@ param(
     [Parameter(Mandatory = $true)]
     [string]$PackageRoot,
 
+    [string]$TargetVersion = '1.6',
+
     [switch]$Distribution
 )
 
@@ -33,7 +35,7 @@ $PackageRoot = [System.IO.Path]::GetFullPath($PackageRoot)
 $aboutPath = Get-RequiredPath 'About\About.xml'
 $previewPath = Get-RequiredPath 'About\Preview.png'
 $loadFoldersPath = Get-RequiredPath 'LoadFolders.xml'
-$allowedVersions = @('1.6')
+$allowedVersions = @($TargetVersion)
 [xml]$about = Get-Content -LiteralPath $aboutPath -Raw
 $metadata = $about.ModMetaData
 Assert-Condition ($null -ne $metadata) 'About.xml must have ModMetaData as its root element.'
@@ -47,7 +49,10 @@ $assemblyPaths = @{}
 foreach ($supportedVersion in $supportedVersions)
 {
     $assemblyPaths[$supportedVersion] = Get-RequiredPath "$supportedVersion\Assemblies\Construction Pipeline Optimizer.dll"
-    $null = Get-RequiredPath "$supportedVersion\Assemblies\0MultiplayerAPI.dll"
+    if ($supportedVersion -eq '1.5' -or $supportedVersion -eq '1.6')
+    {
+        $null = Get-RequiredPath "$supportedVersion\Assemblies\0MultiplayerAPI.dll"
+    }
 }
 $null = Get-RequiredPath 'LICENSE'
 $null = Get-RequiredPath 'README.md'
@@ -69,12 +74,22 @@ foreach ($supportedVersion in $supportedVersions)
 {
     $loadFolder = $loadFolders.loadFolders.("v$supportedVersion")
     Assert-Condition ($loadFolder.li -contains '/') "LoadFolders.xml must load the package root for $supportedVersion."
-    Assert-Condition ($loadFolder.li -contains $supportedVersion) "LoadFolders.xml must load the $supportedVersion runtime folder."
+    if ($supportedVersion -ne '1.0')
+    {
+        Assert-Condition ($loadFolder.li -contains $supportedVersion) "LoadFolders.xml must load the $supportedVersion runtime folder."
+    }
 
     $assemblyPath = $assemblyPaths[$supportedVersion]
     Assert-Condition ((Get-Item -LiteralPath $assemblyPath).Length -gt 0) "RimWorld $supportedVersion assembly is empty."
     $assemblyVersion = [System.Reflection.AssemblyName]::GetAssemblyName($assemblyPath).Version
     Assert-Condition ($assemblyVersion.ToString(3) -eq [string]$metadata.modVersion) "RimWorld $supportedVersion assembly version must match About.xml modVersion."
+
+    if ($supportedVersion -eq '1.0')
+    {
+        $rootAssemblyPath = Get-RequiredPath 'Assemblies\Construction Pipeline Optimizer.dll'
+        Assert-Condition ((Get-FileHash -LiteralPath $rootAssemblyPath -Algorithm SHA256).Hash -eq
+            (Get-FileHash -LiteralPath $assemblyPath -Algorithm SHA256).Hash) 'RimWorld 1.0 root and versioned assemblies must be identical.'
+    }
 }
 Assert-Condition (-not (Test-Path -LiteralPath (Join-Path $PackageRoot 'About\ModIcon.png'))) 'ModIcon.png must not be included in this icon-free package.'
 

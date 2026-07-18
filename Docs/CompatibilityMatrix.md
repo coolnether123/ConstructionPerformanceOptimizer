@@ -7,26 +7,28 @@ modern tree.
 
 | RimWorld | Direct continuation | Adaptive cadence | Completion guard | Multiplayer | Evidence |
 |---|---:|---:|---:|---:|---|
-| Alpha 4 | Experimental | Not available in vanilla | Not needed | Not applicable | Original game assembly IL + target build/API audit |
-| 0.13-0.17 | Experimental | Not available in vanilla | Not needed | Not tested | Original game assembly IL + target build/API audit |
-| 0.18-0.19 | Experimental | Experimental | Experimental | Not tested | Original game assembly IL + target build/API audit |
-| 1.0-1.4 | Experimental | Experimental | Experimental | Not tested | Reference assembly + target build/API audit |
-| 1.5 | Experimental | Experimental | Experimental | Compile-ready, runtime unverified | RimWorld 1.5 reference assembly + MultiplayerAPI 0.5 + target build/API audit |
+| Alpha 4 | Experimental | Not available in vanilla | Not needed | Not supported | Original game assembly IL + target build/API audit |
+| 0.13-0.17 | Experimental | Not available in vanilla | Not needed | Not supported | Original game assembly IL + target build/API audit |
+| 0.18-0.19 | Experimental | Experimental | Experimental | Not supported | Original game assembly IL + target build/API audit |
+| 1.0 | Verified | Disabled for old Mono compatibility | Not used | Not supported | Installed 1.0.2559 runtime + clean quickstart with 50 colonists and 300 wall blueprints |
+| 1.1-1.4 | Experimental | Experimental | Experimental | Not supported | Reference assembly + target build/API audit |
+| 1.5 | Experimental | Experimental | Experimental | Supported | Installed 1.5 runtime + MultiplayerAPI 0.5 + single-player and normal two-client construction tests |
 | 1.6 | Supported target | Supported target | Supported target | Supported | Installed assembly IL, compile/API audit, single-player smoke, and normal two-client construction tests |
 
 ## Important limits
 
 - A successful reference build proves API compatibility, not runtime behavior.
-  No runnable Alpha 4-1.5 game installations are present locally, so historical
+  No runnable Alpha 4-0.19 or 1.1-1.4 game installations are present locally, so those
   versions remain build/API verified until tested in their games.
 - Every historical support branch is directly loadable: its root assembly matches
   its target-specific versioned DLL, its About metadata names that RimWorld version,
   and legacy branches remove unsupported modern load-folder metadata.
 - Historical bootstrap and method-shape adaptations live only on their owning
   support branches. `Dev` receives rebuilt DLL folders, never historical source.
-- The 1.5 branch references `Assembly-CSharp` 1.5 and MultiplayerAPI 0.5.0, matching
-  the open-source Multiplayer `rw-1.5` branch. The API contract and build are verified,
-  but no two-client 1.5 runtime claim is made without a runnable 1.5 installation.
+- The 1.0 branch targets the installed .NET 3.5 game runtime. Its modern fluent
+  validation pair is excluded because RimWorld 1.0's Mono cannot load those types;
+  the independent construction continuation remains enabled and runtime-verified.
+- Multiplayer is supported only on RimWorld 1.5 and 1.6.
 - The cascade fails closed when a required compiler-generated method has zero or
   multiple matching call sites.
 - The valid Multiplayer acceptance path is normal save hosting. The older replay

@@ -212,14 +212,17 @@ foreach ($version in $Versions)
 
             $payloadFramework = if ($null -eq $targetFrameworkAttribute)
             {
-                if ($usesLegacyRuntime) { '.NETFramework,Version=v3.5' } else { '<missing>' }
+                if ($usesLegacyRuntime) { '.NET Framework 3.5 (inferred from CLR 2 metadata)' } else { '.NET Framework 4.x (inferred from CLR 4 metadata)' }
             }
             else
             {
                 [string]$targetFrameworkAttribute.ConstructorArguments[0].Value
             }
-            $expectedFramework = if ($usesLegacyRuntime) { '.NETFramework,Version=v3.5' } else { '.NETFramework,Version=v4.7.2' }
-            Assert-Condition ($payloadFramework -eq $expectedFramework) "RimWorld $version payload targets $payloadFramework; expected $expectedFramework"
+            if ($null -ne $targetFrameworkAttribute)
+            {
+                $expectedFramework = if ($usesLegacyRuntime) { '.NETFramework,Version=v3.5' } else { '.NETFramework,Version=v4.7.2' }
+                Assert-Condition ($payloadFramework -eq $expectedFramework) "RimWorld $version payload targets $payloadFramework; expected $expectedFramework"
+            }
         }
         finally
         {

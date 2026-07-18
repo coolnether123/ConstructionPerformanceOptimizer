@@ -54,7 +54,9 @@ namespace ConstructionPipelineOptimizer.Infrastructure
             {
                 string names = matches.Count == 0
                     ? "none"
-                    : string.Join(", ", matches.Select(method => method.DeclaringType?.FullName + "." + method.Name));
+                    : string.Join(", ", matches
+                        .Select(method => method.DeclaringType?.FullName + "." + method.Name)
+                        .ToArray());
                 throw new MissingMethodException(
                     $"Expected exactly one nested method in {declaringType.FullName} to call " +
                     $"{calledMethod.DeclaringType?.FullName}.{calledMethod.Name}; found {matches.Count}: {names}.");

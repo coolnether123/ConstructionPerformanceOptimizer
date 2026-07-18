@@ -16,7 +16,7 @@ namespace ConstructionPipelineOptimizer.Compatibility
         {
             return (owners ?? Enumerable.Empty<string>())
                 .Where(owner =>
-                    !string.IsNullOrWhiteSpace(owner) &&
+                    owner != null && owner.Trim().Length != 0 &&
                     !string.Equals(owner, ownHarmonyId, StringComparison.Ordinal))
                 .Distinct(StringComparer.Ordinal)
                 .OrderBy(owner => owner, StringComparer.Ordinal)

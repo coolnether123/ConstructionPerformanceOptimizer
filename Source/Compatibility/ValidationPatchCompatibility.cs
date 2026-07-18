@@ -94,8 +94,8 @@ namespace ConstructionPipelineOptimizer.Compatibility
             string[] directConflicts,
             string[] observedDependencies)
         {
-            DirectConflicts = directConflicts ?? Array.Empty<string>();
-            ObservedDependencies = observedDependencies ?? Array.Empty<string>();
+            DirectConflicts = directConflicts ?? new string[0];
+            ObservedDependencies = observedDependencies ?? new string[0];
         }
 
         internal string[] DirectConflicts { get; }

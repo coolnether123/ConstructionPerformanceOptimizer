@@ -10,8 +10,10 @@ normal-hosted two-client Multiplayer construction test.
 Historical targets from Alpha 4 through RimWorld 1.5 build on their owning
 `Support/<version>` branches and pass the available API-shape audits. Each historical
 branch contains target-specific metadata and a root DLL matching its versioned build,
-so the branch can be installed directly. Historical runtime certification is limited
-by the absence of runnable Alpha 4-1.5 game installations on the test machine.
+so the branch can be installed directly. RimWorld 1.5 additionally passed
+single-player and normal-hosted two-client Multiplayer construction tests. Alpha 4
+through RimWorld 1.4 remain build/API verified because those runtimes are not
+installed on the test machine.
 
 ## Release artifacts
 
@@ -19,12 +21,26 @@ by the absence of runnable Alpha 4-1.5 game installations on the test machine.
 |---|---|
 | `1.6/Assemblies/Construction Pipeline Optimizer.dll` | `9D4FDA8F3F6EF33AE3D6F181BFDAB0E15D6B1A228C89F48A332E239471AC0EEA` |
 | `1.6/Assemblies/0MultiplayerAPI.dll` | `72260148E72D263AB42CC3B6DCBBADAC27CB218CB3045B09FE6ADC4807C0437D` |
-| `Releases/ConstructionPipelineOptimizer-1.1.0.zip` | `2B99AAAFF9D48FFF171290B69470DEF73BAC7B2DA7E75AB369AA2A6E4D8B2E60` |
+| `Releases/ConstructionPipelineOptimizer-1.1.0.zip` | `4E416A14EB0C4DAB3C5E2950CBA6B1FB7BD41E6F6E2F33EB25D3A28203481013` |
 
 The archive contains only the 1.6 runtime payload, About metadata and preview,
 `LoadFolders.xml`, `README.md`, `CHANGELOG.md`, `LICENSE`, and the optional
 Multiplayer API bridge. Source, tests, tools, benchmark workspaces, and historical
 engineering payloads are excluded from the public archive.
+
+Current release-preparation commits:
+
+- Dev player metadata/build alignment:
+  `84f56356b11b74dd975bc04aa5e4eef161dd5a96`
+- Dev refreshed historical payload set:
+  `ecfd913bbffac553232a2a98329957a97f190b05`
+- RimWorld 1.5 final package record:
+  `0ba9397ffcd9270be9bd75b398e45f224a574118`
+- RimWorld-Agent 1.5 Multiplayer tooling:
+  `ed04b90b938e9d02312e3425e48824925af7b0d1`
+
+The RimWorld 1.5 decision and evidence are recorded separately in
+[`ReleaseStatus-1.1.0-rw1.5.md`](ReleaseStatus-1.1.0-rw1.5.md).
 
 ## Exact RimWorld 1.6 Multiplayer acceptance
 

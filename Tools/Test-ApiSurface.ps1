@@ -200,8 +200,35 @@ foreach ($version in $Versions)
         $payload = Join-Path $projectRoot "$version\Assemblies\Construction Pipeline Optimizer.dll"
         Assert-Condition (Test-Path -LiteralPath $payload) "The mod payload for RimWorld $version has not been built: $payload"
 
+        $payloadModule = [Mono.Cecil.ModuleDefinition]::ReadModule($payload)
+        try
+        {
+            $targetFrameworkAttribute = $payloadModule.Assembly.CustomAttributes |
+                Where-Object AttributeType.FullName -eq 'System.Runtime.Versioning.TargetFrameworkAttribute' |
+                Select-Object -First 1
+            $usesLegacyRuntime = $version -eq 'Alpha4' -or $version.StartsWith('0.') -or $version -eq '1.0'
+            $expectedRuntime = if ($usesLegacyRuntime) { 'v2.0.50727' } else { 'v4.0.30319' }
+            Assert-Condition ($payloadModule.RuntimeVersion -eq $expectedRuntime) "RimWorld $version payload uses CLR metadata $($payloadModule.RuntimeVersion); expected $expectedRuntime"
+
+            $payloadFramework = if ($null -eq $targetFrameworkAttribute)
+            {
+                if ($usesLegacyRuntime) { '.NETFramework,Version=v3.5' } else { '<missing>' }
+            }
+            else
+            {
+                [string]$targetFrameworkAttribute.ConstructorArguments[0].Value
+            }
+            $expectedFramework = if ($usesLegacyRuntime) { '.NETFramework,Version=v3.5' } else { '.NETFramework,Version=v4.7.2' }
+            Assert-Condition ($payloadFramework -eq $expectedFramework) "RimWorld $version payload targets $payloadFramework; expected $expectedFramework"
+        }
+        finally
+        {
+            $payloadModule.Dispose()
+        }
+
         $results += [pscustomobject]@{
             Version = $version
+            Framework = $payloadFramework
             Continuation = 'verified'
             ValidationThrottle = if (-not $hasRuntimeBodies) { 'compile surface only' } elseif ($expectsThrottle) { 'verified' } else { 'not present in vanilla' }
             CompletionCall = if ($hasRuntimeBodies) { $completionCalls[0].Caller.FullName } else { 'runtime IL unavailable locally' }
@@ -214,5 +241,5 @@ foreach ($version in $Versions)
     }
 }
 
-$results | Format-Table Version, Continuation, ValidationThrottle -AutoSize
+$results | Format-Table Version, Framework, Continuation, ValidationThrottle -AutoSize
 Write-Output "RimWorld construction API surface verified for $($results.Count) versions."

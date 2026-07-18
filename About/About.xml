@@ -3,5 +3,5 @@
   <name>Construction Pipeline Optimizer</name>
   <author>Coolnether123</author>
   <targetVersion>0.18.1722</targetVersion>
-  <description>Reduces repeated active construction validation and redundant zero-cost terrain work selection. Requires Harmony. No settings or save data.</description>
+  <description>Helps construction-heavy colonies run more smoothly by reducing repeated construction work while preserving normal RimWorld behavior. Supports RimWorld 0.18 single-player. Requires Harmony. No settings or save data.</description>
 </ModMetaData>

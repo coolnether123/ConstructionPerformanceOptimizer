@@ -1,6 +1,9 @@
 param(
     [ValidateSet('Debug', 'Release')]
-    [string]$Configuration = 'Release'
+    [string]$Configuration = 'Release',
+
+    [ValidateSet('1.0')]
+    [string]$Version = '1.0'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -12,13 +15,19 @@ if ($LASTEXITCODE -ne 0)
     throw "Deterministic policy tests failed with exit code $LASTEXITCODE."
 }
 
-dotnet build (Join-Path $projectRoot 'Source\ConstructionPipelineOptimizer.csproj') -c $Configuration
+dotnet build (Join-Path $projectRoot 'Source\ConstructionPipelineOptimizer.csproj') -c $Version
 if ($LASTEXITCODE -ne 0)
 {
     throw "Mod build failed with exit code $LASTEXITCODE."
 }
 
-& (Join-Path $PSScriptRoot 'Validate-Package.ps1') -PackageRoot $projectRoot
+& (Join-Path $PSScriptRoot 'Test-ApiSurface.ps1') -Versions $Version
+if ($LASTEXITCODE -ne 0)
+{
+    throw "API surface validation failed with exit code $LASTEXITCODE."
+}
+
+& (Join-Path $PSScriptRoot 'Validate-Package.ps1') -PackageRoot $projectRoot -TargetVersion $Version
 if ($LASTEXITCODE -ne 0)
 {
     throw "Package validation failed with exit code $LASTEXITCODE."

@@ -28,7 +28,7 @@ namespace ConstructionPipelineOptimizer.Bootstrap
                     $"compatibility inspection failed.\n{exception}");
                 compatibility = new ValidationPatchCompatibilityReport(
                     new[] { "inspection failed" },
-                    Array.Empty<string>());
+                    new string[0]);
             }
 
             // The broad cadence and its final completion guard are a dependent pair. A foreign

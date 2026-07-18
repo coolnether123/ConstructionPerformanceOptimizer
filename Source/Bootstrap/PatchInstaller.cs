@@ -1,6 +1,8 @@
 using System;
+#if RW_VALIDATION_THROTTLE
 using ConstructionPipelineOptimizer.Compatibility;
 using ConstructionPipelineOptimizer.Infrastructure;
+#endif
 using ConstructionPipelineOptimizer.Patches;
 using HarmonyLib;
 using Verse;

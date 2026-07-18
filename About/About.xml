@@ -7,9 +7,9 @@
   <supportedVersions>
     <li>0.19</li>
   </supportedVersions>
-  <description><![CDATA[Reduces repeated active construction validation and redundant zero-cost terrain work selection.
+  <description><![CDATA[Helps construction-heavy colonies run more smoothly by reducing repeated construction work while preserving normal RimWorld behavior.
 
-The branch is compiled against RimWorld 0.19. Multiplayer is not runtime-verified on this historical RimWorld version.
+Supports RimWorld 0.19 single-player. Multiplayer support begins with the separate RimWorld 1.5 build.
 
 Requires Harmony. No settings or save data. Do not enable this with Construction Queue Optimizer because that legacy package contains the same patches.]]></description>
   <modDependencies>

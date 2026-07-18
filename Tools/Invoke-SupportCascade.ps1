@@ -130,6 +130,7 @@ function Set-BranchMetadata
     param([string]$Version)
 
     $targetVersions = @{
+        '0.19' = '0.19.2009'
         '0.18' = '0.18.1722'
         '0.17' = '0.17.1557'
         '0.16' = '0.16.1393'

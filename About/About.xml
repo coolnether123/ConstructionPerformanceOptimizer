@@ -3,7 +3,6 @@
   <name>Construction Pipeline Optimizer</name>
   <author>Coolnether123</author>
   <packageId>coolnether123.constructionpipelineoptimizer</packageId>
-  <modVersion>1.1.0</modVersion>
   <supportedVersions>
     <li>1.0</li>
   </supportedVersions>

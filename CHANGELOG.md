@@ -36,13 +36,19 @@ The project follows Semantic Versioning.
   Historical branches now carry target-specific metadata and a matching root payload
   so they are directly installable rather than compile artifacts only.
 - Added the official MultiplayerAPI 0.5 bridge to the RimWorld 1.5 branch. Its build
-  matches Multiplayer's open-source `rw-1.5` dependency; runtime remains unverified
-  because no runnable RimWorld 1.5 installation is present locally.
+  matches Multiplayer's open-source `rw-1.5` dependency and passed normal-hosted
+  two-client construction testing.
+- Corrected the RimWorld 1.0 target to .NET 3.5 and excluded the modern fluent
+  validation pair that its old Mono runtime cannot load. The independent construction
+  continuation remains enabled.
 
 ### Verified
 
 - Deterministic policy and fluent-transpiler tests.
 - RimWorld 1.6 release build with zero warnings and API-shape audit.
+- RimWorld 1.0 native quickstart with 50 colonists and 300 steel-wall blueprints:
+  25,512 simulation ticks, 186 new completed walls, 101 active frames, 13 blueprints
+  remaining, and no runtime exceptions or errors.
 - Isolated 75-mod single-player construction smoke with Better Work Tab and the
   legacy optimizer excluded.
 - Three repeatable normal-session Multiplayer construction passes with identical

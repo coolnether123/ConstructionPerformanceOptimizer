@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework Condition="'$(Configuration)' != '0.15'">net472</TargetFramework>
+    <TargetFramework Condition="'$(Configuration)' == '0.15'">net35</TargetFramework>
     <Configurations>Debug;Release;Alpha4;0.13;0.14;0.15;0.16;0.17;0.18;0.19;1.0;1.1;1.2;1.3;1.4;1.5;1.6</Configurations>
     <LangVersion>latest</LangVersion>
     <Nullable>disable</Nullable>
@@ -125,7 +126,13 @@
     <PackageReference Include="Lib.Harmony" Version="2.3.6" ExcludeAssets="compile;runtime" />
   </ItemGroup>
   <ItemGroup Condition="'$(EffectiveRimWorldVersion)' == 'Alpha4' Or '$(EffectiveRimWorldVersion)' == '0.13' Or '$(EffectiveRimWorldVersion)' == '0.14' Or '$(EffectiveRimWorldVersion)' == '0.15' Or '$(EffectiveRimWorldVersion)' == '0.16' Or '$(EffectiveRimWorldVersion)' == '0.17'">
+    <Compile Remove="Compatibility\PatchOwnerPolicy.cs" />
+    <Compile Remove="Compatibility\ValidationPatchCompatibility.cs" />
     <Compile Remove="Infrastructure\FinishFrameMethodTargets.cs" />
+    <Compile Remove="Infrastructure\MethodCallInspector.cs" />
+    <Compile Remove="Infrastructure\Transpilers\FluentTranspiler.cs" />
+    <Compile Remove="Infrastructure\Transpilers\FluentTranspilerCallRecipes.cs" />
+    <Compile Remove="Infrastructure\Transpilers\FluentTranspilerValidation.cs" />
     <Compile Remove="Patches\FinishFrameValidationThrottlePatch.cs" />
     <Compile Remove="Patches\FinishFrameCompletionGuardPatch.cs" />
   </ItemGroup>

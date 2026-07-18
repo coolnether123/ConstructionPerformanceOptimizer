@@ -42,7 +42,7 @@ namespace ConstructionPipelineOptimizer.Bootstrap
 
     /// <summary>
     /// Historical RimWorld releases reliably construct custom Def subclasses while loading
-    /// XML. Keep this idempotent entry point alongside modern static-constructor discovery.
+    /// XML. Keep this idempotent entry point alongside static-constructor discovery.
     /// </summary>
     public sealed class ConstructionPipelineOptimizerBootstrapDef : Def
     {

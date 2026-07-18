@@ -40,10 +40,9 @@ namespace ConstructionPipelineOptimizer.Bootstrap
         }
     }
 
-#if RW_ALPHA4
     /// <summary>
-    /// Alpha 4 constructs custom Def subclasses while loading XML. This small Def is the
-    /// supported entry point because that release predates the modern startup attribute.
+    /// Historical RimWorld releases reliably construct custom Def subclasses while loading
+    /// XML. Keep this idempotent entry point alongside modern static-constructor discovery.
     /// </summary>
     public sealed class ConstructionPipelineOptimizerBootstrapDef : Def
     {
@@ -52,7 +51,8 @@ namespace ConstructionPipelineOptimizer.Bootstrap
             ConstructionPipelineOptimizerMod.Initialize();
         }
     }
-#else
+
+#if !RW_ALPHA4
     /// <summary>
     /// RimWorld 0.13 and newer discover this type during static-constructor startup.
     /// </summary>

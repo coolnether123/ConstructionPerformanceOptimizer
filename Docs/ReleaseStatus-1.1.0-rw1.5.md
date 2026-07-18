@@ -18,6 +18,8 @@ the public RimWorld 1.6 archive.
   `006da477f79af5ba65b9c982f4673b70a57240c7`
 - CPO final acceptance/package documentation source:
   `e2ac386e153a1bb043e9a9b460c50e0f0c1d7dc5`
+- CPO player-facing About metadata:
+  `58875d1071437e08fbe70a3a633386cec11a6787`
 - RimWorld-Agent 1.5 multiplayer/fixture tooling:
   `ed04b90b938e9d02312e3425e48824925af7b0d1`
 
@@ -29,7 +31,7 @@ is intentionally excluded from the runtime archive.
 - Archive:
   `ConstructionPipelineOptimizer-1.1.0-rw1.5.zip`
 - Archive SHA-256:
-  `51854FBAAF2898B8028B11D2609F0C0F52CC781485ED2BD5ACF74227ADF9C045`
+  `F860CCDEF295161EA921F4BA924BFC458937C10A2561CB6328043514E087E9AF`
 - CPO root/versioned DLL SHA-256:
   `5173F7CB342F0C75218060B0DCE3172B6C091775AF6387D1D9029E964A0F69E7`
 - MultiplayerAPI 0.5 DLL SHA-256:

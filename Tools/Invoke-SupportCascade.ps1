@@ -151,7 +151,7 @@ function Set-BranchMetadata
   <name>Construction Pipeline Optimizer</name>
   <author>Coolnether123</author>
   <targetVersion>$targetVersion</targetVersion>
-  <description>Reduces repeated active construction validation and redundant zero-cost terrain work selection. Requires Harmony. No settings or save data.</description>
+  <description>Helps construction-heavy colonies run more smoothly by reducing repeated construction work while preserving normal RimWorld behavior. Supports RimWorld $Version single-player. Requires Harmony. No settings or save data.</description>
 </ModMetaData>
 "@
         [System.IO.File]::WriteAllText($aboutPath, $xml)
@@ -168,7 +168,7 @@ function Set-BranchMetadata
     }
     else
     {
-        'Multiplayer is not runtime-verified on this historical RimWorld version.'
+        'This build supports single-player. Multiplayer support begins with the separate RimWorld 1.5 build.'
     }
 
     $modVersionElement = if ($Version -eq '1.4' -or $Version -eq '1.5')
@@ -190,7 +190,7 @@ $modVersionElement
   <supportedVersions>
     <li>$Version</li>
   </supportedVersions>
-  <description><![CDATA[Reduces repeated active construction validation and redundant zero-cost terrain work selection.
+  <description><![CDATA[Helps construction-heavy colonies run more smoothly by reducing repeated construction work while preserving normal RimWorld behavior.
 
 The branch is compiled against RimWorld $Version. $multiplayerText
 
@@ -251,12 +251,13 @@ function Sync-BranchPayload
         Remove-Item -LiteralPath $rootMultiplayerApi -Force
     }
 
-    if ($Version -eq 'Alpha4')
+    if ($Version -eq 'Alpha4' -or $Version.StartsWith('0.'))
     {
-        $sourceDef = Join-Path $projectRoot 'Alpha4\Defs\ConstructionPipelineOptimizerBootstrap.xml'
-        $rootDefs = Join-Path $projectRoot 'Defs\ConstructionPipelineOptimizerBootstrap'
-        New-Item -ItemType Directory -Force -Path $rootDefs | Out-Null
-        Copy-Item -LiteralPath $sourceDef -Destination (Join-Path $rootDefs 'ConstructionPipelineOptimizerBootstrap.xml') -Force
+        $bootstrapDef = Join-Path $projectRoot 'Defs\ConstructionPipelineOptimizerBootstrap.xml'
+        if (-not (Test-Path -LiteralPath $bootstrapDef))
+        {
+            throw "Historical bootstrap Def is missing: $bootstrapDef"
+        }
     }
 
     Set-BranchMetadata $Version
@@ -274,9 +275,9 @@ function Commit-BranchPayload
             'About/About.xml',
             'LoadFolders.xml')
     }
-    if ($Version -eq 'Alpha4')
+    if ($Version -eq 'Alpha4' -or $Version.StartsWith('0.'))
     {
-        $paths += 'Defs/ConstructionPipelineOptimizerBootstrap'
+        $paths += 'Defs/ConstructionPipelineOptimizerBootstrap.xml'
     }
 
     $stagePaths = @($paths | Where-Object {

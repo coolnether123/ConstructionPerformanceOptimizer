@@ -189,7 +189,15 @@ function Wait-ForDurableHeartbeat(
     $freshUpdates = 0
     do {
         if (Test-Path -LiteralPath $HeartbeatPath) {
-            $heartbeatWrite = (Get-Item -LiteralPath $HeartbeatPath).LastWriteTime
+            # The Agent replaces heartbeat.txt atomically. It can therefore disappear
+            # between Test-Path and Get-Item; treat that as a normal pending update.
+            $heartbeat = Get-Item -LiteralPath $HeartbeatPath -ErrorAction SilentlyContinue
+            if ($null -eq $heartbeat) {
+                Start-Sleep -Milliseconds 200
+                continue
+            }
+
+            $heartbeatWrite = $heartbeat.LastWriteTime
             $ageSeconds = ((Get-Date) - $heartbeatWrite).TotalSeconds
             if ($ageSeconds -lt 3) {
                 if ($lastFreshWrite -ne $heartbeatWrite) {

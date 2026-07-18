@@ -137,9 +137,10 @@ The 1.5 branch builds CPO against `Assembly-CSharp` 1.5 and
 same API package. The resulting CPO DLL references MultiplayerAPI 0.5.0, and its
 branch package carries the corresponding `0MultiplayerAPI.dll`.
 
-This proves the intended 1.5 compile/API contract. It does not prove a live
-two-client session because no runnable RimWorld 1.5 installation is available
-locally. Public documentation therefore labels 1.5 Multiplayer runtime-unverified.
+The installed RimWorld 1.5.4409 runtime passed a normal-hosted two-client session
+with Multiplayer 0.10.7 and MultiplayerAPI 0.5. Both peers reached the same final
+paused tick, completed active construction, and reported no desync. A separate
+CPO-free control also passed.
 
 ## RimWorld Agent verification
 
@@ -151,6 +152,7 @@ multi-instance bridge paths.
 Verification:
 
 - RimWorld Agent 1.6 build: passed with zero errors.
+- RimWorld Agent 1.5 build and two-instance connection tooling: passed.
 - Known build warning: the existing cross-version status writer uses Unity's obsolete
   `Application.loadedLevelName` property.
 - Colony inspection argument tests: passed.
@@ -172,7 +174,7 @@ and these messages are not attributed to CPO.
 
 ```powershell
 # Deterministic and fluent-transpiler tests plus 1.6 build/package validation
-.\Tools\Build.ps1 -Configuration Release
+.\Tools\Build.ps1 -Version 1.6
 
 # All historical API-shape checks after the support cascade
 .\Tools\Test-ApiSurface.ps1
@@ -191,5 +193,6 @@ and these messages are not attributed to CPO.
 
 - RimWorld 1.6 single-player: **release-ready**
 - RimWorld 1.6 Multiplayer: **release-ready**
-- Alpha 4-1.5 branch builds: **build/API verified and directly packageable**
-- RimWorld 1.5 Multiplayer: **correct API build; live runtime verification pending**
+- RimWorld 1.5 single-player: **runtime-verified release candidate**
+- RimWorld 1.5 Multiplayer: **runtime-verified release candidate**
+- Alpha 4-1.4 branch builds: **build/API verified and directly packageable**

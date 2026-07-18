@@ -11,13 +11,13 @@ modern tree.
 | 0.13-0.17 | Experimental | Not available in vanilla | Not needed | Not tested | Original game assembly IL + target build/API audit |
 | 0.18-0.19 | Experimental | Experimental | Experimental | Not tested | Original game assembly IL + target build/API audit |
 | 1.0-1.4 | Experimental | Experimental | Experimental | Not tested | Reference assembly + target build/API audit |
-| 1.5 | Experimental | Experimental | Experimental | Compile-ready, runtime unverified | RimWorld 1.5 reference assembly + MultiplayerAPI 0.5 + target build/API audit |
+| 1.5 | Experimental | Experimental | Experimental | Verified on `Support/1.5` | Installed RimWorld 1.5 + MultiplayerAPI 0.5 + build/API audit + single-player and normal two-client construction tests |
 | 1.6 | Supported target | Supported target | Supported target | Supported | Installed assembly IL, compile/API audit, single-player smoke, and normal two-client construction tests |
 
 ## Important limits
 
 - A successful reference build proves API compatibility, not runtime behavior.
-  No runnable Alpha 4-1.5 game installations are present locally, so historical
+  No runnable Alpha 4-1.4 game installations are present locally, so those historical
   versions remain build/API verified until tested in their games.
 - Every historical support branch is directly loadable: its root assembly matches
   its target-specific versioned DLL, its About metadata names that RimWorld version,
@@ -25,8 +25,10 @@ modern tree.
 - Historical bootstrap and method-shape adaptations live only on their owning
   support branches. `Dev` receives rebuilt DLL folders, never historical source.
 - The 1.5 branch references `Assembly-CSharp` 1.5 and MultiplayerAPI 0.5.0, matching
-  the open-source Multiplayer `rw-1.5` branch. The API contract and build are verified,
-  but no two-client 1.5 runtime claim is made without a runnable 1.5 installation.
+  the open-source Multiplayer `rw-1.5` branch. Its isolated 100-blueprint save passed
+  single-player construction and normal two-client Multiplayer tests. The final
+  CPO-enabled run advanced from tick 23 to 14,379, completed 37 constructions, and
+  kept both peers synchronized with no desync. The CPO-free control also passed.
 - The cascade fails closed when a required compiler-generated method has zero or
   multiple matching call sites.
 - The valid Multiplayer acceptance path is normal save hosting. The older replay

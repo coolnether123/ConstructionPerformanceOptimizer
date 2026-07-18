@@ -106,8 +106,9 @@ always keep a normal save backup when changing a large mod list.
 - Tilled Soil is supported but is not a required dependency.
 - RimWorld 1.6 Multiplayer is supported and ships the official optional API bridge.
 - RimWorld 1.5 compiles against the official MultiplayerAPI 0.5 package used by
-  Multiplayer's open-source `rw-1.5` branch. Runtime multiplayer remains unverified
-  until a runnable 1.5 game installation is available for a two-client test.
+  Multiplayer's open-source `rw-1.5` branch. The `Support/1.5` package passed
+  single-player construction and normal-hosted two-client Multiplayer tests with
+  Better Work Tab and the legacy optimizer excluded.
 - Mods that patch `WorkGiver_ConstructFinishFrames.JobOnThing` remain in the
   continuation decision path. Full replacements still warrant a compatibility test.
 - A foreign Harmony owner present on the exact generated validation predicate when

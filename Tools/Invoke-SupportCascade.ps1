@@ -150,7 +150,7 @@ function Set-BranchMetadata
   <name>Construction Pipeline Optimizer</name>
   <author>Coolnether123</author>
   <targetVersion>$targetVersion</targetVersion>
-  <description>Reduces repeated active construction validation and redundant zero-cost terrain work selection. Requires Harmony. No settings or save data.</description>
+  <description>Helps construction-heavy colonies run more smoothly by reducing repeated construction work while preserving normal RimWorld behavior. Supports RimWorld $Version single-player. Requires Harmony. No settings or save data.</description>
 </ModMetaData>
 "@
         [System.IO.File]::WriteAllText($aboutPath, $xml)
@@ -167,7 +167,16 @@ function Set-BranchMetadata
     }
     else
     {
-        'Multiplayer is not runtime-verified on this historical RimWorld version.'
+        'This build supports single-player. Multiplayer support begins with the separate RimWorld 1.5 build.'
+    }
+
+    $modVersionElement = if ($Version -eq '1.4' -or $Version -eq '1.5')
+    {
+        '  <modVersion>1.1.0</modVersion>'
+    }
+    else
+    {
+        ''
     }
 
     $xml = @"
@@ -176,11 +185,11 @@ function Set-BranchMetadata
   <name>Construction Pipeline Optimizer</name>
   <author>Coolnether123</author>
   <packageId>coolnether123.constructionpipelineoptimizer</packageId>
-  <modVersion>1.1.0</modVersion>
+$modVersionElement
   <supportedVersions>
     <li>$Version</li>
   </supportedVersions>
-  <description><![CDATA[Reduces repeated active construction validation and redundant zero-cost terrain work selection.
+  <description><![CDATA[Helps construction-heavy colonies run more smoothly by reducing repeated construction work while preserving normal RimWorld behavior.
 
 The branch is compiled against RimWorld $Version. $multiplayerText
 

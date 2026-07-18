@@ -70,7 +70,7 @@ optimizations from the earlier broad package have substantial alternatives.
 
 ## Multiplayer
 
-RimWorld 1.6 Multiplayer is supported. CPO uses the official Multiplayer API for
+RimWorld 1.5 and 1.6 Multiplayer are supported. CPO uses the official Multiplayer API for
 detection and makes its cadence decisions from synchronized game ticks and stable pawn
 IDs. It does not send independent UI commands or maintain peer-local gameplay state.
 
@@ -105,9 +105,12 @@ always keep a normal save backup when changing a large mod list.
 - Harmony is required.
 - Tilled Soil is supported but is not a required dependency.
 - RimWorld 1.6 Multiplayer is supported and ships the official optional API bridge.
-- RimWorld 1.5 compiles against the official MultiplayerAPI 0.5 package used by
-  Multiplayer's open-source `rw-1.5` branch. Runtime multiplayer remains unverified
-  until a runnable 1.5 game installation is available for a two-client test.
+- RimWorld 1.5 passed normal-hosted two-client Multiplayer testing with the official
+  MultiplayerAPI 0.5 bridge.
+- Alpha 4 through RimWorld 1.4 are single-player-only historical builds. Multiplayer
+  is not supported on those versions.
+- RimWorld 1.0 passed a native quickstart construction stress test with 50 colonists
+  and 300 steel-wall blueprints.
 - Mods that patch `WorkGiver_ConstructFinishFrames.JobOnThing` remain in the
   continuation decision path. Full replacements still warrant a compatibility test.
 - A foreign Harmony owner present on the exact generated validation predicate when

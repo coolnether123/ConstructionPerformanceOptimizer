@@ -170,13 +170,22 @@ function Set-BranchMetadata
         'This build supports single-player. Multiplayer support begins with the separate RimWorld 1.5 build.'
     }
 
+    $modVersionElement = if ($Version -eq '1.4' -or $Version -eq '1.5')
+    {
+        '  <modVersion>1.1.0</modVersion>'
+    }
+    else
+    {
+        ''
+    }
+
     $xml = @"
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
   <name>Construction Pipeline Optimizer</name>
   <author>Coolnether123</author>
   <packageId>coolnether123.constructionpipelineoptimizer</packageId>
-  <modVersion>1.1.0</modVersion>
+$modVersionElement
   <supportedVersions>
     <li>$Version</li>
   </supportedVersions>

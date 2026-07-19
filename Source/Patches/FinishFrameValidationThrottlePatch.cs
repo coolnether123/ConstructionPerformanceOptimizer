@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using System.Reflection;
-using ConstructionPipelineOptimizer.Infrastructure;
-using ConstructionPipelineOptimizer.Infrastructure.Transpilers;
-using ConstructionPipelineOptimizer.Scheduling;
+using ConstructionPerformanceOptimizer.Infrastructure;
+using ConstructionPerformanceOptimizer.Infrastructure.Transpilers;
+using ConstructionPerformanceOptimizer.Scheduling;
 using HarmonyLib;
 using RimWorld;
 using Verse;
 using Verse.AI;
 
-namespace ConstructionPipelineOptimizer.Patches
+namespace ConstructionPerformanceOptimizer.Patches
 {
     /// <summary>
     /// Throttles the repeated CanConstruct fail condition inside vanilla FinishFrame jobs when

@@ -2,7 +2,7 @@
 
 Acquired on 2026-07-13. External source was cloned or decompiled only for
 interoperability and overlap analysis; no external implementation was copied into
-Construction Pipeline Optimizer.
+Construction Performance Optimizer.
 
 | Project | Evidence | Revision / artifact |
 |---|---|---|

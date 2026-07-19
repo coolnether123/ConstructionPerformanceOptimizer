@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 
-namespace ConstructionPipelineOptimizer.Infrastructure.Transpilers
+namespace ConstructionPerformanceOptimizer.Infrastructure.Transpilers
 {
     /// <summary>
     /// Strict, fail-closed fluent editor for the small set of IL rewrites owned by this mod.

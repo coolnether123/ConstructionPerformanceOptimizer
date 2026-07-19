@@ -26,9 +26,9 @@ $configPath = "$env:USERPROFILE\AppData\LocalLow\Ludeon Studios\RimWorld by Lude
 $modsRoot = Join-Path (Split-Path -Parent $RimWorldPath) "Mods"
 $legacySource = Join-Path $benchmarkRoot "Variants\LegacyBroad"
 $conflictSource = Join-Path $benchmarkRoot "Variants\ForeignValidationOwner"
-$legacyInstall = Join-Path $modsRoot "Construction Pipeline Optimizer - Legacy Broad Benchmark"
+$legacyInstall = Join-Path $modsRoot "Construction Performance Optimizer - Legacy Broad Benchmark"
 $conflictInstall = Join-Path $modsRoot "CPO Foreign Validation Owner - Benchmark Only"
-$currentInstall = Join-Path $modsRoot "Construction Pipeline Optimizer"
+$currentInstall = Join-Path $modsRoot "Construction Performance Optimizer"
 $playerLog = "$env:USERPROFILE\AppData\LocalLow\Ludeon Studios\RimWorld by Ludeon Studios\Player.log"
 $timestamp = Get-Date -Format "yyyyMMdd-HHmmss"
 $resultRoot = Join-Path $benchmarkRoot "Results\$timestamp-$Variant"
@@ -51,8 +51,8 @@ function Set-BenchmarkProfile {
     $removeIds = @(
         "coolnether123.betterworktab",
         "coolnether123.constructionqueueoptimizer",
-        "coolnether123.constructionpipelineoptimizer",
-        "coolnether123.constructionpipelineoptimizer.benchmarklegacy",
+        "coolnether123.constructionperformanceoptimizer",
+        "coolnether123.constructionperformanceoptimizer.benchmarklegacy",
         "benchmark.cpo.foreignvalidationowner"
     )
 
@@ -70,9 +70,9 @@ function Set-BenchmarkProfile {
     }
 
     $variantPackageIds = switch ($SelectedVariant) {
-        "legacy-broad" { "coolnether123.constructionpipelineoptimizer.benchmarklegacy" }
-        { $_ -in @("current-safe", "current-adaptive") } { "coolnether123.constructionpipelineoptimizer" }
-        "current-conflict" { "benchmark.cpo.foreignvalidationowner"; "coolnether123.constructionpipelineoptimizer" }
+        "legacy-broad" { "coolnether123.constructionperformanceoptimizer.benchmarklegacy" }
+        { $_ -in @("current-safe", "current-adaptive") } { "coolnether123.constructionperformanceoptimizer" }
+        "current-conflict" { "benchmark.cpo.foreignvalidationowner"; "coolnether123.constructionperformanceoptimizer" }
         default { @() }
     }
     foreach ($variantPackageId in $variantPackageIds) {
@@ -99,7 +99,7 @@ function Copy-VariantRuntime {
     New-Item -ItemType Directory -Force -Path $conflictInstall | Out-Null
     Copy-Item -Path (Join-Path $conflictSource "*") -Destination $conflictInstall -Recurse -Force
 
-    if (!(Test-Path -LiteralPath (Join-Path $currentInstall "1.6\Assemblies\Construction Pipeline Optimizer.dll"))) {
+    if (!(Test-Path -LiteralPath (Join-Path $currentInstall "1.6\Assemblies\Construction Performance Optimizer.dll"))) {
         throw "Current optimizer runtime is not installed at $currentInstall"
     }
 }
@@ -130,8 +130,8 @@ try {
         "runs=$Runs"
         "rimWorldSha256=$((Get-FileHash -Algorithm SHA256 -LiteralPath $RimWorldPath).Hash)"
         "saveSha256=$((Get-FileHash -Algorithm SHA256 -LiteralPath "$env:USERPROFILE\AppData\LocalLow\Ludeon Studios\RimWorld by Ludeon Studios\Saves\$SaveName.rws").Hash)"
-        "legacyDllSha256=$((Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $legacyInstall "1.6\Assemblies\Construction Pipeline Optimizer.dll")).Hash)"
-        "currentDllSha256=$((Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $currentInstall "1.6\Assemblies\Construction Pipeline Optimizer.dll")).Hash)"
+        "legacyDllSha256=$((Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $legacyInstall "1.6\Assemblies\Construction Performance Optimizer.dll")).Hash)"
+        "currentDllSha256=$((Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $currentInstall "1.6\Assemblies\Construction Performance Optimizer.dll")).Hash)"
         "conflictDllSha256=$((Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $conflictInstall "1.6\Assemblies\CPO Foreign Validation Owner.dll")).Hash)"
     )
     $manifest | Set-Content -LiteralPath (Join-Path $resultRoot "manifest.txt") -Encoding UTF8

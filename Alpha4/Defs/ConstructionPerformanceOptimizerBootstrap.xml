@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <!-- Alpha 4 initializes assembly code through construction of a custom Def. -->
+  <ConstructionPerformanceOptimizer.Bootstrap.ConstructionPerformanceOptimizerBootstrapDef>
+    <defName>ConstructionPerformanceOptimizer_Alpha4Bootstrap</defName>
+  </ConstructionPerformanceOptimizer.Bootstrap.ConstructionPerformanceOptimizerBootstrapDef>
+</Defs>

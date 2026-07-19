@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace ConstructionPipelineOptimizer.Infrastructure.Transpilers
+namespace ConstructionPerformanceOptimizer.Infrastructure.Transpilers
 {
     /// <summary>
     /// Pure stack-signature validation shared by all fluent call recipes.

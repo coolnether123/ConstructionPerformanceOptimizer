@@ -18,7 +18,7 @@ param(
 $ErrorActionPreference = "Stop"
 $variants = @("baseline", "legacy-broad", "current-adaptive")
 $runner = Join-Path $PSScriptRoot "Invoke-Variant.ps1"
-$currentDll = Join-Path (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)) "1.6\Assemblies\Construction Pipeline Optimizer.dll"
+$currentDll = Join-Path (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)) "1.6\Assemblies\Construction Performance Optimizer.dll"
 
 if ([string]::IsNullOrWhiteSpace($ResultRoot))
 {

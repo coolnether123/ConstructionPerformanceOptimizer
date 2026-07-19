@@ -1,4 +1,4 @@
-[h1]Construction Pipeline Optimizer[/h1]
+[h1]Construction Performance Optimizer[/h1]
 
 A focused RimWorld construction performance mod for active construction jobs and the zero-cost terrain pipeline used by Tilled Soil and similar mods.
 

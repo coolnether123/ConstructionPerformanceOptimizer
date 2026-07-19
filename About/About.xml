@@ -25,9 +25,7 @@ CPO improves game performance. It does not make pawns build faster, alter work p
 
 Supports RimWorld 1.0 through 1.6. RimWorld 1.0 uses only the continuation optimization for compatibility with its older runtime. Single-player is supported on every listed version. Multiplayer is supported only on RimWorld 1.5 and 1.6, and every player must use the same CPO version and mod list.
 
-Requires Harmony. No settings and no save data. Normally safe to add or remove between sessions; keep a normal save backup when changing a large mod list.
-
-Do not enable this with Construction Queue Optimizer; the legacy mod contains the same construction patches.]]></description>
+Requires Harmony. No settings and no save data. Normally safe to add or remove between sessions; keep a normal save backup when changing a large mod list.]]></description>
   <modDependencies>
     <li>
       <packageId>brrainz.harmony</packageId>

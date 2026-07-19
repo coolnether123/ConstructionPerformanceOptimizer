@@ -18,7 +18,7 @@ RimWorld 1.5 package must remain separate from the public RimWorld 1.6 archive.
 - Normal save hosting with two separately rendered processes
 - 72 active mods, including Multiplayer, Multiplayer Compatibility, Tilled Soil,
   and CPO
-- Better Work Tab and Construction Queue Optimizer excluded
+- Better Work Tab excluded
 - Both peers reached `ClientPlaying`
 - Initial synchronized pause: world/map tick `23`
 - Final synchronized pause: world/map tick `14,379`

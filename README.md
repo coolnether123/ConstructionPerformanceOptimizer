@@ -82,7 +82,6 @@ gameplay patch.
    `Legacy`; those games predate safe automatic selection between incompatible
    version assemblies.
 4. Load this mod after Harmony and Tilled Soil.
-5. Do not enable `Construction Queue Optimizer` at the same time.
 
 The mod has no settings and writes no save data. It is normally safe to add or
 remove between sessions, but that is not a universal compatibility guarantee;

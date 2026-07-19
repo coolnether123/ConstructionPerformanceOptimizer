@@ -133,7 +133,6 @@ The project follows Semantic Versioning.
   defensive construction validation.
 - Unconditional construction authorization immediately before an active vanilla
   finish job completes its frame.
-- Explicit incompatibility metadata for the legacy Construction Queue Optimizer.
 - RimWorld 1.6 release metadata, visuals, package validation, and reproducible
   runtime-only archive generation.
 

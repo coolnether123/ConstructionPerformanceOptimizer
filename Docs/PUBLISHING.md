@@ -67,7 +67,6 @@ archive.
 
 - No red errors during startup or construction.
 - No duplicate package-ID warning.
-- The legacy Construction Queue Optimizer is not active.
 - Ordinary material-bearing frames complete normally with the adaptive pair both on
   and intentionally disabled.
 - Zero-cost terrain completes successfully.

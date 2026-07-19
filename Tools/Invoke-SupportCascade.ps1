@@ -194,7 +194,7 @@ $modVersionElement
 
 Version 1.0. The branch is compiled against RimWorld $Version. $multiplayerText
 
-Requires Harmony. No settings or save data. Do not enable this with Construction Queue Optimizer because that legacy package contains the same patches.]]></description>
+Requires Harmony. No settings or save data.]]></description>
   <modDependencies>
     <li>
       <packageId>brrainz.harmony</packageId>

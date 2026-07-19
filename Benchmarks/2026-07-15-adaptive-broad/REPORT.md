@@ -104,8 +104,7 @@ Seed: `160715`. No trial was discarded, replaced, or rerun based on performance.
 - Fresh RimWorld process and unchanged save reload for every trial
 - Same historical full mod profile in every arm
 - Dubs Performance Analyzer and RimWorld Agent enabled in every arm
-- Better Work Tab, Construction Queue Optimizer, and non-selected optimizer variants
-  explicitly removed from every arm
+- Better Work Tab and non-selected optimizer variants explicitly removed from every arm
 - Original `ModsConfig.xml` restored exactly after every trial
 - Restored `ModsConfig.xml` SHA-256:
   `75231E50E316F2D55FB8D81ED0E776B3E64E1C78C6D12EC60DD38C271048970C`

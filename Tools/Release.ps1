@@ -93,7 +93,7 @@ function New-LegacyAbout
     $displayVersion = if ($RimWorldVersion -eq 'Alpha4') { 'Alpha 4' } else { $RimWorldVersion }
     $benefit = 'CPO avoids an unnecessary global job search when a pawn can continue eligible zero-cost terrain construction.'
 
-    $description = "Construction Performance Optimizer 1.0. $benefit The benefit is largest in construction-heavy colonies and with terrain-building mods. It does not change construction speed or bypass normal gameplay rules. Supports RimWorld $displayVersion single-player only; Multiplayer is not supported on this version. Requires Harmony. No settings or save data. Do not enable this with Construction Queue Optimizer because that legacy package contains the same patches."
+    $description = "Construction Performance Optimizer 1.0. $benefit The benefit is largest in construction-heavy colonies and with terrain-building mods. It does not change construction speed or bypass normal gameplay rules. Supports RimWorld $displayVersion single-player only; Multiplayer is not supported on this version. Requires Harmony. No settings or save data."
     $legacyAbout = @"
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>

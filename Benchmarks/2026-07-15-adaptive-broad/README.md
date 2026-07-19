@@ -10,8 +10,7 @@ three-map colony fixture:
   Harmony owner; otherwise the pair stays off. Downstream patched methods remain
   composed and are reported.
 
-Better Work Tab and the older all-in-one Construction Queue Optimizer are removed
-from every benchmark profile. Dubs Performance Analyzer and RimWorld Agent remain
+Better Work Tab is removed from every benchmark profile. Dubs Performance Analyzer and RimWorld Agent remain
 enabled for measurement only.
 
 The historic frozen fixture contains 1,344 construction blueprints: 1,122 are

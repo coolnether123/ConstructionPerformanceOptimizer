@@ -3,7 +3,7 @@
 All notable changes to Construction Performance Optimizer are documented here.
 The project follows Semantic Versioning.
 
-## 1.1.0 - 2026-07-17
+## 1.0 - 2026-07-17
 
 ### Changed
 
@@ -32,7 +32,7 @@ The project follows Semantic Versioning.
 - Added off-game fluent transpiler tests for successful redirects, missing and ambiguous
   targets, unsafe hook signatures, input-stream atomicity, generated completion-guard
   control flow, and exception-handler rejection.
-- Rebuilt Alpha 4 through 1.6 on their owning support branches at version 1.1.0.
+- Rebuilt Alpha 4 through 1.6 on their owning support branches at version 1.0.
   Historical branches now carry target-specific metadata and a matching root payload
   so they are directly installable rather than compile artifacts only.
 - Added the official MultiplayerAPI 0.5 bridge to the RimWorld 1.5 branch. Its build
@@ -48,7 +48,7 @@ The project follows Semantic Versioning.
 - Three repeatable normal-session Multiplayer construction passes with identical
   host/client simulation clocks and no desync. The final exact-artifact pass advanced
   1,801 synchronized ticks and completed 23 constructions.
-- Exact 1.1.0 DLL SHA-256:
+- Exact 1.0 DLL SHA-256:
   `9D4FDA8F3F6EF33AE3D6F181BFDAB0E15D6B1A228C89F48A332E239471AC0EEA`.
 
 ## 1.0.0 - 2026-07-15

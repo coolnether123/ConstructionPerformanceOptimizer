@@ -3,7 +3,7 @@
 A focused RimWorld construction performance mod that reduces repeated active-frame
 validation and avoids one global work search in the zero-cost terrain pipeline.
 
-Version: **1.1.0**
+Version: **1.0**
 
 Dependencies: **Harmony**
 
@@ -40,7 +40,7 @@ The package deliberately excludes every non-construction optimization from the e
 The figures below belong to the tagged pre-hardening 1.0.0 DLL with SHA-256
 `64E3FED700B75BA4B349867D98E783ED317EF50B434D1EF2E6AB783D5834D212`.
 They remain historical performance evidence rather than a claim about the hardened
-1.1.0 binary. The separately validated 1.1.0 DLL has SHA-256
+1.0 binary. The separately validated 1.0 DLL has SHA-256
 `9D4FDA8F3F6EF33AE3D6F181BFDAB0E15D6B1A228C89F48A332E239471AC0EEA`.
 
 On the derived 12,000 Tilled Soil blueprint fixture, the exact committed 1.6 DLL was
@@ -77,7 +77,7 @@ IDs. It does not send independent UI commands or maintain peer-local gameplay st
 Release validation used Multiplayer's normal save-host path with two rendered RimWorld
 instances, 75 active mods, three maps, and more than 11,000 construction blueprints.
 Three CPO-enabled runs returned both peers to identical world/map clocks after active
-construction and reported no desync. The final run used the exact 1.1.0 release DLL,
+construction and reported no desync. The final run used the exact 1.0 release DLL,
 advanced 1,801 synchronized ticks, and completed 23 constructions. A CPO-free control
 also passed. All players still need the same CPO version and mod list, as with any
 deterministic gameplay patch.

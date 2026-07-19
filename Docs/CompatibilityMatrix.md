@@ -35,7 +35,7 @@ modern tree.
   runs completed 2,686, 2,731, and 1,801 synchronized simulation ticks across three
   maps, reduced the construction fixture by 57, 62, and 23 blueprints, returned both
   peers to identical map clocks, and reported no desync. The final run used the exact
-  1.1.0 release DLL with SHA-256
+  1.0 release DLL with SHA-256
   `9D4FDA8F3F6EF33AE3D6F181BFDAB0E15D6B1A228C89F48A332E239471AC0EEA`.
 - Runtime Harmony instrumentation is deliberately disabled in two-client acceptance
   runs. Dynamically repatching the construction methods while the harness is active

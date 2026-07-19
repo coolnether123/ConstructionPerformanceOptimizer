@@ -7,7 +7,7 @@
   <supportedVersions>
     <li>1.1</li>
   </supportedVersions>
-  <description><![CDATA[Helps construction-heavy colonies run more smoothly by reducing repeated construction work while preserving normal RimWorld behavior.
+  <description>Construction Performance Optimizer 1.0. <![CDATA[Construction Performance Optimizer 1.0. Helps construction-heavy colonies run more smoothly by reducing repeated construction work while preserving normal RimWorld behavior.
 
 The branch is compiled against RimWorld 1.1. This build supports single-player. Multiplayer support begins with the separate RimWorld 1.5 build.
 

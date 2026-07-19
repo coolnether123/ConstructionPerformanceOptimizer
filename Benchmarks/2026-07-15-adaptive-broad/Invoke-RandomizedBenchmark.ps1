@@ -31,7 +31,7 @@ $runner = Join-Path $PSScriptRoot "Invoke-Variant.ps1"
 $repositoryRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 if ([string]::IsNullOrWhiteSpace($OldSafeDll)) {
     $OldSafeDll = Join-Path $repositoryRoot (
-        "Releases\ConstructionPerformanceOptimizer-1.1.0\ConstructionPerformanceOptimizer" +
+        "Releases\ConstructionPerformanceOptimizer-1.0\ConstructionPerformanceOptimizer" +
         "\1.6\Assemblies\Construction Performance Optimizer.dll")
 }
 if ([string]::IsNullOrWhiteSpace($NewFastDll)) {

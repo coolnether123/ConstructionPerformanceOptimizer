@@ -1,10 +1,10 @@
-# CPO 1.1.0 speed-3 runtime metrics
+# CPO 1.0 speed-3 runtime metrics
 
 Date: 2026-07-18
 
 ## Result
 
-The hardened CPO 1.1.0 DLL was measured in nine fresh RimWorld processes for
+The hardened CPO 1.0 DLL was measured in nine fresh RimWorld processes for
 60 seconds each on the 12,000-blueprint Tilled Soil stress save at normal player
 speed 3 (`Superfast`). Better Work Tab and Construction Queue Optimizer were
 disabled. Each run used an isolated game-data folder and the harness required CPO

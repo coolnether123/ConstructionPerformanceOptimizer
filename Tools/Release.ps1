@@ -35,18 +35,19 @@ if ($LASTEXITCODE -ne 0)
 
 [xml]$about = Get-Content -LiteralPath (Join-Path $projectRoot 'About\About.xml') -Raw
 $version = [string]$about.ModMetaData.modVersion
+$releaseLabel = if ($version -match '^(\d+\.\d+)\.0$') { $Matches[1] } else { $version }
 $releaseDirectory = Join-Path $projectRoot 'Releases'
 $packageName = 'ConstructionPerformanceOptimizer'
 $stagedPackage = Join-Path $stagingBase $packageName
 $stagedLegacyRoot = Join-Path $stagingBase 'Legacy'
-$releaseVersionRoot = [System.IO.Path]::GetFullPath((Join-Path $releaseDirectory "$packageName-$version"))
+$releaseVersionRoot = [System.IO.Path]::GetFullPath((Join-Path $releaseDirectory "$packageName-$releaseLabel"))
 $releaseDirectoryPrefix = [System.IO.Path]::GetFullPath($releaseDirectory).TrimEnd('\') + '\'
 if (-not $releaseVersionRoot.StartsWith($releaseDirectoryPrefix, [System.StringComparison]::OrdinalIgnoreCase))
 {
     throw "Unsafe release folder resolved outside the project release directory: $releaseVersionRoot"
 }
 $publishFolder = Join-Path $releaseVersionRoot $packageName
-$archivePath = Join-Path $releaseDirectory "$packageName-$version.zip"
+$archivePath = Join-Path $releaseDirectory "$packageName-$releaseLabel.zip"
 
 if (((Test-Path -LiteralPath $archivePath) -or (Test-Path -LiteralPath $releaseVersionRoot)) -and -not $Force)
 {
@@ -92,7 +93,7 @@ function New-LegacyAbout
     $displayVersion = if ($RimWorldVersion -eq 'Alpha4') { 'Alpha 4' } else { $RimWorldVersion }
     $benefit = 'CPO avoids an unnecessary global job search when a pawn can continue eligible zero-cost terrain construction.'
 
-    $description = "$benefit The benefit is largest in construction-heavy colonies and with terrain-building mods. It does not change construction speed or bypass normal gameplay rules. Supports RimWorld $displayVersion single-player only; Multiplayer is not supported on this version. Requires Harmony. No settings or save data. Do not enable this with Construction Queue Optimizer because that legacy package contains the same patches."
+    $description = "Construction Performance Optimizer 1.0. $benefit The benefit is largest in construction-heavy colonies and with terrain-building mods. It does not change construction speed or bypass normal gameplay rules. Supports RimWorld $displayVersion single-player only; Multiplayer is not supported on this version. Requires Harmony. No settings or save data. Do not enable this with Construction Queue Optimizer because that legacy package contains the same patches."
     $legacyAbout = @"
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
@@ -180,12 +181,12 @@ try
     New-Item -ItemType Directory -Force -Path $legacyArchiveRoot | Out-Null
     foreach ($legacyVersion in $legacyVersions)
     {
-        $legacyArchive = Join-Path $legacyArchiveRoot "$packageName-$version-rw$legacyVersion.zip"
+        $legacyArchive = Join-Path $legacyArchiveRoot "$packageName-$releaseLabel-rw$legacyVersion.zip"
         $null = New-ReleaseArchive -Source (Join-Path $releaseVersionRoot "Legacy\$legacyVersion\$packageName") -Destination $legacyArchive
     }
 
     $installGuide = @"
-Construction Performance Optimizer $version
+Construction Performance Optimizer $releaseLabel
 
 RimWorld 1.0-1.6:
 Install the ConstructionPerformanceOptimizer folder. It selects the matching build automatically.

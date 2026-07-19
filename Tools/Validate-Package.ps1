@@ -65,7 +65,7 @@ if ($LegacyVersion)
     $assemblyPath = Get-RequiredPath 'Assemblies\Construction Performance Optimizer.dll'
     Assert-Condition ((Get-Item -LiteralPath $assemblyPath).Length -gt 0) "RimWorld $LegacyVersion assembly is empty."
     $assemblyVersion = [System.Reflection.AssemblyName]::GetAssemblyName($assemblyPath).Version
-    Assert-Condition ($assemblyVersion.ToString(3) -eq '1.1.0') "RimWorld $LegacyVersion assembly version must be 1.1.0."
+    Assert-Condition ($assemblyVersion.ToString(3) -eq '1.0.0') "RimWorld $LegacyVersion assembly version must be 1.0.0."
 }
 else
 {

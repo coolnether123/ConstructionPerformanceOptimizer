@@ -9,7 +9,7 @@ The benefit is most noticeable with large building plans, long construction queu
 many builders, higher game speeds, and terrain-building mods such as Tilled Soil. It
 does not make pawns build faster or change construction rules.
 
-Version: **1.1.0**
+Version: **1.0**
 
 Dependencies: **Harmony**
 

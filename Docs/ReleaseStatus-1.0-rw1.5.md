@@ -1,4 +1,4 @@
-# Construction Performance Optimizer 1.1.0 — RimWorld 1.5
+# Construction Performance Optimizer 1.0 — RimWorld 1.5
 
 ## Release decision
 
@@ -35,7 +35,7 @@ evidence.
 
 ## Final package
 
-- Archive: `ConstructionPerformanceOptimizer-1.1.0-rw1.5.zip`
+- Archive: `ConstructionPerformanceOptimizer-1.0-rw1.5.zip`
 - Archive SHA-256:
   `F860CCDEF295161EA921F4BA924BFC458937C10A2561CB6328043514E087E9AF`
 - CPO DLL SHA-256:

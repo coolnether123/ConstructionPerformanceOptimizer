@@ -151,7 +151,7 @@ function Set-BranchMetadata
   <name>Construction Performance Optimizer</name>
   <author>Coolnether123</author>
   <targetVersion>$targetVersion</targetVersion>
-  <description>Helps construction-heavy colonies run more smoothly by reducing repeated construction work while preserving normal RimWorld behavior. Supports RimWorld $Version single-player. Requires Harmony. No settings or save data.</description>
+  <description>Construction Performance Optimizer 1.0 helps construction-heavy colonies run more smoothly by reducing repeated construction work while preserving normal RimWorld behavior. Supports RimWorld $Version single-player. Requires Harmony. No settings or save data.</description>
 </ModMetaData>
 "@
         [System.IO.File]::WriteAllText($aboutPath, $xml)
@@ -173,7 +173,7 @@ function Set-BranchMetadata
 
     $modVersionElement = if ($Version -eq '1.4' -or $Version -eq '1.5')
     {
-        '  <modVersion>1.1.0</modVersion>'
+        '  <modVersion>1.0.0</modVersion>'
     }
     else
     {
@@ -192,7 +192,7 @@ $modVersionElement
   </supportedVersions>
   <description><![CDATA[Helps construction-heavy colonies run more smoothly by reducing repeated construction work while preserving normal RimWorld behavior.
 
-The branch is compiled against RimWorld $Version. $multiplayerText
+Version 1.0. The branch is compiled against RimWorld $Version. $multiplayerText
 
 Requires Harmony. No settings or save data. Do not enable this with Construction Queue Optimizer because that legacy package contains the same patches.]]></description>
   <modDependencies>

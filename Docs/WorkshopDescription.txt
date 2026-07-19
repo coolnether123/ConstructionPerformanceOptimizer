@@ -20,6 +20,7 @@ CPO improves game performance. It does not make pawns build faster or change con
 
 [h2]Compatibility[/h2]
 [list]
+[*]Current release: Version 1.0.
 [*]Supports RimWorld 1.0 through 1.6.
 [*]RimWorld 1.0 uses the zero-cost terrain continuation optimization only.
 [*]Single-player is supported on every listed version.

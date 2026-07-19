@@ -1,8 +1,8 @@
-# Construction Performance Optimizer 1.1.0 Release Status
+# Construction Performance Optimizer 1.0 Release Status
 
 ## Executive status
 
-Construction Performance Optimizer (CPO) 1.1.0 is release-ready for RimWorld 1.6.
+Construction Performance Optimizer (CPO) 1.0 is release-ready for RimWorld 1.6.
 The selected adaptive build passed deterministic policy tests, fluent-transpiler
 tests, API-shape validation, package validation, randomized clean single-player
 performance tests, fail-closed conflict testing, and a normal-hosted two-client
@@ -41,7 +41,7 @@ Current release-preparation commits:
   `ed04b90b938e9d02312e3425e48824925af7b0d1`
 
 The RimWorld 1.5 decision and evidence are recorded separately in
-[`ReleaseStatus-1.1.0-rw1.5.md`](ReleaseStatus-1.1.0-rw1.5.md).
+[`ReleaseStatus-1.0-rw1.5.md`](ReleaseStatus-1.0-rw1.5.md).
 
 ## Exact RimWorld 1.6 Multiplayer acceptance
 
@@ -51,7 +51,7 @@ Final evidence:
 
 | Check | Result |
 |---|---|
-| CPO DLL | Construction Performance Optimizer 1.1.0 build `9F14EB...E507` |
+| CPO DLL | Construction Performance Optimizer 1.0 build `9F14EB...E507` |
 | Game instances | Two rendered RimWorld processes |
 | Hosting path | Normal save hosting; replay path excluded |
 | Active mods | 75 |
@@ -130,7 +130,7 @@ exception-handler rejection.
 | 1.5 | Verified | Compile surface verified | Build/API audit passed |
 | 1.6 | Verified | Verified | Build/API and runtime tests passed |
 
-All 15 targets report assembly version 1.1.0.0 and reference their corresponding
+All 15 targets report assembly version 1.0.0.0 and reference their corresponding
 RimWorld `Assembly-CSharp` version. The support cascade builds each target on its
 own branch and copies only rebuilt versioned assembly folders back to `Dev`.
 
@@ -184,7 +184,7 @@ and these messages are not attributed to CPO.
 .\Tools\Test-ApiSurface.ps1
 
 # Full support-branch build cascade (does not push unless -Push is supplied)
-.\Tools\Invoke-SupportCascade.ps1 -ReleaseLabel v1.1.0
+.\Tools\Invoke-SupportCascade.ps1 -ReleaseLabel v1.0
 
 # Exact normal-host two-client construction test
 .\Tools\Invoke-MultiplayerSmoke.ps1 -TwoClient -RunSeconds 15 -Port 30531

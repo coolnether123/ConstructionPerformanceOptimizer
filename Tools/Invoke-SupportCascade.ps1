@@ -196,7 +196,7 @@ function Complete-IdentityRename
         return
     }
 
-    Invoke-Git add -A
+    Invoke-Git add --all
     Invoke-Git commit `
         -m "Complete Construction Performance Optimizer rename for RimWorld $Version" `
         -m "Rename historical branch-only source, metadata, bootstrap, and payload paths."

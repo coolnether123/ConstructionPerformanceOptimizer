@@ -1,6 +1,6 @@
 using System;
 using System.Reflection;
-using ConstructionPipelineOptimizer.Infrastructure;
+using ConstructionPerformanceOptimizer.Infrastructure;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -13,7 +13,7 @@ using FrameType = RimWorld.Frame;
 using FinishFrameDriverType = RimWorld.JobDriver_ConstructFinishFrame;
 #endif
 
-namespace ConstructionPipelineOptimizer.Infrastructure
+namespace ConstructionPerformanceOptimizer.Infrastructure
 {
     /// <summary>
     /// Centralizes exact vanilla method identities used by the FinishFrame transpilers.

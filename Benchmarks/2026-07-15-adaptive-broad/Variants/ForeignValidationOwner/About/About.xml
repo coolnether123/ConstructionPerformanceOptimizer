@@ -14,6 +14,6 @@
     </li>
   </modDependencies>
   <loadBefore>
-    <li>coolnether123.constructionpipelineoptimizer</li>
+    <li>coolnether123.constructionperformanceoptimizer</li>
   </loadBefore>
 </ModMetaData>

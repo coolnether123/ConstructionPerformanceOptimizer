@@ -1,4 +1,4 @@
-# Construction Pipeline Optimizer
+# Construction Performance Optimizer
 
 A focused RimWorld construction performance mod that reduces repeated active-frame
 validation and avoids one global work search in the zero-cost terrain pipeline.
@@ -85,7 +85,7 @@ deterministic gameplay patch.
 ## Installation
 
 1. Install Harmony.
-2. Extract the `ConstructionPipelineOptimizer` folder into RimWorld's `Mods`
+2. Extract the `ConstructionPerformanceOptimizer` folder into RimWorld's `Mods`
    folder, or subscribe through Steam Workshop after publication.
 3. Load this mod after Harmony and Tilled Soil.
 4. Do not enable `Construction Queue Optimizer` at the same time.

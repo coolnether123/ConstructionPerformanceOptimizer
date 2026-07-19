@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to Construction Pipeline Optimizer are documented here.
+All notable changes to Construction Performance Optimizer are documented here.
 The project follows Semantic Versioning.
 
 ## 1.1.0 - 2026-07-17

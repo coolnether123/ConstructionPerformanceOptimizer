@@ -6,13 +6,13 @@ param(
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path -Parent $PSScriptRoot
 
-dotnet run --project (Join-Path $projectRoot 'Tests\ConstructionPipelineOptimizer.Tests.csproj') -c $Configuration
+dotnet run --project (Join-Path $projectRoot 'Tests\ConstructionPerformanceOptimizer.Tests.csproj') -c $Configuration
 if ($LASTEXITCODE -ne 0)
 {
     throw "Deterministic policy tests failed with exit code $LASTEXITCODE."
 }
 
-dotnet build (Join-Path $projectRoot 'Source\ConstructionPipelineOptimizer.csproj') -c $Configuration
+dotnet build (Join-Path $projectRoot 'Source\ConstructionPerformanceOptimizer.csproj') -c $Configuration
 if ($LASTEXITCODE -ne 0)
 {
     throw "Mod build failed with exit code $LASTEXITCODE."

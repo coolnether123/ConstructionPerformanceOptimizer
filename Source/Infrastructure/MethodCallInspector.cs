@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace ConstructionPipelineOptimizer.Infrastructure
+namespace ConstructionPerformanceOptimizer.Infrastructure
 {
     /// <summary>
     /// Resolves compiler-generated patch targets by the method they call, not by an unstable

@@ -8,7 +8,7 @@ using FrameType = RimWorld.Frame;
 using TerrainDefType = Verse.TerrainDef;
 #endif
 
-namespace ConstructionPipelineOptimizer.Eligibility
+namespace ConstructionPerformanceOptimizer.Eligibility
 {
     /// <summary>
     /// Defines the narrow frame scope that may bypass the second global work search.

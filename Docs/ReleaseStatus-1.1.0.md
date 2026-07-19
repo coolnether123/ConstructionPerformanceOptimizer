@@ -20,7 +20,7 @@ installed on the test machine.
 
 | Artifact | SHA-256 |
 |---|---|
-| `1.6/Assemblies/Construction Performance Optimizer.dll` | `CDA027C78449AF865BE00039392EC99FD97B66CBF65F4F499A9CBB476837AA16` |
+| `1.6/Assemblies/Construction Performance Optimizer.dll` | `9F14EB4470BE92C259DF23A998B7758AF0DF68BD4723CD339A161B86658DE507` |
 | `1.6/Assemblies/0MultiplayerAPI.dll` | `72260148E72D263AB42CC3B6DCBBADAC27CB218CB3045B09FE6ADC4807C0437D` |
 
 The main archive contains the automatically routed RimWorld 1.0-1.6 runtime
@@ -31,12 +31,12 @@ directory. Source, tests, tools, and benchmark workspaces are excluded.
 
 Current release-preparation commits:
 
-- Dev player metadata/build alignment:
-  `84f56356b11b74dd975bc04aa5e4eef161dd5a96`
+- Dev Construction Performance Optimizer identity:
+  `47819f89ea8986a3d41173cbed2153f2e2330251`
 - Dev refreshed historical payload set:
-  `ecfd913bbffac553232a2a98329957a97f190b05`
-- RimWorld 1.5 final package record:
-  `0ba9397ffcd9270be9bd75b398e45f224a574118`
+  `e41db66dad210c4522b064d5639735bc44eb6704`
+- RimWorld 1.5 renamed package record:
+  `26e1eed22e89e2eb7e5a5923d6e78a0b0636f40c`
 - RimWorld-Agent 1.5 Multiplayer tooling:
   `ed04b90b938e9d02312e3425e48824925af7b0d1`
 
@@ -51,7 +51,7 @@ Final evidence:
 
 | Check | Result |
 |---|---|
-| CPO DLL | Selected adaptive 1.1.0 build `CDA027...AA16` |
+| CPO DLL | Construction Performance Optimizer 1.1.0 build `9F14EB...E507` |
 | Game instances | Two rendered RimWorld processes |
 | Hosting path | Normal save hosting; replay path excluded |
 | Active mods | 75 |

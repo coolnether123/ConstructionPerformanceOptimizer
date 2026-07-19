@@ -4,8 +4,8 @@
     <Configurations>Debug;Release;1.6</Configurations>
     <LangVersion>latest</LangVersion>
     <Nullable>disable</Nullable>
-    <AssemblyName>Construction Pipeline Optimizer</AssemblyName>
-    <RootNamespace>ConstructionPipelineOptimizer</RootNamespace>
+    <AssemblyName>Construction Performance Optimizer</AssemblyName>
+    <RootNamespace>ConstructionPerformanceOptimizer</RootNamespace>
     <Version>1.1.0</Version>
     <AssemblyVersion>1.1.0.0</AssemblyVersion>
     <FileVersion>1.1.0.0</FileVersion>
@@ -14,7 +14,7 @@
          benchmark and Workshop package can therefore use the exact same DLL. -->
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <Authors>Coolnether123</Authors>
-    <Description>Adaptive deterministic construction pipeline optimization for RimWorld 1.6.</Description>
+    <Description>Adaptive deterministic construction performance optimization for RimWorld 1.6.</Description>
     <Copyright>Copyright © 2026 Coolnether123</Copyright>
     <Deterministic>true</Deterministic>
     <DisableImplicitConfigurationDefines>true</DisableImplicitConfigurationDefines>

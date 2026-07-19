@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using ConstructionPipelineOptimizer.Infrastructure;
+using ConstructionPerformanceOptimizer.Infrastructure;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -10,7 +10,7 @@ using FrameType = RimWorld.Frame;
 using FinishFrameDriverType = RimWorld.JobDriver_ConstructFinishFrame;
 using FinishFramesWorkGiverType = RimWorld.WorkGiver_ConstructFinishFrames;
 
-namespace ConstructionPipelineOptimizer.Compatibility
+namespace ConstructionPerformanceOptimizer.Compatibility
 {
     /// <summary>
     /// Distinguishes direct competition on the validation predicate from downstream patches

@@ -1,11 +1,12 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 
-namespace ConstructionPipelineOptimizer.Infrastructure.Transpilers
+namespace ConstructionPerformanceOptimizer.Infrastructure.Transpilers
 {
     /// <summary>
     /// Strict, fail-closed fluent editor for the small set of IL rewrites owned by this mod.
@@ -75,6 +76,47 @@ namespace ConstructionPipelineOptimizer.Infrastructure.Transpilers
             return new FluentCallSelection(this, sourceMethod);
         }
 
+        internal FluentTranspiler PrependInstanceFieldGuardOrReturnFalse(
+            FieldInfo instanceField,
+            MethodInfo guardMethod)
+        {
+            FluentTranspilerValidation.ValidateInstanceFieldBooleanGuard(
+                originalMethod,
+                instanceField,
+                guardMethod);
+            EnsureStructuralEditIsSafe("An early-return guard");
+
+            ILGenerator activeGenerator = generator ??
+                throw Failure("An early-return guard requires Harmony's ILGenerator.");
+
+            if (instructions.Count == 0)
+            {
+                throw Failure("An early-return guard requires a non-empty instruction stream.");
+            }
+
+            Label runOriginal = activeGenerator.DefineLabel();
+            CodeInstruction originalFirst = instructions[0];
+            originalFirst.labels.Add(runOriginal);
+
+            CodeInstruction loadInstance = new CodeInstruction(OpCodes.Ldarg_0);
+            loadInstance.labels.AddRange(originalFirst.labels.Where(label => !label.Equals(runOriginal)));
+            originalFirst.labels.RemoveAll(label => !label.Equals(runOriginal));
+
+            instructions.InsertRange(
+                0,
+                new[]
+                {
+                    loadInstance,
+                    new CodeInstruction(OpCodes.Ldfld, instanceField),
+                    new CodeInstruction(OpCodes.Call, guardMethod),
+                    new CodeInstruction(OpCodes.Brtrue, runOriginal),
+                    new CodeInstruction(OpCodes.Ldc_I4_0),
+                    new CodeInstruction(OpCodes.Ret)
+                });
+            editCount++;
+            return this;
+        }
+
         internal MethodBase OriginalMethod => originalMethod;
 
         internal int FindUniqueCallIndex(MethodInfo sourceMethod)
@@ -114,27 +156,9 @@ namespace ConstructionPipelineOptimizer.Infrastructure.Transpilers
 
         internal void AppendBooleanGuardAndReturn(int callIndex)
         {
-            if (generator == null)
-            {
+            EnsureStructuralEditIsSafe("A guarded call rewrite");
+            ILGenerator activeGenerator = generator ??
                 throw Failure("A guarded call rewrite requires Harmony's ILGenerator.");
-            }
-
-            MethodBody? body = originalMethod.GetMethodBody();
-            if (body != null && body.ExceptionHandlingClauses.Count > 0)
-            {
-                throw Failure(
-                    "Refusing a structural guarded-call edit in a method with exception handlers.");
-            }
-
-            foreach (CodeInstruction instruction in instructions)
-            {
-                if (instruction.blocks.Count > 0)
-                {
-                    throw Failure(
-                        "Refusing a structural guarded-call edit after another transpiler " +
-                        "introduced exception-block boundaries.");
-                }
-            }
 
             int continuationIndex = callIndex + 1;
             if (continuationIndex >= instructions.Count)
@@ -142,11 +166,36 @@ namespace ConstructionPipelineOptimizer.Infrastructure.Transpilers
                 throw Failure("The guarded call has no continuation instruction.");
             }
 
-            Label continueLabel = generator.DefineLabel();
+            Label continueLabel = activeGenerator.DefineLabel();
             instructions[continuationIndex].labels.Add(continueLabel);
             instructions.Insert(callIndex + 1, new CodeInstruction(OpCodes.Brtrue, continueLabel));
             instructions.Insert(callIndex + 2, new CodeInstruction(OpCodes.Ret));
             editCount++;
+        }
+
+        private void EnsureStructuralEditIsSafe(string operation)
+        {
+            if (generator == null)
+            {
+                throw Failure($"{operation} requires Harmony's ILGenerator.");
+            }
+
+            MethodBody? body = originalMethod.GetMethodBody();
+            if (body != null && body.ExceptionHandlingClauses.Count > 0)
+            {
+                throw Failure(
+                    $"Refusing {operation.ToLowerInvariant()} in a method with exception handlers.");
+            }
+
+            foreach (CodeInstruction instruction in instructions)
+            {
+                if (instruction.blocks.Count > 0)
+                {
+                    throw Failure(
+                        $"Refusing {operation.ToLowerInvariant()} after another transpiler " +
+                        "introduced exception-block boundaries.");
+                }
+            }
         }
 
         private IEnumerable<CodeInstruction> Build()

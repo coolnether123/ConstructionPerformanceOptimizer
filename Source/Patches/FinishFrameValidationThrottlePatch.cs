@@ -1,14 +1,15 @@
 using System.Collections.Generic;
 using System.Reflection;
-using ConstructionPipelineOptimizer.Infrastructure;
-using ConstructionPipelineOptimizer.Infrastructure.Transpilers;
-using ConstructionPipelineOptimizer.Scheduling;
+using System.Reflection.Emit;
+using ConstructionPerformanceOptimizer.Infrastructure;
+using ConstructionPerformanceOptimizer.Infrastructure.Transpilers;
+using ConstructionPerformanceOptimizer.Scheduling;
 using HarmonyLib;
 using RimWorld;
 using Verse;
 using Verse.AI;
 
-namespace ConstructionPipelineOptimizer.Patches
+namespace ConstructionPerformanceOptimizer.Patches
 {
     /// <summary>
     /// Throttles the repeated CanConstruct fail condition inside vanilla FinishFrame jobs when
@@ -22,47 +23,40 @@ namespace ConstructionPipelineOptimizer.Patches
 
         private static readonly MethodInfo CadenceValidator = AccessTools.DeclaredMethod(
             typeof(FinishFrameValidationThrottlePatch),
-            nameof(CanConstructOnCadence));
+            nameof(ShouldRunVanillaValidation));
+
+        private static readonly FieldInfo ValidationBuild =
+            FinishFrameMethodTargets.ValidationBuildField();
 
         private static MethodBase TargetMethod() => FinishFrameMethodTargets.ValidationPredicate();
 
         private static IEnumerable<CodeInstruction> Transpiler(
             IEnumerable<CodeInstruction> instructions,
-            MethodBase original)
+            MethodBase original,
+            ILGenerator generator)
         {
-            return FluentTranspiler.Execute(instructions, original, null, transpiler =>
+            return FluentTranspiler.Execute(instructions, original, generator, transpiler =>
                 transpiler
-                    .ForCall(FinishFrameMethodTargets.CanConstruct)
-                    .ReplaceSingleWith(CadenceValidator));
+                    .PrependInstanceFieldGuardOrReturnFalse(
+                        ValidationBuild,
+                        CadenceValidator));
         }
 
-        private static bool CanConstructOnCadence(
-            Thing thing,
-            Pawn pawn,
-            bool checkSkills,
-            bool forced,
-            JobDef jobForReservation)
+        private static bool ShouldRunVanillaValidation(Toil build)
         {
+            Pawn pawn = build?.actor;
+            if (pawn == null)
+            {
+                return true;
+            }
+
             // Multiplayer supplies the ticking map's deterministic map tick through
             // TickManager while this toil executes. The stable pawn ID distributes the
             // cadence identically on every peer without consuming random state.
-            bool shouldValidate = ValidationCadence.ShouldValidate(
+            return ValidationCadence.ShouldValidate(
                 Find.TickManager.TicksGame,
                 pawn.thingIDNumber,
                 ValidationInterval);
-            if (shouldValidate)
-            {
-                return GenConstruct.CanConstruct(
-                    thing,
-                    pawn,
-                    checkSkills,
-                    forced,
-                    jobForReservation);
-            }
-
-            // The vanilla fail predicate negates this result; true therefore means "do not
-            // fail on this skipped tick." Completion still has an unconditional guard.
-            return true;
         }
     }
 }

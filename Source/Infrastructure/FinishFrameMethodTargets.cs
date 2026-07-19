@@ -1,6 +1,7 @@
 using System;
+using System.Linq;
 using System.Reflection;
-using ConstructionPipelineOptimizer.Infrastructure;
+using ConstructionPerformanceOptimizer.Infrastructure;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -8,7 +9,7 @@ using Verse.AI;
 using FrameType = RimWorld.Frame;
 using FinishFrameDriverType = RimWorld.JobDriver_ConstructFinishFrame;
 
-namespace ConstructionPipelineOptimizer.Infrastructure
+namespace ConstructionPerformanceOptimizer.Infrastructure
 {
     /// <summary>
     /// Centralizes exact vanilla method identities used by the FinishFrame transpilers.
@@ -32,6 +33,26 @@ namespace ConstructionPipelineOptimizer.Infrastructure
                 typeof(FinishFrameDriverType),
                 CanConstruct,
                 method => method.ReturnType == typeof(bool) && method.GetParameters().Length == 0);
+        }
+
+        internal static FieldInfo ValidationBuildField()
+        {
+            MethodBase predicate = ValidationPredicate();
+            Type declaringType = predicate.DeclaringType ??
+                throw new MissingFieldException(
+                    "FinishFrame validation predicate has no declaring type.");
+            FieldInfo[] matches = declaringType
+                .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .Where(field => field.FieldType == typeof(Toil) && field.Name == "build")
+                .ToArray();
+            if (matches.Length != 1)
+            {
+                throw new MissingFieldException(
+                    $"Expected one FinishFrame validation Toil field named build; " +
+                    $"found {matches.Length}.");
+            }
+
+            return matches[0];
         }
 
         internal static MethodBase CompletionAction()

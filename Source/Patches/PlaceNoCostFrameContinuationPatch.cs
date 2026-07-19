@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using ConstructionPipelineOptimizer.Eligibility;
+using ConstructionPerformanceOptimizer.Eligibility;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -7,7 +7,7 @@ using Verse.AI;
 using FrameType = RimWorld.Frame;
 using PlaceNoCostDriverType = RimWorld.JobDriver_PlaceNoCostFrame;
 
-namespace ConstructionPipelineOptimizer.Patches
+namespace ConstructionPerformanceOptimizer.Patches
 {
     /// <summary>
     /// Extends vanilla's no-cost frame placement job with one final, instant continuation toil.
@@ -17,6 +17,12 @@ namespace ConstructionPipelineOptimizer.Patches
     [HarmonyPatch(typeof(PlaceNoCostDriverType), "MakeNewToils")]
     internal static class PlaceNoCostFrameContinuationPatch
     {
+        private static readonly WorkGiverDef FinishFramesWorkGiverDef =
+            DefDatabase<WorkGiverDef>.GetNamedSilentFail("ConstructFinishFrames");
+
+        private static readonly WorkGiver_Scanner FinishFramesWorkGiver =
+            FinishFramesWorkGiverDef?.Worker as WorkGiver_Scanner;
+
         private static IEnumerable<Toil> Postfix(IEnumerable<Toil> __result)
         {
             // Preserve the complete vanilla toil sequence before appending our transition.
@@ -42,17 +48,17 @@ namespace ConstructionPipelineOptimizer.Patches
                     return;
                 }
 
-                WorkGiverDef workGiverDef =
-                    DefDatabase<WorkGiverDef>.GetNamedSilentFail("ConstructFinishFrames");
-                WorkGiver_Scanner workGiver = workGiverDef?.Worker as WorkGiver_Scanner;
-                if (workGiver == null)
+                if (FinishFramesWorkGiver == null)
                 {
                     return;
                 }
 
                 // Ask the actual vanilla work giver for the job. Any other mod that patches
                 // JobOnThing can approve, reject, or replace this transition normally.
-                Job finishJob = workGiver.JobOnThing(pawn, frame, currentJob.playerForced);
+                Job finishJob = FinishFramesWorkGiver.JobOnThing(
+                    pawn,
+                    frame,
+                    currentJob.playerForced);
                 if (finishJob == null)
                 {
                     return;
@@ -65,7 +71,7 @@ namespace ConstructionPipelineOptimizer.Patches
 
                 if (finishJob.workGiverDef == null)
                 {
-                    finishJob.workGiverDef = workGiverDef;
+                    finishJob.workGiverDef = FinishFramesWorkGiverDef;
                 }
 
                 pawn.jobs.StartJob(finishJob, JobCondition.Succeeded);

@@ -1,12 +1,30 @@
 # Changelog
 
-All notable changes to Construction Pipeline Optimizer are documented here.
+All notable changes to Construction Performance Optimizer are documented here.
 The project follows Semantic Versioning.
 
 ## 1.1.0 - 2026-07-17
 
 ### Changed
 
+- Moved the guarded validation cadence to a validated predicate-entry fast path. It
+  avoids the full repeated defensive predicate on skipped ticks while keeping Harmony
+  prefixes and postfixes in the normal chain, and fails closed on an unexpected closure
+  field, method shape, exception region, or foreign owner.
+- Cached the registered `ConstructFinishFrames` work giver while still calling its real
+  `JobOnThing` method and preserving the exact returned job, so compatibility patches can
+  continue to approve, reject, or replace the transition.
+- Added a non-instrumenting runtime performance probe and randomized clean benchmark
+  runner. On the frozen 12,000-blueprint speed-3 fixture, the selected build produced
+  +8.33% paired TPS, 7.56% lower wall time per tick, and 6.54% lower process CPU time per
+  tick across three blocks; rendered FPS was unchanged within noise.
+- Hardened benchmark cleanup for Prepatcher's delayed canonical-executable relaunch.
+  The harness tracks only processes created by the run, preserves pre-existing games,
+  and verifies that isolated trials leave no processes behind.
+- Re-ran normal-hosted two-client Multiplayer acceptance on the selected adaptive
+  build. Both rendered peers loaded all three CPO features, advanced 2,506 synchronized
+  ticks across three maps, completed 52 constructions, ended on identical clocks,
+  and reported no desync.
 - Made `Dev` a strict RimWorld 1.6 source tree: removed historical API
   conditionals, references, bootstrap data, and build configurations. Historical
   source remains branch-owned under `Support/<version>`, while only rebuilt DLL
@@ -52,10 +70,8 @@ The project follows Semantic Versioning.
 - Isolated 75-mod single-player construction smoke with Better Work Tab and the
   legacy optimizer excluded.
 - Three repeatable normal-session Multiplayer construction passes with identical
-  host/client simulation clocks and no desync. The final exact-artifact pass advanced
-  1,801 synchronized ticks and completed 23 constructions.
-- Exact 1.1.0 DLL SHA-256:
-  `9D4FDA8F3F6EF33AE3D6F181BFDAB0E15D6B1A228C89F48A332E239471AC0EEA`.
+  host/client simulation clocks and no desync. The final selected-build pass advanced
+  2,506 synchronized ticks and completed 52 constructions.
 
 ## 1.0.0 - 2026-07-15
 

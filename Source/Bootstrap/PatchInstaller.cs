@@ -1,11 +1,11 @@
 using System;
-using ConstructionPipelineOptimizer.Compatibility;
-using ConstructionPipelineOptimizer.Infrastructure;
-using ConstructionPipelineOptimizer.Patches;
+using ConstructionPerformanceOptimizer.Compatibility;
+using ConstructionPerformanceOptimizer.Infrastructure;
+using ConstructionPerformanceOptimizer.Patches;
 using HarmonyLib;
 using Verse;
 
-namespace ConstructionPipelineOptimizer.Bootstrap
+namespace ConstructionPerformanceOptimizer.Bootstrap
 {
     /// <summary>
     /// Installs independent patch features in a safety-aware order.
@@ -18,12 +18,12 @@ namespace ConstructionPipelineOptimizer.Bootstrap
             try
             {
                 compatibility = ValidationPatchCompatibility.Inspect(
-                    ConstructionPipelineOptimizerMod.PackageId);
+                    ConstructionPerformanceOptimizerMod.PackageId);
             }
             catch (Exception exception)
             {
                 Log.Error(
-                    "[Construction Pipeline Optimizer] Disabled broad validation: " +
+                    "[Construction Performance Optimizer] Disabled broad validation: " +
                     $"compatibility inspection failed.\n{exception}");
                 compatibility = new ValidationPatchCompatibilityReport(
                     new[] { "inspection failed" },
@@ -76,7 +76,7 @@ namespace ConstructionPipelineOptimizer.Bootstrap
             catch (Exception exception)
             {
                 Log.Error(
-                    $"[Construction Pipeline Optimizer] Disabled {patchType.Name}: " +
+                    $"[Construction Performance Optimizer] Disabled {patchType.Name}: " +
                     $"the expected RimWorld method shape was not found.\n{exception}");
                 return false;
             }

@@ -9,7 +9,8 @@ modern tree.
 |---|---:|---:|---:|---:|---|
 | Alpha 4 | Experimental | Not available in vanilla | Not needed | Not supported | Original game assembly IL + target build/API audit |
 | 0.13-0.17 | Experimental | Not available in vanilla | Not needed | Not supported | Original game assembly IL + target build/API audit |
-| 0.18-0.19 | Experimental | Experimental | Experimental | Not supported | Original game assembly IL + target build/API audit |
+| 0.18 | Experimental | Not included on legacy Mono | Not included | Not supported | Original game assembly IL + target build/API audit |
+| 0.19 | Experimental | Not included on legacy Mono | Not included | Not supported | Original game assembly IL + target build/API audit |
 | 1.0 | Verified | Disabled for old Mono compatibility | Not used | Not supported | Installed 1.0.2559 runtime + clean quickstart with 50 colonists and 300 wall blueprints |
 | 1.1-1.4 | Experimental | Experimental | Experimental | Not supported | Reference assembly + target build/API audit |
 | 1.5 | Experimental | Experimental | Experimental | Verified on `Support/1.5` | Installed RimWorld 1.5 + MultiplayerAPI 0.5 + build/API audit + single-player and normal two-client construction tests |

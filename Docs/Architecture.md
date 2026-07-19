@@ -18,20 +18,23 @@ affected only by the active-job validation cadence when its compatibility gate p
 - Continuation applies only to a `Frame` whose build target is a `TerrainDef` with no cost list.
 - Continuation asks the registered `ConstructFinishFrames` work giver for the actual next job; patched or replacement work-giver logic participates normally.
 - On RimWorld 1.6, active finish jobs distribute their repeated defensive
-  validation every 15 ticks from `Find.TickManager.TicksGame` and pawn ID only
-  when the exact generated validation predicate has no foreign Harmony owner.
+  validation predicate every 15 ticks from `Find.TickManager.TicksGame` and pawn ID
+  only when the exact generated predicate has no foreign Harmony owner. A skipped
+  tick returns from the predicate before its vanilla body while leaving Harmony
+  prefixes and postfixes in the normal dispatcher chain.
 - Multiplayer runs the same patch set inside its deterministic map-tick context.
   CPO registers no peer-local UI sync methods and stores no gameplay state outside
   the synchronized simulation.
 - A targeted transpiler guards the exact `CompleteConstruction` call inside the finish-job tick action. Invalid completion returns from that tick without calling `ReadyForNextToil`, so vanilla later marks the job incompletable.
-- Both call-site rewrites use a focused fluent transpiler layer adapted from Better Work
-  Tab's `Spine.Harmony` implementation. Recipes require one exact call, validate the
-  replacement's complete stack signature before editing, clone the input stream, preserve
-  existing labels and exception blocks, and lint call operands and branch targets before
-  returning IL to Harmony.
-- The completion recipe refuses structural edits in methods with exception handlers. Its
-  boolean hook, success branch, and early return are emitted as one strict recipe; any
-  failure throws back to the patch installer so the cadence/guard pair is rolled back.
+- Both structural rewrites use a focused fluent transpiler layer adapted from Better Work
+  Tab's `Spine.Harmony` implementation. The validation recipe requires the one exact
+  compiler-generated predicate, its captured `build` toil field, and a boolean cadence
+  hook with a validated stack signature. The completion recipe requires one exact call.
+  Both clone the input stream, preserve labels and exception blocks, and lint call
+  operands and branch targets before returning IL to Harmony.
+- Both recipes refuse structural edits in methods with exception handlers. Each boolean
+  hook, success branch, and early return is emitted as one strict recipe; any failure
+  throws back to the patch installer so the cadence/guard pair is rolled back.
 - The cadence and completion guard are one safety-dependent pair. If compatibility
   inspection or either exact call-site patch fails, the pair is disabled or rolled
   back and vanilla validation remains active.
@@ -46,15 +49,20 @@ Continuation passes the current job's
 decision. If a job is returned, the same value is then assigned to that exact job.
 These are separate requirements and both are preserved.
 
-Compiler-generated finish-frame methods are resolved by their exact IL calls to `CanConstruct` and `CompleteConstruction`. Zero or multiple matches disable the affected feature instead of guessing. The completion guard installs before the cadence; the cadence is never installed without its safety dependency.
+Compiler-generated finish-frame methods are resolved by their exact IL calls to
+`CanConstruct` and `CompleteConstruction`. The validation closure must also expose
+exactly one captured `Toil` field named `build`. Zero or multiple matches disable the
+affected feature instead of guessing. The completion guard installs before the cadence;
+the cadence is never installed without its safety dependency.
 
 Compatibility inspection is deliberately asymmetric:
 
 - A foreign owner directly on the exact generated validation predicate disables the
   broad pair because it competes at the replaced call site.
 - Patches on `GenConstruct.CanConstruct`, `Frame.CompleteConstruction`, the finish
-  driver, or `ConstructFinishFrames.JobOnThing` are observed and logged but remain
-  composed because the wrappers still call those patched methods.
+  driver, or `ConstructFinishFrames.JobOnThing` are observed and logged. They remain
+  composed when their corresponding vanilla operation runs; the cadence deliberately
+  avoids `CanConstruct` on skipped validation ticks.
 - The transpilers independently require exactly one expected vanilla call. If an
   earlier transpiler removes or duplicates it, installation fails closed.
 
@@ -66,6 +74,18 @@ the broad pair. A mod that deliberately patches the predicate later at runtime i
 outside this startup check and requires dedicated compatibility handling.
 
 ## Single-use helper review
+
+`FinishFrameMethodTargets.ValidationBuildField` has one production caller. It remains
+separate because resolving the compiler-generated closure field is method-shape policy,
+while the patch class owns cadence behavior. If another patch never needs that captured
+toil, keep the resolver here rather than duplicating reflection inside the patch.
+
+`FluentTranspiler.PrependInstanceFieldGuardOrReturnFalse` has one production recipe
+caller plus direct deterministic test coverage. It remains a fluent operation because it
+owns label transfer, exception-region rejection, stack-signature validation, and atomic
+early-return emission as one structural IL boundary. Inlining it into the CPO patch would
+couple game policy to IL mechanics; the recommended architecture is to keep it as the
+tested recipe unless the fluent layer itself is retired.
 
 `ZeroCostTerrainEligibility.IsEligibleFrame` has one production caller after the
 validation cadence became adaptive and broad. It remains separate because it defines

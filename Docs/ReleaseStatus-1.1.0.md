@@ -1,11 +1,12 @@
-# Construction Pipeline Optimizer 1.1.0 Release Status
+# Construction Performance Optimizer 1.1.0 Release Status
 
 ## Executive status
 
-Construction Pipeline Optimizer (CPO) 1.1.0 is release-ready for RimWorld 1.6.
-The exact packaged DLL passed deterministic policy tests, fluent-transpiler tests,
-API-shape validation, package validation, single-player construction tests, and a
-normal-hosted two-client Multiplayer construction test.
+Construction Performance Optimizer (CPO) 1.1.0 is release-ready for RimWorld 1.6.
+The selected adaptive build passed deterministic policy tests, fluent-transpiler
+tests, API-shape validation, package validation, randomized clean single-player
+performance tests, fail-closed conflict testing, and a normal-hosted two-client
+Multiplayer construction test.
 
 Historical targets from Alpha 4 through RimWorld 1.5 build on their owning
 `Support/<version>` branches and pass the available API-shape audits. Each historical
@@ -19,14 +20,14 @@ installed on the test machine.
 
 | Artifact | SHA-256 |
 |---|---|
-| `1.6/Assemblies/Construction Pipeline Optimizer.dll` | `9D4FDA8F3F6EF33AE3D6F181BFDAB0E15D6B1A228C89F48A332E239471AC0EEA` |
+| `1.6/Assemblies/Construction Performance Optimizer.dll` | `CDA027C78449AF865BE00039392EC99FD97B66CBF65F4F499A9CBB476837AA16` |
 | `1.6/Assemblies/0MultiplayerAPI.dll` | `72260148E72D263AB42CC3B6DCBBADAC27CB218CB3045B09FE6ADC4807C0437D` |
-| `Releases/ConstructionPipelineOptimizer-1.1.0.zip` | `64F7CA38903B8A17A0539496AD0C2248E1E4F90D91CF1B30C96D85C912C0227C` |
 
-The archive contains only the 1.6 runtime payload, About metadata and preview,
-`LoadFolders.xml`, `README.md`, `CHANGELOG.md`, `LICENSE`, and the optional
-Multiplayer API bridge. Source, tests, tools, benchmark workspaces, and historical
-engineering payloads are excluded from the public archive.
+The main archive contains the automatically routed RimWorld 1.0-1.6 runtime
+payloads, About metadata and preview, `LoadFolders.xml`, `README.md`, `CHANGELOG.md`,
+`LICENSE`, and the optional 1.5/1.6 Multiplayer API bridges. Ready-to-install
+Alpha 4-0.19 single-version folders and ZIPs are under the release's `Legacy`
+directory. Source, tests, tools, and benchmark workspaces are excluded.
 
 Current release-preparation commits:
 
@@ -46,11 +47,11 @@ The RimWorld 1.5 decision and evidence are recorded separately in
 
 Final evidence:
 
-`C:\Users\PrecisionX\AppData\Local\Temp\CPO-MultiplayerSmoke-20260717-031553.txt`
+`C:\Users\PrecisionX\AppData\Local\Temp\CPO-MultiplayerSmoke-20260718-165809.txt`
 
 | Check | Result |
 |---|---|
-| CPO DLL | Exact 1.1.0 release hash `9D4FDA...0EEA` |
+| CPO DLL | Selected adaptive 1.1.0 build `CDA027...AA16` |
 | Game instances | Two rendered RimWorld processes |
 | Hosting path | Normal save hosting; replay path excluded |
 | Active mods | 75 |
@@ -58,10 +59,10 @@ Final evidence:
 | Legacy construction optimizer | Disabled |
 | Maps | 3 |
 | Initial synchronized world tick | 9,332,890 |
-| Final synchronized world tick | 9,334,691 |
-| Synchronized ticks completed | 1,801 |
-| Construction before/after | 11,004 / 10,981 |
-| Constructions completed | 23 |
+| Final synchronized world tick | 9,335,396 |
+| Synchronized ticks completed | 2,506 |
+| Construction before/after | 11,004 / 10,952 |
+| Constructions completed | 52 |
 | Host desync state | `False` |
 | Client desync state | `False` |
 | Final host/client map clocks | Identical on maps 0, 4, and 7 |
@@ -69,7 +70,8 @@ Final evidence:
 | Processes remaining | None |
 
 The startup diagnostics confirmed that continuation, broad validation throttling,
-and the completion guard were all enabled. Both clients loaded MultiplayerAPI 0.6.
+and the completion guard were all enabled. Both clients loaded Multiplayer 0.11.5
+and MultiplayerAPI 0.6.
 
 Earlier supporting runs:
 
@@ -121,7 +123,8 @@ exception-handler rejection.
 |---|---|---|---|
 | Alpha 4 | Verified | Not present in vanilla | Build/API audit passed |
 | 0.13-0.17 | Verified | Not present in vanilla | Build/API audit passed |
-| 0.18-0.19 | Verified | Verified | Build/API audit passed |
+| 0.18 | Verified | Not included on legacy Mono | Build/API audit passed |
+| 0.19 | Verified | Not included on legacy Mono | Build/API audit passed |
 | 1.0 | Verified | Disabled for old Mono compatibility | Native single-player construction stress passed |
 | 1.1-1.4 | Verified | Compile surface verified | Build/API audit passed |
 | 1.5 | Verified | Compile surface verified | Build/API audit passed |

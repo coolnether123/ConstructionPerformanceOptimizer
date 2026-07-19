@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace ConstructionPipelineOptimizer.Infrastructure.Transpilers
+namespace ConstructionPerformanceOptimizer.Infrastructure.Transpilers
 {
     /// <summary>
     /// Pure stack-signature validation shared by all fluent call recipes.
@@ -71,6 +71,51 @@ namespace ConstructionPipelineOptimizer.Infrastructure.Transpilers
                     $"Replacement {FormatMethod(replacementMethod)} returns " +
                     $"{FormatType(replacementMethod.ReturnType)}, but the recipe requires " +
                     $"{FormatType(expectedReplacementReturnType)}.");
+            }
+        }
+
+        internal static void ValidateInstanceFieldBooleanGuard(
+            MethodBase originalMethod,
+            FieldInfo instanceField,
+            MethodInfo guardMethod)
+        {
+            if (!(originalMethod is MethodInfo originalInfo) ||
+                originalInfo.IsStatic ||
+                originalInfo.ReturnType != typeof(bool))
+            {
+                throw new InvalidOperationException(
+                    "An instance-field early-return guard requires an instance method " +
+                    "that returns System.Boolean.");
+            }
+
+            Type originalType = originalInfo.DeclaringType ??
+                throw new InvalidOperationException(
+                    $"Original {FormatMethod(originalInfo)} has no declaring type.");
+            if (instanceField == null ||
+                instanceField.IsStatic ||
+                instanceField.DeclaringType == null ||
+                !instanceField.DeclaringType.IsAssignableFrom(originalType))
+            {
+                throw new InvalidOperationException(
+                    "The early-return field must be an instance field readable from the " +
+                    "original method's declaring type.");
+            }
+
+            if (guardMethod == null ||
+                !guardMethod.IsStatic ||
+                guardMethod.ReturnType != typeof(bool))
+            {
+                throw new InvalidOperationException(
+                    "The early-return guard must be a static method returning System.Boolean.");
+            }
+
+            ParameterInfo[] parameters = guardMethod.GetParameters();
+            if (parameters.Length != 1 ||
+                !IsStackAssignable(instanceField.FieldType, parameters[0].ParameterType))
+            {
+                throw new InvalidOperationException(
+                    $"Guard {FormatMethod(guardMethod)} must consume exactly the field type " +
+                    $"{FormatType(instanceField.FieldType)}.");
             }
         }
 

@@ -1,6 +1,6 @@
 using System.Reflection;
 using System.Reflection.Emit;
-using ConstructionPipelineOptimizer.Infrastructure.Transpilers;
+using ConstructionPerformanceOptimizer.Infrastructure.Transpilers;
 using HarmonyLib;
 
 internal static class FluentTranspilerTests
@@ -17,6 +17,16 @@ internal static class FluentTranspilerTests
     private static readonly MethodInfo CompletionCaller = GetStaticMethod(nameof(CallCompletion));
     private static readonly MethodInfo CompletionCallerWithCatch =
         GetStaticMethod(nameof(CallCompletionInsideTryCatch));
+    private static readonly MethodInfo GuardedPredicate =
+        typeof(GuardedPredicateFixture).GetMethod(
+            nameof(GuardedPredicateFixture.Predicate),
+            BindingFlags.Instance | BindingFlags.NonPublic)!;
+    private static readonly FieldInfo GuardedPredicateState =
+        typeof(GuardedPredicateFixture).GetField(
+            nameof(GuardedPredicateFixture.state),
+            BindingFlags.Instance | BindingFlags.NonPublic)!;
+    private static readonly MethodInfo RunPredicateGuard =
+        GetStaticMethod(nameof(ShouldRunPredicate));
 
     internal static void Run()
     {
@@ -25,8 +35,48 @@ internal static class FluentTranspilerTests
         RejectsUnsafeSignaturesBeforeMutation();
         RejectsMalformedBranchOperands();
         EmitsValidatedBooleanGuardControlFlow();
+        EmitsValidatedInstanceFieldEarlyReturn();
         RejectsStructuralEditsInsideExceptionHandlers();
         RejectsStructuralEditsAfterForeignExceptionBlockChanges();
+    }
+
+    private static void EmitsValidatedInstanceFieldEarlyReturn()
+    {
+        List<CodeInstruction> input = new List<CodeInstruction>
+        {
+            new CodeInstruction(OpCodes.Ldc_I4_1),
+            new CodeInstruction(OpCodes.Ret)
+        };
+        DynamicMethod dynamicMethod = new DynamicMethod(
+            "CpoValidationEarlyReturnLabels",
+            typeof(bool),
+            new[] { typeof(GuardedPredicateFixture) });
+
+        List<CodeInstruction> output = FluentTranspiler.Execute(
+                input,
+                GuardedPredicate,
+                dynamicMethod.GetILGenerator(),
+                transpiler => transpiler.PrependInstanceFieldGuardOrReturnFalse(
+                    GuardedPredicateState,
+                    RunPredicateGuard))
+            .ToList();
+
+        Assert(output.Count == input.Count + 6,
+            "The early-return recipe should add exactly six guard instructions.");
+        Assert(output[0].opcode == OpCodes.Ldarg_0,
+            "The early-return recipe must load the generated predicate instance.");
+        Assert(output[1].opcode == OpCodes.Ldfld &&
+            Equals(output[1].operand, GuardedPredicateState),
+            "The early-return recipe must load the exact validated closure field.");
+        Assert(output[2].opcode == OpCodes.Call &&
+            Equals(output[2].operand, RunPredicateGuard),
+            "The early-return recipe must call the exact static cadence guard.");
+        Assert(output[3].opcode == OpCodes.Brtrue && output[3].operand is Label,
+            "A true cadence decision must branch to the untouched vanilla body.");
+        Assert(output[4].opcode == OpCodes.Ldc_I4_0 && output[5].opcode == OpCodes.Ret,
+            "A skipped validation must return false from the vanilla failure predicate.");
+        Assert(output[6].labels.Contains((Label)output[3].operand),
+            "The cadence success branch must target the first vanilla instruction.");
     }
 
     private static void ReplacesOneExactCallWithoutMutatingInput()
@@ -269,6 +319,8 @@ internal static class FluentTranspilerTests
 
     private static bool CallPredicate(int value) => IsAllowed(value);
 
+    private static bool ShouldRunPredicate(object state) => state != null;
+
     private static bool TryComplete(CompletionTarget target, object worker)
     {
         target.Complete(worker);
@@ -301,5 +353,12 @@ internal static class FluentTranspilerTests
         internal void Complete(object worker)
         {
         }
+    }
+
+    private sealed class GuardedPredicateFixture
+    {
+        internal readonly object state = new object();
+
+        internal bool Predicate() => state != null;
     }
 }

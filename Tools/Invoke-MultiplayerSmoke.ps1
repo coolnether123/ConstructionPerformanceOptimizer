@@ -267,13 +267,13 @@ try {
     $forbiddenIds = @(
         "coolnether123.betterworktab",
         "coolnether123.constructionqueueoptimizer",
-        "coolnether123.constructionpipelineoptimizer.benchmarklegacy",
+        "coolnether123.constructionperformanceoptimizer.benchmarklegacy",
         "benchmark.cpo.foreignvalidationowner"
     )
     if ($ExcludeMultiplayer) {
         $forbiddenIds += @("rwmt.multiplayer", "rwmt.multiplayercompatibility")
     }
-    foreach ($id in @($forbiddenIds + "coolnether123.constructionpipelineoptimizer")) {
+    foreach ($id in @($forbiddenIds + "coolnether123.constructionperformanceoptimizer")) {
         @($active.SelectNodes("li")) |
             Where-Object { $_.InnerText.Equals($id, [StringComparison]::OrdinalIgnoreCase) } |
             ForEach-Object { [void]$active.RemoveChild($_) }
@@ -281,7 +281,7 @@ try {
 
     if (!$ExcludeCpo) {
         $cpo = $profile.CreateElement("li")
-        $cpo.InnerText = "coolnether123.constructionpipelineoptimizer"
+        $cpo.InnerText = "coolnether123.constructionperformanceoptimizer"
         $agent = @($active.SelectNodes("li")) |
             Where-Object { $_.InnerText.Equals("coolnether123.rimworldagent", [StringComparison]::OrdinalIgnoreCase) } |
             Select-Object -First 1
@@ -297,7 +297,7 @@ try {
     $ids = @($active.SelectNodes("li") | ForEach-Object { $_.InnerText.ToLowerInvariant() })
     $forbidden = @($ids | Where-Object { $forbiddenIds -contains $_ })
     if ($forbidden.Count -ne 0) { throw "Forbidden test mods active: $($forbidden -join ', ')" }
-    $cpoActive = $ids -contains "coolnether123.constructionpipelineoptimizer"
+    $cpoActive = $ids -contains "coolnether123.constructionperformanceoptimizer"
     if ($cpoActive -eq [bool]$ExcludeCpo) { throw "CPO profile state did not match ExcludeCpo=$([bool]$ExcludeCpo)." }
     Add-Evidence "test.source=$(if ($sourceSave) { 'save' } else { 'replay' })"
     Add-Evidence "test.save=$SaveName"
@@ -373,7 +373,7 @@ try {
     Wait-Until -TimeoutSeconds 300 -FailureMessage "Agent did not become ready." -Condition {
         (Test-Path $readyFile) -and (Get-Item $readyFile).LastWriteTime -gt $started
     }
-    $initializationMarker = if ($ExcludeCpo) { "[RimWorld Agent] Enabled." } else { "[Construction Pipeline Optimizer] features:" }
+    $initializationMarker = if ($ExcludeCpo) { "[RimWorld Agent] Enabled." } else { "[Construction Performance Optimizer] features:" }
     Wait-Until -TimeoutSeconds 600 -FailureMessage "Full mod initialization did not complete." -Condition {
         if (!(Test-Path $hostLog)) { return $false }
         $log = Get-Content -Raw -LiteralPath $hostLog
@@ -540,6 +540,9 @@ try {
     Start-Sleep -Seconds $RunSeconds
     Add-Evidence (Invoke-Agent "host" "dev-run $speedTool paused")
     if ($TwoClient) {
+        Start-Sleep -Seconds 3
+        Add-Evidence ("host.passingShips:`n" + (Invoke-Agent "host" "dev-run mp-passing-ships"))
+        Add-Evidence ("client.passingShips:`n" + (Invoke-Agent "client" "dev-run mp-passing-ships"))
         $syncDeadline = (Get-Date).AddMinutes(3)
         do {
             Start-Sleep -Seconds 3
@@ -644,7 +647,7 @@ finally {
         [pscustomobject]@{ Name = "client"; Path = $clientLog }
     )) {
         if (Test-Path -LiteralPath $instanceLog.Path) {
-            $matches = Select-String -LiteralPath $instanceLog.Path -Pattern "Construction Pipeline Optimizer|desync|Exception|Error" -CaseSensitive:$false |
+            $matches = Select-String -LiteralPath $instanceLog.Path -Pattern "Construction Performance Optimizer|desync|Exception|Error" -CaseSensitive:$false |
                 Select-Object -Last 160 | ForEach-Object { $_.Line }
             Add-Evidence ("$($instanceLog.Name)Log.matches:`n" + ($matches -join [Environment]::NewLine))
         }

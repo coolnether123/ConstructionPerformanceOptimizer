@@ -1,4 +1,4 @@
-namespace ConstructionPipelineOptimizer.Scheduling
+namespace ConstructionPerformanceOptimizer.Scheduling
 {
     /// <summary>
     /// Provides a deterministic, pawn-distributed schedule for construction validation.

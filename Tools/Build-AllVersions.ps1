@@ -8,11 +8,11 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = [System.IO.Path]::GetFullPath((Split-Path -Parent $PSScriptRoot))
-$project = Join-Path $projectRoot 'Source\ConstructionPipelineOptimizer.csproj'
+$project = Join-Path $projectRoot 'Source\ConstructionPerformanceOptimizer.csproj'
 
 if (-not $SkipPolicyTests)
 {
-    & dotnet run --project (Join-Path $projectRoot 'Tests\ConstructionPipelineOptimizer.Tests.csproj') -c Release
+    & dotnet run --project (Join-Path $projectRoot 'Tests\ConstructionPerformanceOptimizer.Tests.csproj') -c Release
     if ($LASTEXITCODE -ne 0)
     {
         throw "Policy tests failed with exit code $LASTEXITCODE"

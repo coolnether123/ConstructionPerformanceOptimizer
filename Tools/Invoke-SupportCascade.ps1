@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-Builds and validates the Construction Pipeline Optimizer support-branch cascade.
+Builds and validates the Construction Performance Optimizer support-branch cascade.
 
 .DESCRIPTION
 The cascade follows the same direction as Better Work Tab:
@@ -29,8 +29,8 @@ $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 
 $projectRoot = [System.IO.Path]::GetFullPath((Split-Path -Parent $PSScriptRoot))
-$projectPath = Join-Path $projectRoot 'Source\ConstructionPipelineOptimizer.csproj'
-$payloadName = 'Construction Pipeline Optimizer.dll'
+$projectPath = Join-Path $projectRoot 'Source\ConstructionPerformanceOptimizer.csproj'
+$payloadName = 'Construction Performance Optimizer.dll'
 
 function Invoke-Git
 {
@@ -91,7 +91,7 @@ function Merge-SupportSource
     $allowed = @($unmerged | Where-Object {
         $_ -eq 'About/About.xml' -or
         $_ -eq 'LoadFolders.xml' -or
-        $_ -eq 'Assemblies/Construction Pipeline Optimizer.dll' -or
+        $_ -eq 'Assemblies/Construction Performance Optimizer.dll' -or
         $_ -eq $versionedPayload
     })
     $unexpected = @($unmerged | Where-Object { $_ -notin $allowed })
@@ -148,7 +148,7 @@ function Set-BranchMetadata
         $xml = @"
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-  <name>Construction Pipeline Optimizer</name>
+  <name>Construction Performance Optimizer</name>
   <author>Coolnether123</author>
   <targetVersion>$targetVersion</targetVersion>
   <description>Helps construction-heavy colonies run more smoothly by reducing repeated construction work while preserving normal RimWorld behavior. Supports RimWorld $Version single-player. Requires Harmony. No settings or save data.</description>
@@ -183,9 +183,9 @@ function Set-BranchMetadata
     $xml = @"
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-  <name>Construction Pipeline Optimizer</name>
+  <name>Construction Performance Optimizer</name>
   <author>Coolnether123</author>
-  <packageId>coolnether123.constructionpipelineoptimizer</packageId>
+  <packageId>coolnether123.constructionperformanceoptimizer</packageId>
 $modVersionElement
   <supportedVersions>
     <li>$Version</li>
@@ -253,7 +253,7 @@ function Sync-BranchPayload
 
     if ($Version -eq 'Alpha4' -or $Version.StartsWith('0.'))
     {
-        $bootstrapDef = Join-Path $projectRoot 'Defs\ConstructionPipelineOptimizerBootstrap.xml'
+        $bootstrapDef = Join-Path $projectRoot 'Defs\ConstructionPerformanceOptimizerBootstrap.xml'
         if (-not (Test-Path -LiteralPath $bootstrapDef))
         {
             throw "Historical bootstrap Def is missing: $bootstrapDef"
@@ -277,7 +277,7 @@ function Commit-BranchPayload
     }
     if ($Version -eq 'Alpha4' -or $Version.StartsWith('0.'))
     {
-        $paths += 'Defs/ConstructionPipelineOptimizerBootstrap.xml'
+        $paths += 'Defs/ConstructionPerformanceOptimizerBootstrap.xml'
     }
 
     $stagePaths = @($paths | Where-Object {
@@ -312,7 +312,7 @@ function Commit-BranchPayload
 Set-Location $projectRoot
 Assert-CleanWorktree
 
-& dotnet run --project (Join-Path $projectRoot 'Tests\ConstructionPipelineOptimizer.Tests.csproj') -c Release
+& dotnet run --project (Join-Path $projectRoot 'Tests\ConstructionPerformanceOptimizer.Tests.csproj') -c Release
 if ($LASTEXITCODE -ne 0)
 {
     throw "Shared policy tests failed with exit code $LASTEXITCODE"
@@ -379,4 +379,4 @@ if ($Push)
 
 Invoke-Git checkout $SourceBranch
 Assert-CleanWorktree
-Write-Host 'Construction Pipeline Optimizer support cascade complete.'
+Write-Host 'Construction Performance Optimizer support cascade complete.'

@@ -25,7 +25,7 @@ A focused RimWorld construction performance mod for active construction jobs and
 This is intentionally not a broad performance overhaul. It contains no turret, pawn-health, refuelable, dissolution, mechanitor, rendering, or general tick patches. That narrow scope reduces overlap with established performance mods.
 
 [h2]Performance evidence[/h2]
-The figures below were collected from the tagged pre-hardening 1.0.0 DLL (SHA-256 64E3FED700B75BA4B349867D98E783ED317EF50B434D1EF2E6AB783D5834D212). The 1.1.0 release keeps those figures as historical performance evidence; its separately validated hardened DLL has SHA-256 9D4FDA8F3F6EF33AE3D6F181BFDAB0E15D6B1A228C89F48A332E239471AC0EEA.
+The figures below were collected from the tagged pre-hardening 1.0.0 DLL (SHA-256 64E3FED700B75BA4B349867D98E783ED317EF50B434D1EF2E6AB783D5834D212). The 1.0 release keeps those figures as historical performance evidence; its separately validated hardened DLL has SHA-256 9D4FDA8F3F6EF33AE3D6F181BFDAB0E15D6B1A228C89F48A332E239471AC0EEA.
 
 On a derived save with exactly 12,000 Tilled Soil blueprints, the exact committed 1.6 DLL completed nine fresh-process 60-second samples per arm in three randomized blocks. Adaptive measured 124.18 mean / 115.31 median TPS versus baseline 114.19 mean / 111.11 median TPS: +8.75% by mean and +3.78% by median. Block-mean gains were +7.10%, +18.84%, and +0.11%, and 93.357% of repeated validation opportunities were skipped. The 95% confidence intervals overlap, so the positive pooled result is not statistically established. This is an extreme workload observation, not a guarantee for ordinary colonies.
 

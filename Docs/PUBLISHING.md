@@ -15,7 +15,7 @@ archive.
    the game is loading assemblies.
 2. Confirm the version matches in:
    - `About/About.xml`
-   - `Source/ConstructionPipelineOptimizer.csproj`
+   - `Source/ConstructionPerformanceOptimizer.csproj`
    - `CHANGELOG.md`
 3. Run `Tools/Release.ps1` from PowerShell.
 4. Confirm the script reports successful tests, build, package validation, ZIP
@@ -24,8 +24,8 @@ archive.
    and Workshop performance text. Any transpiler or runtime source change requires a new
    in-game smoke and an explicit evidence update before publication.
 6. Use the generated runtime-only folder at
-   `Releases/ConstructionPipelineOptimizer-<version>/ConstructionPipelineOptimizer`.
-   The ZIP contains this same `ConstructionPipelineOptimizer` root.
+   `Releases/ConstructionPerformanceOptimizer-<version>/ConstructionPerformanceOptimizer`.
+   The ZIP contains this same `ConstructionPerformanceOptimizer` root.
 7. Test that extracted package in a fresh RimWorld 1.6 process with Harmony and
    Tilled Soil.
 8. Test a save containing ordinary material-bearing construction and zero-cost
@@ -47,7 +47,7 @@ archive.
    the generated runtime-only folder. Never upload the development project root;
    it contains source, tests, tools, and research that are intentionally absent
    from the public package.
-3. Start RimWorld, select Construction Pipeline Optimizer, and use the Workshop
+3. Start RimWorld, select Construction Performance Optimizer, and use the Workshop
    upload action.
 4. Set Harmony as a required Workshop item. `About.xml` dependency metadata does
    not create Steam's Required Items relationship automatically.

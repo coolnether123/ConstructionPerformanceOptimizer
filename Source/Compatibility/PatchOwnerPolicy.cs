@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ConstructionPipelineOptimizer.Compatibility
+namespace ConstructionPerformanceOptimizer.Compatibility
 {
     /// <summary>
     /// Separates patch-owner classification from Harmony reflection so the fail-closed

@@ -2,7 +2,7 @@
 using System;
 using System.Reflection;
 
-namespace ConstructionPipelineOptimizer.Infrastructure.Transpilers
+namespace ConstructionPerformanceOptimizer.Infrastructure.Transpilers
 {
     /// <summary>
     /// Fluent exact-call recipes adapted from Better Work Tab's Spine.Harmony call recipes.

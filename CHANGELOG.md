@@ -73,7 +73,7 @@ The project follows Semantic Versioning.
   host/client simulation clocks and no desync. The final selected-build pass advanced
   2,506 synchronized ticks and completed 52 constructions.
 
-## 1.0.0 - 2026-07-15
+## Pre-release development - 2026-07-15
 
 ### Changed
 

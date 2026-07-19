@@ -5,6 +5,8 @@ The project follows Semantic Versioning.
 
 ## 1.0 - 2026-07-17
 
+**Release status: Release ready.**
+
 ### Changed
 
 - Moved the guarded validation cadence to a validated predicate-entry fast path. It

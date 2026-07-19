@@ -1,4 +1,4 @@
-Version 1.0 — Initial release.
+Version 1.0 — Release ready.
 
 Introduced Construction Performance Optimizer for RimWorld 1.0–1.6, with dedicated builds for every supported game version.
 

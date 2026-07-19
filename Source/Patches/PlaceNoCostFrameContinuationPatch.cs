@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using ConstructionPipelineOptimizer.Eligibility;
+using ConstructionPerformanceOptimizer.Eligibility;
 using HarmonyLib;
 using Verse;
 using Verse.AI;
@@ -13,7 +13,7 @@ using FrameType = RimWorld.Frame;
 using PlaceNoCostDriverType = RimWorld.JobDriver_PlaceNoCostFrame;
 #endif
 
-namespace ConstructionPipelineOptimizer.Patches
+namespace ConstructionPerformanceOptimizer.Patches
 {
     /// <summary>
     /// Extends vanilla's no-cost frame placement job with one final, instant continuation toil.

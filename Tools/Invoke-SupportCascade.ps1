@@ -173,7 +173,7 @@ function Set-BranchMetadata
 
     $modVersionElement = if ($Version -eq '1.4' -or $Version -eq '1.5')
     {
-        '  <modVersion>1.1.0</modVersion>'
+        '  <modVersion>1.0</modVersion>'
     }
     else
     {

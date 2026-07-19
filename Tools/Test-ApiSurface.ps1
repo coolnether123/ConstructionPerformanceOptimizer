@@ -197,7 +197,7 @@ foreach ($version in $Versions)
             Assert-Condition ($matchingCanConstruct.Count -eq 1) "RimWorld $version expected one boolean CanConstruct overload with $expectedCanConstructParameters parameters; found $($matchingCanConstruct.Count)"
         }
 
-        $payload = Join-Path $projectRoot "$version\Assemblies\Construction Pipeline Optimizer.dll"
+        $payload = Join-Path $projectRoot "$version\Assemblies\Construction Performance Optimizer.dll"
         Assert-Condition (Test-Path -LiteralPath $payload) "The mod payload for RimWorld $version has not been built: $payload"
 
         $results += [pscustomobject]@{

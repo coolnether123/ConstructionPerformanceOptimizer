@@ -1,4 +1,4 @@
-# Construction Pipeline Optimizer 1.1.0 — RimWorld 1.5 release status
+# Construction Performance Optimizer 1.1.0 — RimWorld 1.5 release status
 
 Date: 2026-07-17
 
@@ -29,7 +29,7 @@ is intentionally excluded from the runtime archive.
 ## Final artifacts
 
 - Archive:
-  `ConstructionPipelineOptimizer-1.1.0-rw1.5.zip`
+  `ConstructionPerformanceOptimizer-1.1.0-rw1.5.zip`
 - Archive SHA-256:
   `F860CCDEF295161EA921F4BA924BFC458937C10A2561CB6328043514E087E9AF`
 - CPO root/versioned DLL SHA-256:

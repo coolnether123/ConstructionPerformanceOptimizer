@@ -46,10 +46,10 @@ foreach ($supportedVersion in $supportedVersions)
 $assemblyPaths = @{}
 foreach ($supportedVersion in $supportedVersions)
 {
-    $assemblyPaths[$supportedVersion] = Get-RequiredPath "$supportedVersion\Assemblies\Construction Pipeline Optimizer.dll"
+    $assemblyPaths[$supportedVersion] = Get-RequiredPath "$supportedVersion\Assemblies\Construction Performance Optimizer.dll"
     $null = Get-RequiredPath "$supportedVersion\Assemblies\0MultiplayerAPI.dll"
 }
-$rootAssemblyPath = Get-RequiredPath 'Assemblies\Construction Pipeline Optimizer.dll'
+$rootAssemblyPath = Get-RequiredPath 'Assemblies\Construction Performance Optimizer.dll'
 $null = Get-RequiredPath 'Assemblies\0MultiplayerAPI.dll'
 $null = Get-RequiredPath 'LICENSE'
 $null = Get-RequiredPath 'README.md'
@@ -57,9 +57,9 @@ $null = Get-RequiredPath 'CHANGELOG.md'
 
 [xml]$loadFolders = Get-Content -LiteralPath $loadFoldersPath -Raw
 
-Assert-Condition ($metadata.name -eq 'Construction Pipeline Optimizer') 'Unexpected mod name in About.xml.'
+Assert-Condition ($metadata.name -eq 'Construction Performance Optimizer') 'Unexpected mod name in About.xml.'
 Assert-Condition ($metadata.author -eq 'Coolnether123') 'Unexpected author in About.xml.'
-Assert-Condition ($metadata.packageId -eq 'coolnether123.constructionpipelineoptimizer') 'Unexpected packageId in About.xml.'
+Assert-Condition ($metadata.packageId -eq 'coolnether123.constructionperformanceoptimizer') 'Unexpected packageId in About.xml.'
 Assert-Condition ($metadata.modVersion -match '^\d+\.\d+\.\d+$') 'modVersion must use semantic version format (major.minor.patch).'
 foreach ($supportedVersion in $supportedVersions)
 {

@@ -6,13 +6,13 @@ param(
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path -Parent $PSScriptRoot
 
-dotnet run --project (Join-Path $projectRoot 'Tests\ConstructionPipelineOptimizer.Tests.csproj') -c Release
+dotnet run --project (Join-Path $projectRoot 'Tests\ConstructionPerformanceOptimizer.Tests.csproj') -c Release
 if ($LASTEXITCODE -ne 0)
 {
     throw "Deterministic policy tests failed with exit code $LASTEXITCODE."
 }
 
-dotnet build (Join-Path $projectRoot 'Source\ConstructionPipelineOptimizer.csproj') -c $Version
+dotnet build (Join-Path $projectRoot 'Source\ConstructionPerformanceOptimizer.csproj') -c $Version
 if ($LASTEXITCODE -ne 0)
 {
     throw "Mod build failed with exit code $LASTEXITCODE."
@@ -21,7 +21,7 @@ if ($LASTEXITCODE -ne 0)
 $versionedAssemblies = Join-Path $projectRoot "$Version\Assemblies"
 $rootAssemblies = Join-Path $projectRoot 'Assemblies'
 New-Item -ItemType Directory -Force -Path $rootAssemblies | Out-Null
-foreach ($runtimeAssembly in 'Construction Pipeline Optimizer.dll', '0MultiplayerAPI.dll')
+foreach ($runtimeAssembly in 'Construction Performance Optimizer.dll', '0MultiplayerAPI.dll')
 {
     Copy-Item -LiteralPath (Join-Path $versionedAssemblies $runtimeAssembly) -Destination $rootAssemblies -Force
 }

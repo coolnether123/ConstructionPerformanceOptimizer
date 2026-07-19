@@ -1,4 +1,4 @@
-using ConstructionPipelineOptimizer.Infrastructure;
+using ConstructionPerformanceOptimizer.Infrastructure;
 using HarmonyLib;
 using Verse;
 

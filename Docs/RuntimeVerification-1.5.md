@@ -57,7 +57,7 @@ multiplayer.version=0.10.7
 multiplayerApi.version=0.5
 artifact.cpoSha256=5173F7CB342F0C75218060B0DCE3172B6C091775AF6387D1D9029E964A0F69E7
 artifact.multiplayerApiSha256=4689E799C50DB79411B00AD8855D7DF86721BF3CFE1E390B68038B6ABCD852EC
-artifact.releaseArchive=ConstructionPipelineOptimizer-1.1.0-rw1.5.zip
+artifact.releaseArchive=ConstructionPerformanceOptimizer-1.1.0-rw1.5.zip
 ```
 
 The large mod list emits existing renderer/asset-bundle, translation, and transient

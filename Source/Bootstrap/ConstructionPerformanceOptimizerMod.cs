@@ -4,15 +4,15 @@ using Verse;
 using Multiplayer.API;
 #endif
 
-namespace ConstructionPipelineOptimizer.Bootstrap
+namespace ConstructionPerformanceOptimizer.Bootstrap
 {
     /// <summary>
     /// Installs the mod's Harmony patches after RimWorld finishes loading assemblies.
     /// The mod has no settings or persistent save data.
     /// </summary>
-    public static class ConstructionPipelineOptimizerMod
+    public static class ConstructionPerformanceOptimizerMod
     {
-        internal const string PackageId = "coolnether123.constructionpipelineoptimizer";
+        internal const string PackageId = "coolnether123.constructionperformanceoptimizer";
         private static bool initialized;
 
         internal static void Initialize()
@@ -27,7 +27,7 @@ namespace ConstructionPipelineOptimizer.Bootstrap
             if (MP.enabled)
             {
                 Log.Message(
-                    "[Construction Pipeline Optimizer] Multiplayer API detected; " +
+                    "[Construction Performance Optimizer] Multiplayer API detected; " +
                     "construction optimizations will run inside Multiplayer's " +
                     "deterministic map-tick context.");
             }
@@ -36,7 +36,7 @@ namespace ConstructionPipelineOptimizer.Bootstrap
             // Install each feature deliberately so a changed game method cannot leave a
             // safety-dependent optimization partially active.
             PatchInstallationReport report = PatchInstaller.Install(new Harmony(PackageId));
-            Log.Message($"[Construction Pipeline Optimizer] {report}");
+            Log.Message($"[Construction Performance Optimizer] {report}");
         }
     }
 
@@ -45,11 +45,11 @@ namespace ConstructionPipelineOptimizer.Bootstrap
     /// Alpha 4 constructs custom Def subclasses while loading XML. This small Def is the
     /// supported entry point because that release predates the modern startup attribute.
     /// </summary>
-    public sealed class ConstructionPipelineOptimizerBootstrapDef : Def
+    public sealed class ConstructionPerformanceOptimizerBootstrapDef : Def
     {
-        public ConstructionPipelineOptimizerBootstrapDef()
+        public ConstructionPerformanceOptimizerBootstrapDef()
         {
-            ConstructionPipelineOptimizerMod.Initialize();
+            ConstructionPerformanceOptimizerMod.Initialize();
         }
     }
 #else
@@ -57,14 +57,14 @@ namespace ConstructionPipelineOptimizer.Bootstrap
     /// RimWorld 0.13 and newer discover this type during static-constructor startup.
     /// </summary>
     [StaticConstructorOnStartup]
-    internal static class ConstructionPipelineOptimizerStartup
+    internal static class ConstructionPerformanceOptimizerStartup
     {
-        static ConstructionPipelineOptimizerStartup()
+        static ConstructionPerformanceOptimizerStartup()
         {
             // Compatibility decisions should see patches installed by normal mod startup
             // constructors. Queue inspection and installation until this load event ends;
             // patches deliberately added after that point remain outside the startup snapshot.
-            LongEventHandler.ExecuteWhenFinished(ConstructionPipelineOptimizerMod.Initialize);
+            LongEventHandler.ExecuteWhenFinished(ConstructionPerformanceOptimizerMod.Initialize);
         }
     }
 #endif

@@ -22,6 +22,7 @@ param(
         '0.17', '0.16', '0.15', '0.14', '0.13', 'Alpha4'),
     [switch]$SkipSourceBuild,
     [switch]$SkipPayloadCopyBackToDev,
+    [switch]$IdentityRenameOnly,
     [switch]$Push
 )
 
@@ -385,6 +386,25 @@ function Commit-BranchPayload
     Invoke-Git commit -m "Build RimWorld $Version payload for $ReleaseLabel" -m "Build and API-audit the version-specific construction optimization payload."
 }
 
+function Copy-SupportPayloadsBackToDev
+{
+    Invoke-Git checkout $SourceBranch
+    Assert-CleanWorktree
+    foreach ($version in $SupportVersions)
+    {
+        Invoke-Git checkout "Support/$version" -- "$version/Assemblies"
+    }
+
+    $payloadPaths = @($SupportVersions | ForEach-Object { "$_/Assemblies" })
+    $statusArguments = @('status', '--porcelain', '--') + $payloadPaths
+    $payloadChanges = @(Get-GitOutput @statusArguments)
+    if ($payloadChanges.Count -gt 0)
+    {
+        Invoke-Git add -- @payloadPaths
+        Invoke-Git commit -m "Update $SourceBranch support payloads for $ReleaseLabel" -m 'Copy only rebuilt versioned assemblies back from the completed support cascade.'
+    }
+}
+
 Set-Location $projectRoot
 Assert-CleanWorktree
 
@@ -392,6 +412,44 @@ Assert-CleanWorktree
 if ($LASTEXITCODE -ne 0)
 {
     throw "Shared policy tests failed with exit code $LASTEXITCODE"
+}
+
+if ($IdentityRenameOnly)
+{
+    Invoke-Git checkout $SourceBranch
+    Assert-CleanWorktree
+    foreach ($version in $SupportVersions)
+    {
+        $branch = "Support/$version"
+        if (-not (Test-BranchExists $branch))
+        {
+            throw "Missing branch $branch."
+        }
+
+        Invoke-Git checkout $branch
+        Assert-CleanWorktree
+        Complete-IdentityRename $version
+        Assert-CleanWorktree
+        Build-Version $version
+        Sync-BranchPayload $version
+        Commit-BranchPayload $version
+        Assert-CleanWorktree
+    }
+
+    if (-not $SkipPayloadCopyBackToDev)
+    {
+        Copy-SupportPayloadsBackToDev
+    }
+    if ($Push)
+    {
+        $branches = @($SourceBranch) + ($SupportVersions | ForEach-Object { "Support/$_" })
+        Invoke-Git push $Remote @branches
+    }
+
+    Invoke-Git checkout $SourceBranch
+    Assert-CleanWorktree
+    Write-Host 'Construction Performance Optimizer identity cascade complete.'
+    return
 }
 
 Invoke-Git checkout $SourceBranch
@@ -432,21 +490,7 @@ foreach ($version in $SupportVersions)
 
 if (-not $SkipPayloadCopyBackToDev)
 {
-    Invoke-Git checkout $SourceBranch
-    Assert-CleanWorktree
-    foreach ($version in $SupportVersions)
-    {
-        Invoke-Git checkout "Support/$version" -- "$version/Assemblies"
-    }
-
-    $payloadPaths = @($SupportVersions | ForEach-Object { "$_/Assemblies" })
-    $statusArguments = @('status', '--porcelain', '--') + $payloadPaths
-    $payloadChanges = @(Get-GitOutput @statusArguments)
-    if ($payloadChanges.Count -gt 0)
-    {
-        Invoke-Git add -- @payloadPaths
-        Invoke-Git commit -m "Update $SourceBranch support payloads for $ReleaseLabel" -m 'Copy only rebuilt versioned assemblies back from the completed support cascade.'
-    }
+    Copy-SupportPayloadsBackToDev
 }
 
 if ($Push)

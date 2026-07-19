@@ -23,7 +23,7 @@ if ($LASTEXITCODE -ne 0)
 [xml]$about = Get-Content -LiteralPath (Join-Path $projectRoot 'About\About.xml') -Raw
 $version = [string]$about.ModMetaData.modVersion
 $releaseDirectory = Join-Path $projectRoot 'Releases'
-$packageName = 'ConstructionPipelineOptimizer'
+$packageName = 'ConstructionPerformanceOptimizer'
 $stagedPackage = Join-Path $stagingBase $packageName
 $releaseVersionRoot = [System.IO.Path]::GetFullPath((Join-Path $releaseDirectory "$packageName-$version"))
 $releaseDirectoryPrefix = [System.IO.Path]::GetFullPath($releaseDirectory).TrimEnd('\') + '\'
@@ -58,7 +58,7 @@ try
     {
         $stagedAssemblies = Join-Path $stagedPackage "$modernVersion\Assemblies"
         New-Item -ItemType Directory -Force -Path $stagedAssemblies | Out-Null
-        foreach ($runtimeAssembly in 'Construction Pipeline Optimizer.dll', '0MultiplayerAPI.dll')
+        foreach ($runtimeAssembly in 'Construction Performance Optimizer.dll', '0MultiplayerAPI.dll')
         {
             Copy-Item -LiteralPath (Join-Path $projectRoot "$modernVersion\Assemblies\$runtimeAssembly") -Destination $stagedAssemblies
         }

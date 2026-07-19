@@ -22,7 +22,6 @@ param(
         '0.17', '0.16', '0.15', '0.14', '0.13', 'Alpha4'),
     [switch]$SkipSourceBuild,
     [switch]$SkipPayloadCopyBackToDev,
-    [switch]$IdentityRenameOnly,
     [switch]$Push
 )
 
@@ -124,82 +123,6 @@ function Build-Version
     {
         throw "RimWorld $Version API-shape audit failed with exit code $LASTEXITCODE"
     }
-}
-
-function Complete-IdentityRename
-{
-    param([string]$Version)
-
-    # Dev owns the shared rename. Historical branches can still contain files that
-    # exist only on that branch (notably legacy bootstrap Defs and root payloads), so
-    # complete the same mechanical identity change after each downward merge.
-    $trackedFiles = @(Get-GitOutput ls-files)
-    $textExtensions = @(
-        '.cs', '.csproj', '.md', '.ps1', '.xml', '.txt', '.json',
-        '.props', '.targets', '.sln')
-    $utf8 = [Text.UTF8Encoding]::new($false)
-    foreach ($relativePath in $trackedFiles)
-    {
-        $fullPath = Join-Path $projectRoot $relativePath
-        if (-not (Test-Path -LiteralPath $fullPath -PathType Leaf) -or
-            [IO.Path]::GetExtension($relativePath) -notin $textExtensions)
-        {
-            continue
-        }
-
-        $text = [IO.File]::ReadAllText($fullPath)
-        $updated = $text.
-            Replace('Construction Pipeline Optimizer', 'Construction Performance Optimizer').
-            Replace('ConstructionPipelineOptimizer', 'ConstructionPerformanceOptimizer').
-            Replace('constructionpipelineoptimizer', 'constructionperformanceoptimizer')
-        if ($updated -ne $text)
-        {
-            [IO.File]::WriteAllText($fullPath, $updated, $utf8)
-        }
-    }
-
-    foreach ($relativePath in $trackedFiles)
-    {
-        $renamedPath = $relativePath.
-            Replace('Construction Pipeline Optimizer', 'Construction Performance Optimizer').
-            Replace('ConstructionPipelineOptimizer', 'ConstructionPerformanceOptimizer').
-            Replace('constructionpipelineoptimizer', 'constructionperformanceoptimizer')
-        if ($renamedPath -eq $relativePath)
-        {
-            continue
-        }
-
-        $source = Join-Path $projectRoot $relativePath
-        $destination = Join-Path $projectRoot $renamedPath
-        if (-not (Test-Path -LiteralPath $source))
-        {
-            continue
-        }
-        if (Test-Path -LiteralPath $destination)
-        {
-            throw (
-                "Cannot complete the RimWorld $Version identity rename because both " +
-                "$relativePath and $renamedPath exist.")
-        }
-
-        $destinationParent = Split-Path -Parent $destination
-        if (-not [string]::IsNullOrWhiteSpace($destinationParent))
-        {
-            New-Item -ItemType Directory -Force -Path $destinationParent | Out-Null
-        }
-        Move-Item -LiteralPath $source -Destination $destination
-    }
-
-    $changes = @(Get-GitOutput status --porcelain)
-    if ($changes.Count -eq 0)
-    {
-        return
-    }
-
-    Invoke-Git add --all
-    Invoke-Git commit `
-        -m "Complete Construction Performance Optimizer rename for RimWorld $Version" `
-        -m "Rename historical branch-only source, metadata, bootstrap, and payload paths."
 }
 
 function Set-BranchMetadata
@@ -414,44 +337,6 @@ if ($LASTEXITCODE -ne 0)
     throw "Shared policy tests failed with exit code $LASTEXITCODE"
 }
 
-if ($IdentityRenameOnly)
-{
-    Invoke-Git checkout $SourceBranch
-    Assert-CleanWorktree
-    foreach ($version in $SupportVersions)
-    {
-        $branch = "Support/$version"
-        if (-not (Test-BranchExists $branch))
-        {
-            throw "Missing branch $branch."
-        }
-
-        Invoke-Git checkout $branch
-        Assert-CleanWorktree
-        Complete-IdentityRename $version
-        Assert-CleanWorktree
-        Build-Version $version
-        Sync-BranchPayload $version
-        Commit-BranchPayload $version
-        Assert-CleanWorktree
-    }
-
-    if (-not $SkipPayloadCopyBackToDev)
-    {
-        Copy-SupportPayloadsBackToDev
-    }
-    if ($Push)
-    {
-        $branches = @($SourceBranch) + ($SupportVersions | ForEach-Object { "Support/$_" })
-        Invoke-Git push $Remote @branches
-    }
-
-    Invoke-Git checkout $SourceBranch
-    Assert-CleanWorktree
-    Write-Host 'Construction Performance Optimizer identity cascade complete.'
-    return
-}
-
 Invoke-Git checkout $SourceBranch
 if (-not $SkipSourceBuild)
 {
@@ -479,7 +364,6 @@ foreach ($version in $SupportVersions)
         -Version $version `
         -Message "Merge $previousBranch into RimWorld $version support for $ReleaseLabel"
 
-    Complete-IdentityRename $version
     Assert-CleanWorktree
     Build-Version $version
     Sync-BranchPayload $version

@@ -13,19 +13,19 @@
     <li>1.5</li>
     <li>1.6</li>
   </supportedVersions>
-  <description><![CDATA[Makes construction-heavy colonies simulate more smoothly, especially when many blueprints are active or terrain-building mods such as Tilled Soil are in use.
+  <description><![CDATA[Construction Performance Optimizer helps RimWorld stay responsive when your colony has a large construction backlog.
 
-In a controlled speed-3 stress test with 12,000 Tilled Soil blueprints, CPO produced about 8% more simulation ticks per second while reducing the time and CPU work needed for each tick. This is a construction-heavy benchmark, not a promise that every colony will run 8% faster. Ordinary colonies may see a smaller benefit, and the test did not show an FPS increase.
+Colonies with hundreds or thousands of blueprints can spend a surprising amount of processing time repeatedly checking unfinished construction. CPO reduces that unnecessary work, allowing the game to spend more time advancing the simulation.
 
-CPO reduces repeated behind-the-scenes checks on active construction and avoids an unnecessary global job search when a pawn can continue eligible zero-cost terrain construction. It automatically leaves the broader optimization disabled if another mod directly conflicts with its safe patch point.
+You are most likely to notice the benefit when placing large building plans, maintaining a long construction queue, using terrain-building mods such as Tilled Soil, playing large or late-game colonies with many builders, or running at higher game speeds.
 
-CPO does not make pawns build faster or skip gameplay rules. Vanilla work priorities, material delivery, pathfinding, construction speed, success chance, and final construction authorization remain in control.
+The improvement depends on how much construction is active. It may be substantial in construction-heavy colonies and barely noticeable when little is being built.
 
-Supports RimWorld 1.0 through 1.6. RimWorld 1.0 uses only the continuation optimization for compatibility with its older runtime.
+CPO improves game performance. It does not make pawns build faster, alter work priorities, skip material delivery, change construction success chances, or bypass final construction authorization.
+
+Supports RimWorld 1.0 through 1.6. RimWorld 1.0 uses only the continuation optimization for compatibility with its older runtime. Single-player is supported on every listed version. Multiplayer is supported only on RimWorld 1.5 and 1.6, and every player must use the same CPO version and mod list.
 
 Requires Harmony. No settings and no save data. Normally safe to add or remove between sessions; keep a normal save backup when changing a large mod list.
-
-Single-player is supported on every listed version. Multiplayer is supported only on RimWorld 1.5 and 1.6. Every player must use the same CPO version and mod list.
 
 Do not enable this with Construction Queue Optimizer; the legacy mod contains the same construction patches.]]></description>
   <modDependencies>

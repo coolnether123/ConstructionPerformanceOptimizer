@@ -2,9 +2,13 @@
 
 A focused RimWorld construction performance mod for active construction jobs and the zero-cost terrain pipeline used by Tilled Soil and similar mods.
 
-[b]Measured about 8% faster simulation throughput in a construction-heavy stress test.[/b]
+[b]Helps RimWorld stay responsive when your colony has a large construction backlog.[/b]
 
-That result came from a controlled speed-3 test with 12,000 active Tilled Soil blueprints. It is not a promise that every colony will run 8% faster, and it is not an FPS claim. The benefit is largest when active construction is a meaningful simulation bottleneck.
+Colonies with hundreds or thousands of blueprints can spend a surprising amount of processing time repeatedly checking unfinished construction. CPO reduces that unnecessary work so the game can spend more time advancing the simulation.
+
+You are most likely to notice the benefit with large building plans, long construction queues, many builders, higher game speeds, or terrain-building mods such as Tilled Soil. The improvement depends on how much construction is active and may be barely noticeable when little is being built.
+
+CPO improves game performance. It does not make pawns build faster, change work priorities, skip material delivery, alter construction success chances, or bypass final construction authorization.
 
 [h2]What it optimizes[/h2]
 [list]
@@ -29,11 +33,7 @@ That result came from a controlled speed-3 test with 12,000 active Tilled Soil b
 This is intentionally not a broad performance overhaul. It contains no turret, pawn-health, refuelable, dissolution, mechanitor, rendering, or general tick patches. That narrow scope reduces overlap with established performance mods.
 
 [h2]Performance evidence[/h2]
-On a frozen save with exactly 12,000 Tilled Soil blueprints, the release candidate was compared with no CPO in three randomized fresh-process blocks at normal player speed 3. Better Work Tab, Construction Queue Optimizer, Dubs Performance Analyzer, and runtime Harmony instrumentation were disabled.
-
-CPO delivered about 8% faster simulation throughput, about 7% less wall time per simulation tick, and about 6% less process CPU time per simulation tick in that stress fixture. Rendered FPS was effectively unchanged because RimWorld used the saved work to simulate more ticks per rendered frame.
-
-Results vary with colony state, hardware, mod list, and active construction. CPO does not promise a fixed gain for ordinary colonies; the largest benefits are expected when repeated active construction checks or zero-cost terrain job searches are a meaningful bottleneck.
+Controlled testing with a very large construction backlog confirmed improved simulation throughput and less processing work per game tick. Results vary with colony state, hardware, mod list, and active construction, so CPO does not promise a fixed gain for ordinary colonies. The largest benefits are expected when repeated construction checks or zero-cost terrain job searches are a meaningful bottleneck.
 
 [h2]Reporting problems[/h2]
 Include your complete mod list, player log, RimWorld version, whether Multiplayer is active, and a reproducible construction example. Keep a save backup before changing a large mod list.

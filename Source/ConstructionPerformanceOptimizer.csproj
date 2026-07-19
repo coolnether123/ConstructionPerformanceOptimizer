@@ -6,8 +6,8 @@
     <Configurations>Debug;Release;Alpha4;0.13;0.14;0.15;0.16;0.17;0.18;0.19;1.0;1.1;1.2;1.3;1.4;1.5;1.6</Configurations>
     <LangVersion>latest</LangVersion>
     <Nullable>disable</Nullable>
-    <AssemblyName>Construction Pipeline Optimizer</AssemblyName>
-    <RootNamespace>ConstructionPipelineOptimizer</RootNamespace>
+    <AssemblyName>Construction Performance Optimizer</AssemblyName>
+    <RootNamespace>ConstructionPerformanceOptimizer</RootNamespace>
     <Version>1.1.0</Version>
     <AssemblyVersion>1.1.0.0</AssemblyVersion>
     <FileVersion>1.1.0.0</FileVersion>

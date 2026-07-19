@@ -1,6 +1,6 @@
-using ConstructionPipelineOptimizer.Scheduling;
-using ConstructionPipelineOptimizer.Infrastructure;
-using ConstructionPipelineOptimizer.Compatibility;
+using ConstructionPerformanceOptimizer.Scheduling;
+using ConstructionPerformanceOptimizer.Infrastructure;
+using ConstructionPerformanceOptimizer.Compatibility;
 using System.Reflection;
 
 static void Assert(bool condition, string message)
@@ -53,8 +53,8 @@ catch (MissingMethodException)
 Assert(rejectedAmbiguity, "The IL resolver must fail closed when multiple generated methods match.");
 
 string[] foreignOwners = PatchOwnerPolicy.ForeignOwners(
-    new[] { "other.mod", "coolnether123.constructionpipelineoptimizer", "other.mod" },
-    "coolnether123.constructionpipelineoptimizer");
+    new[] { "other.mod", "coolnether123.constructionperformanceoptimizer", "other.mod" },
+    "coolnether123.constructionperformanceoptimizer");
 Assert(foreignOwners.Length == 1 && foreignOwners[0] == "other.mod",
     "Compatibility policy should ignore only this mod and deduplicate foreign owners.");
 Assert(PatchOwnerPolicy.ForeignOwners(Array.Empty<string>(), "self").Length == 0,
@@ -62,7 +62,7 @@ Assert(PatchOwnerPolicy.ForeignOwners(Array.Empty<string>(), "self").Length == 0
 
 FluentTranspilerTests.Run();
 
-Console.WriteLine("ConstructionPipelineOptimizer deterministic policy tests passed.");
+Console.WriteLine("ConstructionPerformanceOptimizer deterministic policy tests passed.");
 
 internal static class CallTarget
 {

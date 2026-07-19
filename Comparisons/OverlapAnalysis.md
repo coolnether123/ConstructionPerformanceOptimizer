@@ -3,7 +3,7 @@
 ## Conclusion
 
 The construction-only split is justified. None of the surveyed RimWorld 1.6
-optimizers patches any of Construction Pipeline Optimizer's three targets:
+optimizers patches any of Construction Performance Optimizer's three targets:
 
 1. `JobDriver_PlaceNoCostFrame.MakeNewToils`
 2. the `JobDriver_ConstructFinishFrame.MakeNewToils` defensive
@@ -25,7 +25,7 @@ but much smaller and less distinctive than the construction path.
 
 | Optimizer | Place no-cost frame continuation | Active finish validation cadence | Completion authorization | Adjacent construction work |
 |---|---:|---:|---:|---|
-| Construction Pipeline Optimizer | Yes | Yes | Yes | Deliberately excluded |
+| Construction Performance Optimizer | Yes | Yes | Yes | Deliberately excluded |
 | Performance Optimizer 1.6 | No | No | No | No current 1.6 construction patch found |
 | Yet another Optimizer | No | No | No | Removes redundant touch checks from resource-delivery work givers; optionally parallelizes work-giver scans |
 | Performance Fish 1.6 port | No | No | No | No matching construction patch found |
@@ -74,7 +74,7 @@ survey.
 
 ## Compatibility implications
 
-- Do not load Construction Pipeline Optimizer with the legacy Construction Queue
+- Do not load Construction Performance Optimizer with the legacy Construction Queue
   Optimizer; both patch the same construction methods.
 - YaOpt's adjacent resource-delivery optimization does not patch the same
   methods, but its parallel work-giver mode is disabled in Multiplayer and its
@@ -93,7 +93,7 @@ survey.
 
 ## Recommended package architecture
 
-Make Construction Pipeline Optimizer the only authoritative home of the three
+Make Construction Performance Optimizer the only authoritative home of the three
 construction patches. Do not maintain a second copy in the legacy broad package:
 either retire that package or remove its construction classes and turn it into a
 separate optional micro-optimization pack. This prevents source drift and avoids

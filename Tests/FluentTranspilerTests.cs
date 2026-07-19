@@ -1,6 +1,6 @@
 using System.Reflection;
 using System.Reflection.Emit;
-using ConstructionPipelineOptimizer.Infrastructure.Transpilers;
+using ConstructionPerformanceOptimizer.Infrastructure.Transpilers;
 using HarmonyLib;
 
 internal static class FluentTranspilerTests

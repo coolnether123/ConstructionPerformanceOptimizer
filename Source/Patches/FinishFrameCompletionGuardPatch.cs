@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
-using ConstructionPipelineOptimizer.Infrastructure;
-using ConstructionPipelineOptimizer.Infrastructure.Transpilers;
+using ConstructionPerformanceOptimizer.Infrastructure;
+using ConstructionPerformanceOptimizer.Infrastructure.Transpilers;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -12,7 +12,7 @@ using FrameType = global::Frame;
 using FrameType = RimWorld.Frame;
 #endif
 
-namespace ConstructionPipelineOptimizer.Patches
+namespace ConstructionPerformanceOptimizer.Patches
 {
     /// <summary>
     /// Replaces only FinishFrame's completion call with an unconditional authorization gate.

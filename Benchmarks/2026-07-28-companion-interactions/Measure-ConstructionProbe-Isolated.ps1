@@ -126,7 +126,7 @@ $commandPath = Join-Path $bridge 'command.txt'
 $agentResultPath = Join-Path $bridge 'last-result.txt'
 $readyPath = Join-Path $bridge 'ready.txt'
 $sender =
-    'A:\Dev\GitHub\Coolnether123\RimWorld-Agent\Tools\Send-RimWorldAgentCommand.ps1'
+    'A:\Dev\RimWorld\Infrastructure\AgenticHarness\RimWorld-Agent\Tools\Send-RimWorldAgentCommand.ps1'
 $authorizedHash =
     (Get-FileHash -LiteralPath $rimWorldPath -Algorithm SHA256).Hash
 if ((Get-FileHash -LiteralPath $canonicalPath -Algorithm SHA256).Hash -cne

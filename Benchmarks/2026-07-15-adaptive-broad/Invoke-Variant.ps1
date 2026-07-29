@@ -38,7 +38,7 @@ $projectRoot = [System.IO.Path]::GetFullPath((Join-Path $benchmarkRoot '..\..'))
 if ([string]::IsNullOrWhiteSpace($CandidateDll)) {
     $CandidateDll = Join-Path $projectRoot '1.6\Assemblies\Construction Performance Optimizer.dll'
 }
-$agentRoot = "A:\Dev\GitHub\Coolnether123\RimWorld-Agent"
+$agentRoot = "A:\Dev\RimWorld\Infrastructure\AgenticHarness\RimWorld-Agent"
 $measureScript = Join-Path $agentRoot "Tools\Measure-ConstructionProbe.ps1"
 $normalDataFolder = "$env:USERPROFILE\AppData\LocalLow\Ludeon Studios\RimWorld by Ludeon Studios"
 $sourceSavePath = Join-Path $normalDataFolder "Saves\$SaveName.rws"

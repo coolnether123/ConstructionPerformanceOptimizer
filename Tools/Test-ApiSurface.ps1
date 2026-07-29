@@ -6,7 +6,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = [System.IO.Path]::GetFullPath((Split-Path -Parent $PSScriptRoot))
-$bwtRoot = 'A:\Dev\GitHub\Coolnether123\Better-Work-Tab'
+$bwtRoot = 'A:\Dev\RimWorld\Mods\Better-Work-Tab'
 $rimWorldRoot = Join-Path $bwtRoot 'Decompiled\RimWorld'
 $cecilPath = Join-Path $bwtRoot 'Decompiled\Tools\ilspycmd\.store\ilspycmd\9.1.0.7988\ilspycmd\9.1.0.7988\tools\net8.0\any\Mono.Cecil.dll'
 

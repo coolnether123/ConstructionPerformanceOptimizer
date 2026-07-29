@@ -1,0 +1,9 @@
+companion,clean_blocks,arm01_cpu_ms_per_tick,arm11_cpu_ms_per_tick,cpo_benefit_percent,cpu_interaction_ms_per_tick,interaction_ci_low,interaction_ci_high,disposition
+"Achtung! 4.1.12 official",3,9.936,8.200,17.47,-1.6370,-8.3871,5.1131,"compatible; combined official clean blocks; no CPO patch"
+"Better Pawn Control",3,8.6387,7.8847,8.73,-0.3583,-3.3155,2.5989,"compatible; exact owners coexist; no CPO patch"
+"Performance Optimizer",3,9.2020,8.2390,10.47,-1.0450,-5.6207,3.5307,"compatible; exact owners coexist; no CPO patch"
+"Yet Another Optimizer",3,7.3813,6.3050,14.58,-0.4627,-0.7291,-0.1962,"compatible; screening interaction favors CPO; no CPO patch"
+"Performance Fish 0.6.2 profiled",3,7.7920,6.9610,10.66,0.0257,-2.3200,2.3714,"compatible with modular Tech Advancing profile; no CPO patch"
+"MissileGirl",3,7.8310,7.8447,-0.17,0.9890,-2.5428,4.5208,"runtime compatible; neutral marginal CPU result; no CPO patch"
+"Turret Performance Tweaks",3,9.2097,7.8970,14.25,-0.1797,-5.4236,5.0642,"compatible; combined clean blocks; no CPO patch"
+"Hard RimWorld Optimization",3,9.1443,8.3627,8.55,-0.8777,-7.4784,5.7231,"compatible; earlier slowdown did not reproduce; no CPO patch"

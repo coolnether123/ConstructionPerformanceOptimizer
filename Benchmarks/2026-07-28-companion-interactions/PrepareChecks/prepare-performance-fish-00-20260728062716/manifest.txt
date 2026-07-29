@@ -1,0 +1,17 @@
+﻿arm=00
+expectedCpoState=Off
+companionEnabled=False
+companionModIds=bs.fishery;bs.performance
+profileOrder=before:Ludeon.RimWorld
+requiredOrder=zetrith.prepatcher>bs.fishery;brrainz.harmony>bs.fishery;bs.fishery>bs.performance;bs.performance>Ludeon.RimWorld
+runtimeChecks=bs.fishery|1.6\Assemblies\1Fishery.dll|1Fishery, Version=0.6.1.0, Culture=neutral, PublicKeyToken=null|51376B7755EB7779B3EAFD006366BF57D97AE47D3FF17553B65BBC2A4DD79656;bs.performance|1.6\Assemblies\PerformanceFish.dll|PerformanceFish, Version=0.6.2.0, Culture=neutral, PublicKeyToken=null|FE8E313C3CBC8E49AD59B9400670B4BBBDABED22852EDB36C7EB2AC9509CDAB5
+forbiddenLogRegex=Exception while applying prepatch|Performance Fish.*(?:failed|error)
+diagnosticDubs=False
+allowConcurrentRimWorld=False
+dataFolder=A:\Dev\BenchmarkGames\RimWorld-ConstructionPerformanceOptimizer-1.6\BenchmarkData\Trials\prepare-performance-fish-00-20260728062716
+saveSha256=6B96E02F9037204BD9E7B65B87127698F93F6922A2BEE111B1144C0CCF1CE1ED
+modsConfigSha256=98C6BE1D12892882A65722486AEF7C3CD48530695921D7CE24E5F7134FE130CE
+candidateDllSha256=841E3D3A4190D93A9086825039AAA20EADFFE9AA97933C06AD654796CA007E88
+benchmarkAgentDllSha256=9F2991C296B3687097AC6535EB6EDB0408888F4EA83ABA5E4784CCD75746375C
+companionCompatibilitySettings=
+companionCompatibilitySettingsSha256=

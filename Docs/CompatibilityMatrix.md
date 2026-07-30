@@ -1,16 +1,12 @@
 # RimWorld API compatibility matrix
 
-The public package and `Dev` source support RimWorld 1.6. Historical API
+The public package and `main` source support RimWorld 1.6. Historical API
 adaptations are owned by matching `Support/<version>` branches. The cascade copies
-their rebuilt DLL folders back to `Dev`, but never copies historical source into the
+their rebuilt DLL folders back to `main`, but never copies historical source into the
 modern tree.
 
 | RimWorld | Direct continuation | Adaptive cadence | Completion guard | Multiplayer | Evidence |
 |---|---:|---:|---:|---:|---|
-| Alpha 4 | Experimental | Not available in vanilla | Not needed | Not supported | Original game assembly IL + target build/API audit |
-| 0.13-0.17 | Experimental | Not available in vanilla | Not needed | Not supported | Original game assembly IL + target build/API audit |
-| 0.18 | Experimental | Not included on legacy Mono | Not included | Not supported | Original game assembly IL + target build/API audit |
-| 0.19 | Experimental | Not included on legacy Mono | Not included | Not supported | Original game assembly IL + target build/API audit |
 | 1.0 | Verified | Disabled for old Mono compatibility | Not used | Not supported | Installed 1.0.2559 runtime + clean quickstart with 50 colonists and 300 wall blueprints |
 | 1.1-1.4 | Experimental | Experimental | Experimental | Not supported | Reference assembly + target build/API audit |
 | 1.5 | Experimental | Experimental | Experimental | Verified on `Support/1.5` | Installed RimWorld 1.5 + MultiplayerAPI 0.5 + build/API audit + single-player and normal two-client construction tests |
@@ -19,13 +15,13 @@ modern tree.
 ## Important limits
 
 - A successful reference build proves API compatibility, not runtime behavior.
-  No runnable Alpha 4-0.19 or 1.1-1.4 game installations are present locally, so those
-  versions remain build/API verified until tested in their games.
+  No runnable 1.1-1.4 game installations are present locally, so those versions
+  remain build/API verified until tested in their games.
 - Every historical support branch is directly loadable: its root assembly matches
   its target-specific versioned DLL, its About metadata names that RimWorld version,
   and legacy branches remove unsupported modern load-folder metadata.
 - Historical bootstrap and method-shape adaptations live only on their owning
-  support branches. `Dev` receives rebuilt DLL folders, never historical source.
+  support branches. `main` receives rebuilt DLL folders, never historical source.
 - The 1.0 branch targets the installed .NET 3.5 game runtime. Its modern fluent
   validation pair is excluded because RimWorld 1.0's Mono cannot load those types;
   the independent construction continuation remains enabled and runtime-verified.

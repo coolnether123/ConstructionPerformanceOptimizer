@@ -3,6 +3,16 @@
 All notable changes to Construction Performance Optimizer are documented here.
 The project follows Semantic Versioning.
 
+## Unreleased
+
+### Changed
+
+- Centralized branch and supported-version ownership in
+  `Tools/CascadeManifest.json`. `main` owns RimWorld 1.6, historical support
+  branches stop at RimWorld 1.0, and no `Support/1.6` branch is used.
+- Retired the pre-1.0 payloads from active version control and release tooling
+  to match the Steam Workshop support matrix of RimWorld 1.0 through 1.6.
+
 ## 1.0 - 2026-07-17
 
 **Release status: Release ready.**
@@ -27,10 +37,10 @@ The project follows Semantic Versioning.
   build. Both rendered peers loaded all three CPO features, advanced 2,506 synchronized
   ticks across three maps, completed 52 constructions, ended on identical clocks,
   and reported no desync.
-- Made `Dev` a strict RimWorld 1.6 source tree: removed historical API
+- Made `main` a strict RimWorld 1.6 source tree: removed historical API
   conditionals, references, bootstrap data, and build configurations. Historical
   source remains branch-owned under `Support/<version>`, while only rebuilt DLL
-  payload folders cascade back to `Dev`.
+  payload folders cascade back to `main`.
 - Added the official Multiplayer API and made the validation cadence derive only
   from deterministic game ticks and pawn IDs.
 - Verified RimWorld 1.6 Multiplayer through normal save hosting with two rendered

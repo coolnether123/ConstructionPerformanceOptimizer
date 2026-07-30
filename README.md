@@ -78,10 +78,7 @@ gameplay patch.
 2. For RimWorld 1.0-1.6, extract the main `ConstructionPerformanceOptimizer` folder
    into RimWorld's `Mods` folder, or subscribe through Steam Workshop after
    publication. It selects the matching DLL automatically.
-3. For Alpha 4-0.19, use the matching ready-to-install folder or ZIP under
-   `Legacy`; those games predate safe automatic selection between incompatible
-   version assemblies.
-4. Load this mod after Harmony and Tilled Soil.
+3. Load this mod after Harmony and Tilled Soil.
 
 The mod has no settings and writes no save data. It is normally safe to add or
 remove between sessions, but that is not a universal compatibility guarantee;
@@ -89,15 +86,13 @@ always keep a normal save backup when changing a large mod list.
 
 ## Compatibility
 
-- The public release includes every beneficial build from Alpha 4 through RimWorld
-  1.6. RimWorld 1.0-1.6 share one automatically routed mod folder; Alpha 4-0.19
-  have separate ready-to-install legacy packages because those games cannot safely
-  select among incompatible version assemblies.
-- All versions receive the zero-cost terrain continuation optimization. RimWorld
-  1.1-1.6 also receive the guarded construction-validation cadence. Alpha 4-0.19
-  and RimWorld 1.0 deliberately use continuation only for their older Mono runtime.
+- The public release and version-controlled support matrix cover RimWorld
+  1.0-1.6 in one automatically routed mod folder.
+- All supported versions receive the zero-cost terrain continuation optimization.
+  RimWorld 1.1-1.6 also receive the guarded construction-validation cadence.
+  RimWorld 1.0 deliberately uses continuation only for its older Mono runtime.
 - Historical builds are produced from their matching `Support/<version>` branches.
-  Their rebuilt DLL folders are collected on `Dev`, while their source-level API
+  Their rebuilt DLL folders are collected on `main`, while their source-level API
   adaptations remain on the owning support branches.
 - Harmony is required.
 - Tilled Soil is supported but is not a required dependency.
@@ -106,7 +101,7 @@ always keep a normal save backup when changing a large mod list.
   Multiplayer's open-source `rw-1.5` branch. The `Support/1.5` package passed
   single-player construction and normal-hosted two-client Multiplayer tests with
   Better Work Tab and the legacy optimizer excluded.
-- Alpha 4 through RimWorld 1.4 are supported for single-player only. Multiplayer
+- RimWorld 1.0 through 1.4 are supported for single-player only. Multiplayer
   support is limited to RimWorld 1.5 and 1.6.
 - RimWorld 1.0 passed a native quickstart construction stress test with 50 colonists
   and 300 steel-wall blueprints.
@@ -135,7 +130,8 @@ powershell -ExecutionPolicy Bypass -File .\Tools\Build-AllVersions.ps1
 
 The support cascade merges changes down through existing local `Support/*` branches,
 where each branch owns its historical API source. It copies only rebuilt DLL folders
-back to `Dev` and never pushes unless `-Push` is explicitly supplied:
+back to `main` and never pushes unless `-Push` is explicitly supplied. RimWorld 1.6
+is owned directly by `main`; there is no `Support/1.6` branch:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\Tools\Invoke-SupportCascade.ps1

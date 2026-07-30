@@ -2,8 +2,8 @@
 
 ## Before publishing
 
-The public package and `Dev` source target RimWorld 1.6 only. Older API source remains
-on `Support/<version>` branches, while historical DLL folders in `Dev` are engineering
+The public package and `main` source target RimWorld 1.6 only. Older API source remains
+on `Support/<version>` branches, while historical DLL folders in `main` are engineering
 artifacts and must not be copied into the Workshop archive.
 
 Historical branch releases are separate packages. The cascade gives each support

@@ -35,6 +35,6 @@
     Name="RejectHistoricalApiConfiguration"
     BeforeTargets="PrepareForBuild"
     Condition="'$(Configuration)' != 'Debug' And '$(Configuration)' != 'Release' And '$(Configuration)' != '1.6'">
-    <Error Text="Dev targets RimWorld 1.6 only. Build historical APIs from their Support/&lt;version&gt; branches." />
+    <Error Text="The current source branch targets RimWorld 1.6 only. Build historical APIs from their Support/&lt;version&gt; branches." />
   </Target>
 </Project>

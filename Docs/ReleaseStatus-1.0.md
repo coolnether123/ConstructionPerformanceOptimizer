@@ -8,13 +8,13 @@ tests, API-shape validation, package validation, randomized clean single-player
 performance tests, fail-closed conflict testing, and a normal-hosted two-client
 Multiplayer construction test.
 
-Historical targets from Alpha 4 through RimWorld 1.5 build on their owning
+Historical targets from RimWorld 1.0 through 1.5 build on their owning
 `Support/<version>` branches and pass the available API-shape audits. Each historical
 branch contains target-specific metadata and a root DLL matching its versioned build,
 so the branch can be installed directly. RimWorld 1.5 additionally passed
-single-player and normal-hosted two-client Multiplayer construction tests. Alpha 4
-through RimWorld 1.4 remain build/API verified because those runtimes are not
-installed on the test machine.
+single-player and normal-hosted two-client Multiplayer construction tests.
+RimWorld 1.1 through 1.4 remain build/API verified because those runtimes are
+not installed on the test machine.
 
 ## Release artifacts
 
@@ -25,15 +25,14 @@ installed on the test machine.
 
 The main archive contains the automatically routed RimWorld 1.0-1.6 runtime
 payloads, About metadata and preview, `LoadFolders.xml`, `README.md`, `CHANGELOG.md`,
-`LICENSE`, and the optional 1.5/1.6 Multiplayer API bridges. Ready-to-install
-Alpha 4-0.19 single-version folders and ZIPs are under the release's `Legacy`
-directory. Source, tests, tools, and benchmark workspaces are excluded.
+`LICENSE`, and the optional 1.5/1.6 Multiplayer API bridges. Source, tests,
+tools, benchmark workspaces, and pre-1.0 historical payloads are excluded.
 
 Current release-preparation commits:
 
-- Dev Construction Performance Optimizer identity:
+- main Construction Performance Optimizer identity:
   `47819f89ea8986a3d41173cbed2153f2e2330251`
-- Dev refreshed historical payload set:
+- main refreshed historical payload set:
   `e41db66dad210c4522b064d5639735bc44eb6704`
 - RimWorld 1.5 renamed package record:
   `26e1eed22e89e2eb7e5a5923d6e78a0b0636f40c`
@@ -121,18 +120,14 @@ exception-handler rejection.
 
 | RimWorld | Continuation | Validation cadence | Completion guard/build |
 |---|---|---|---|
-| Alpha 4 | Verified | Not present in vanilla | Build/API audit passed |
-| 0.13-0.17 | Verified | Not present in vanilla | Build/API audit passed |
-| 0.18 | Verified | Not included on legacy Mono | Build/API audit passed |
-| 0.19 | Verified | Not included on legacy Mono | Build/API audit passed |
 | 1.0 | Verified | Disabled for old Mono compatibility | Native single-player construction stress passed |
 | 1.1-1.4 | Verified | Compile surface verified | Build/API audit passed |
 | 1.5 | Verified | Compile surface verified | Build/API audit passed |
 | 1.6 | Verified | Verified | Build/API and runtime tests passed |
 
-All 15 targets report assembly version 1.0.0.0 and reference their corresponding
+All seven controlled targets report assembly version 1.0.0.0 and reference their corresponding
 RimWorld `Assembly-CSharp` version. The support cascade builds each target on its
-own branch and copies only rebuilt versioned assembly folders back to `Dev`.
+own branch and copies only rebuilt versioned assembly folders back to `main`.
 
 ## RimWorld 1.5 Multiplayer status
 
@@ -200,4 +195,4 @@ and these messages are not attributed to CPO.
 - RimWorld 1.5 single-player: **runtime-verified release candidate**
 - RimWorld 1.5 Multiplayer: **runtime-verified release candidate**
 - RimWorld 1.0 single-player: **runtime-verified historical candidate**
-- Alpha 4-0.19 and 1.1-1.4 branch builds: **build/API verified and directly packageable**
+- RimWorld 1.1-1.4 branch builds: **build/API verified and directly packageable**

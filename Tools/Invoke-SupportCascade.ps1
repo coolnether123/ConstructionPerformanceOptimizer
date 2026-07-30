@@ -3,25 +3,25 @@
 Builds and validates the Construction Performance Optimizer support-branch cascade.
 
 .DESCRIPTION
-The cascade follows the same direction as Better Work Tab:
+The cascade follows this direction:
 
-  Dev -> Support/1.5 -> ... -> Support/0.13 -> Support/Alpha4
+  main -> Support/1.5 -> ... -> Support/1.0
 
-Dev contains only RimWorld 1.6 source and build references. Each Support/<version>
-branch owns the source and project adaptations for its historical API. The cascade
-merges modern changes downward, builds and audits on the owning branch, and copies
-only rebuilt versioned DLL folders back to Dev. Nothing is pushed unless -Push is
-provided explicitly.
+The source branch contains only RimWorld 1.6 source and build references. `main`
+is the canonical source branch; callers may explicitly select `Dev` if the
+repository later adopts that name. There is no `Support/1.6` branch. Each
+Support/<version> branch owns the source and project adaptations for an older
+API. The cascade merges modern changes downward, builds and audits on the owning
+branch, and copies only rebuilt versioned DLL folders back to the source branch.
+Nothing is pushed unless -Push is provided explicitly.
 #>
 param(
-    [string]$SourceBranch = 'Dev',
+    [string]$SourceBranch,
     [string]$Remote = 'origin',
     [string]$ReleaseLabel = 'v1.0',
-    [string[]]$SupportVersions = @(
-        '1.5', '1.4', '1.3', '1.2', '1.1', '1.0', '0.19', '0.18',
-        '0.17', '0.16', '0.15', '0.14', '0.13', 'Alpha4'),
     [switch]$SkipSourceBuild,
-    [switch]$SkipPayloadCopyBackToDev,
+    [Alias('SkipPayloadCopyBackToDev')]
+    [switch]$SkipPayloadCopyBackToSource,
     [switch]$Push
 )
 
@@ -31,6 +31,27 @@ Set-StrictMode -Version Latest
 $projectRoot = [System.IO.Path]::GetFullPath((Split-Path -Parent $PSScriptRoot))
 $projectPath = Join-Path $projectRoot 'Source\ConstructionPerformanceOptimizer.csproj'
 $payloadName = 'Construction Performance Optimizer.dll'
+$cascadeManifestPath = Join-Path $PSScriptRoot 'CascadeManifest.json'
+$cascadeManifest = Get-Content -Raw -LiteralPath $cascadeManifestPath |
+    ConvertFrom-Json
+if ([string]::IsNullOrWhiteSpace($SourceBranch))
+{
+    $SourceBranch = [string]$cascadeManifest.sourceBranch
+}
+if (@($cascadeManifest.allowedSourceBranches) -notcontains $SourceBranch)
+{
+    throw (
+        "SourceBranch '$SourceBranch' is not allowed by CascadeManifest.json. " +
+        "Allowed branches: $(@($cascadeManifest.allowedSourceBranches) -join ', ').")
+}
+$SourceVersion = [string]$cascadeManifest.sourceVersion
+$SupportVersions = @($cascadeManifest.supportVersions | ForEach-Object {
+    [string]$_
+})
+if ($SupportVersions -contains $SourceVersion)
+{
+    throw 'CascadeManifest.json cannot list the source version as a support branch.'
+}
 
 function Invoke-Git
 {
@@ -129,39 +150,8 @@ function Set-BranchMetadata
 {
     param([string]$Version)
 
-    $targetVersions = @{
-        '0.19' = '0.19.2009'
-        '0.18' = '0.18.1722'
-        '0.17' = '0.17.1557'
-        '0.16' = '0.16.1393'
-        '0.15' = '0.15.1284'
-        '0.14' = '0.14.1249'
-        '0.13' = '0.13.1137'
-        'Alpha4' = '0.4.460'
-    }
-
     $aboutPath = Join-Path $projectRoot 'About\About.xml'
     $loadFoldersPath = Join-Path $projectRoot 'LoadFolders.xml'
-    if ($targetVersions.ContainsKey($Version))
-    {
-        $targetVersion = $targetVersions[$Version]
-        $xml = @"
-<?xml version="1.0" encoding="utf-8"?>
-<ModMetaData>
-  <name>Construction Performance Optimizer</name>
-  <author>Coolnether123</author>
-  <targetVersion>$targetVersion</targetVersion>
-  <description>Construction Performance Optimizer 1.0 helps construction-heavy colonies run more smoothly by reducing repeated construction work while preserving normal RimWorld behavior. Supports RimWorld $Version single-player. Requires Harmony. No settings or save data.</description>
-</ModMetaData>
-"@
-        [System.IO.File]::WriteAllText($aboutPath, $xml)
-        if (Test-Path -LiteralPath $loadFoldersPath)
-        {
-            Remove-Item -LiteralPath $loadFoldersPath -Force
-        }
-        return
-    }
-
     $multiplayerText = if ($Version -eq '1.5')
     {
         'Includes the RimWorld 1.5 Multiplayer API 0.5 bridge. Every peer must use the same CPO build and mod list.'
@@ -251,15 +241,6 @@ function Sync-BranchPayload
         Remove-Item -LiteralPath $rootMultiplayerApi -Force
     }
 
-    if ($Version -eq 'Alpha4' -or $Version.StartsWith('0.'))
-    {
-        $bootstrapDef = Join-Path $projectRoot 'Defs\ConstructionPerformanceOptimizerBootstrap.xml'
-        if (-not (Test-Path -LiteralPath $bootstrapDef))
-        {
-            throw "Historical bootstrap Def is missing: $bootstrapDef"
-        }
-    }
-
     Set-BranchMetadata $Version
 }
 
@@ -268,18 +249,13 @@ function Commit-BranchPayload
     param([string]$Version)
 
     $paths = @("$Version/Assemblies")
-    if ($Version -ne '1.6')
+    if ($Version -ne $SourceVersion)
     {
         $paths += @(
             'Assemblies',
             'About/About.xml',
             'LoadFolders.xml')
     }
-    if ($Version -eq 'Alpha4' -or $Version.StartsWith('0.'))
-    {
-        $paths += 'Defs/ConstructionPerformanceOptimizerBootstrap.xml'
-    }
-
     $stagePaths = @($paths | Where-Object {
         if (Test-Path -LiteralPath $_)
         {
@@ -309,7 +285,7 @@ function Commit-BranchPayload
     Invoke-Git commit -m "Build RimWorld $Version payload for $ReleaseLabel" -m "Build and API-audit the version-specific construction optimization payload."
 }
 
-function Copy-SupportPayloadsBackToDev
+function Copy-SupportPayloadsBackToSource
 {
     Invoke-Git checkout $SourceBranch
     Assert-CleanWorktree
@@ -340,8 +316,8 @@ if ($LASTEXITCODE -ne 0)
 Invoke-Git checkout $SourceBranch
 if (-not $SkipSourceBuild)
 {
-    Build-Version '1.6'
-    Commit-BranchPayload '1.6'
+    Build-Version $SourceVersion
+    Commit-BranchPayload $SourceVersion
     Assert-CleanWorktree
 }
 
@@ -372,9 +348,9 @@ foreach ($version in $SupportVersions)
     $previousBranch = $branch
 }
 
-if (-not $SkipPayloadCopyBackToDev)
+if (-not $SkipPayloadCopyBackToSource)
 {
-    Copy-SupportPayloadsBackToDev
+    Copy-SupportPayloadsBackToSource
 }
 
 if ($Push)

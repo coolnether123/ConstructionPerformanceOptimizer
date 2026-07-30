@@ -118,9 +118,9 @@ shared build module with direct Pester coverage.
 
 ## Version ownership
 
-`Dev` owns only the RimWorld 1.6 source and references. Historical API adaptations
+`main` owns only the RimWorld 1.6 source and references. Historical API adaptations
 belong to their `Support/<version>` branches. The cascade moves reviewed changes down
-that branch chain and copies only rebuilt `*/Assemblies` payloads back to `Dev`; it
+that branch chain and copies only rebuilt `*/Assemblies` payloads back to `main`; it
 never merges historical source upward. Each historical branch also receives
 target-specific About/load metadata and a root assembly copied from its target build,
 so checking out that branch produces a directly loadable package. The 1.5 branch alone

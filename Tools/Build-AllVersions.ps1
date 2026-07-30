@@ -1,5 +1,5 @@
 param(
-    [string[]]$Versions = @('1.6'),
+    [string[]]$Versions,
     [switch]$SkipPolicyTests,
     [switch]$SkipApiSurfaceTest
 )
@@ -7,11 +7,19 @@ param(
 $ErrorActionPreference = 'Stop'
 $projectRoot = [System.IO.Path]::GetFullPath((Split-Path -Parent $PSScriptRoot))
 $project = Join-Path $projectRoot 'Source\ConstructionPerformanceOptimizer.csproj'
-$unsupportedVersions = @($Versions | Where-Object { $_ -ne '1.6' })
+$cascadeManifest = Get-Content -Raw -LiteralPath (
+    Join-Path $PSScriptRoot 'CascadeManifest.json') | ConvertFrom-Json
+$sourceVersion = [string]$cascadeManifest.sourceVersion
+$sourceBranch = [string]$cascadeManifest.sourceBranch
+if ($null -eq $Versions -or $Versions.Count -eq 0)
+{
+    $Versions = @($sourceVersion)
+}
+$unsupportedVersions = @($Versions | Where-Object { $_ -ne $sourceVersion })
 if ($unsupportedVersions.Count -gt 0)
 {
     throw (
-        "The Dev source tree targets RimWorld 1.6 only. " +
+        "The $sourceBranch source tree targets RimWorld $sourceVersion only. " +
         "Build historical versions from their Support/<version> branches through " +
         "Invoke-SupportCascade.ps1. Requested here: " +
         ($unsupportedVersions -join ', '))
@@ -28,7 +36,7 @@ if (-not $SkipPolicyTests)
 
 foreach ($version in $Versions)
 {
-    Write-Host '== Building RimWorld 1.6 from Dev =='
+    Write-Host "== Building RimWorld $sourceVersion from $sourceBranch =="
     & dotnet build $project -c $version
     if ($LASTEXITCODE -ne 0)
     {

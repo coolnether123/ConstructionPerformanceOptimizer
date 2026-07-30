@@ -11,22 +11,16 @@ if (-not $stagingBase.Equals($expectedStagingBase, [System.StringComparison]::Or
     throw "Unsafe staging path resolved outside the expected project location: $stagingBase"
 }
 
-$modernVersions = @('1.0', '1.1', '1.2', '1.3', '1.4', '1.5', '1.6')
-$legacyVersions = @('Alpha4', '0.13', '0.14', '0.15', '0.16', '0.17', '0.18', '0.19')
+$cascadeManifest = Get-Content -Raw -LiteralPath (
+    Join-Path $PSScriptRoot 'CascadeManifest.json') | ConvertFrom-Json
+$modernVersions = @(
+    @($cascadeManifest.supportVersions | ForEach-Object { [string]$_ }) +
+    [string]$cascadeManifest.sourceVersion |
+        Sort-Object { [version]$_ })
 $multiplayerVersions = @('1.5', '1.6')
-$targetVersions = @{
-    'Alpha4' = '0.4.460'
-    '0.13' = '0.13.1137'
-    '0.14' = '0.14.1249'
-    '0.15' = '0.15.1284'
-    '0.16' = '0.16.1393'
-    '0.17' = '0.17.1557'
-    '0.18' = '0.18.1722'
-    '0.19' = '0.19.2009'
-}
 
-# Dev owns the current 1.6 source. Historical DLLs are deliberately built on their
-# Support/* branches and collected in Dev by the support cascade.
+# main owns the current 1.6 source. Historical DLLs are deliberately built on
+# their Support/* branches and collected in main by the support cascade.
 & powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot 'Build-AllVersions.ps1') -Versions 1.6
 if ($LASTEXITCODE -ne 0)
 {
@@ -39,7 +33,6 @@ $releaseLabel = if ($version -match '^(\d+\.\d+)\.0$') { $Matches[1] } else { $v
 $releaseDirectory = Join-Path $projectRoot 'Releases'
 $packageName = 'ConstructionPerformanceOptimizer'
 $stagedPackage = Join-Path $stagingBase $packageName
-$stagedLegacyRoot = Join-Path $stagingBase 'Legacy'
 $releaseVersionRoot = [System.IO.Path]::GetFullPath((Join-Path $releaseDirectory "$packageName-$releaseLabel"))
 $releaseDirectoryPrefix = [System.IO.Path]::GetFullPath($releaseDirectory).TrimEnd('\') + '\'
 if (-not $releaseVersionRoot.StartsWith($releaseDirectoryPrefix, [System.StringComparison]::OrdinalIgnoreCase))
@@ -79,33 +72,6 @@ function Copy-VersionAssembly
     }
 }
 
-function New-LegacyAbout
-{
-    param(
-        [string]$RimWorldVersion,
-        [string]$Destination
-    )
-
-    $aboutDirectory = Join-Path $Destination 'About'
-    New-Item -ItemType Directory -Force -Path $aboutDirectory | Out-Null
-    Copy-Item -LiteralPath (Join-Path $projectRoot 'About\Preview.png') -Destination $aboutDirectory
-
-    $displayVersion = if ($RimWorldVersion -eq 'Alpha4') { 'Alpha 4' } else { $RimWorldVersion }
-    $benefit = 'CPO avoids an unnecessary global job search when a pawn can continue eligible zero-cost terrain construction.'
-
-    $description = "Construction Performance Optimizer 1.0. $benefit The benefit is largest in construction-heavy colonies and with terrain-building mods. It does not change construction speed or bypass normal gameplay rules. Supports RimWorld $displayVersion single-player only; Multiplayer is not supported on this version. Requires Harmony. No settings or save data."
-    $legacyAbout = @"
-<?xml version="1.0" encoding="utf-8"?>
-<ModMetaData>
-  <name>Construction Performance Optimizer</name>
-  <author>Coolnether123</author>
-  <targetVersion>$($targetVersions[$RimWorldVersion])</targetVersion>
-  <description>$description</description>
-</ModMetaData>
-"@
-    [System.IO.File]::WriteAllText((Join-Path $aboutDirectory 'About.xml'), $legacyAbout)
-}
-
 function New-ReleaseArchive
 {
     param(
@@ -138,7 +104,7 @@ if (Test-Path -LiteralPath $releaseVersionRoot)
     Remove-Item -LiteralPath $releaseVersionRoot -Recurse -Force
 }
 
-New-Item -ItemType Directory -Force -Path $stagedPackage, $stagedLegacyRoot, $releaseDirectory | Out-Null
+New-Item -ItemType Directory -Force -Path $stagedPackage, $releaseDirectory | Out-Null
 
 try
 {
@@ -150,40 +116,13 @@ try
     Copy-Item -LiteralPath (Join-Path $projectRoot 'LoadFolders.xml') -Destination $stagedPackage
     Copy-CommonReleaseFiles -Destination $stagedPackage
 
-    foreach ($legacyVersion in $legacyVersions)
-    {
-        $legacyPackage = Join-Path $stagedLegacyRoot "$legacyVersion\$packageName"
-        New-Item -ItemType Directory -Force -Path $legacyPackage | Out-Null
-        New-LegacyAbout -RimWorldVersion $legacyVersion -Destination $legacyPackage
-        Copy-VersionAssembly -RimWorldVersion $legacyVersion -Destination (Join-Path $legacyPackage 'Assemblies')
-        Copy-CommonReleaseFiles -Destination $legacyPackage
-    }
-
     & (Join-Path $PSScriptRoot 'Validate-Package.ps1') -PackageRoot $stagedPackage -Distribution
     if ($LASTEXITCODE -ne 0)
     {
         throw "Modern distribution validation failed with exit code $LASTEXITCODE."
     }
-    foreach ($legacyVersion in $legacyVersions)
-    {
-        & (Join-Path $PSScriptRoot 'Validate-Package.ps1') -PackageRoot (Join-Path $stagedLegacyRoot "$legacyVersion\$packageName") -LegacyVersion $legacyVersion -Distribution
-        if ($LASTEXITCODE -ne 0)
-        {
-            throw "RimWorld $legacyVersion distribution validation failed with exit code $LASTEXITCODE."
-        }
-    }
-
     New-Item -ItemType Directory -Force -Path $releaseVersionRoot | Out-Null
     Copy-Item -LiteralPath $stagedPackage -Destination $releaseVersionRoot -Recurse
-    Copy-Item -LiteralPath $stagedLegacyRoot -Destination $releaseVersionRoot -Recurse
-
-    $legacyArchiveRoot = Join-Path $releaseVersionRoot 'LegacyArchives'
-    New-Item -ItemType Directory -Force -Path $legacyArchiveRoot | Out-Null
-    foreach ($legacyVersion in $legacyVersions)
-    {
-        $legacyArchive = Join-Path $legacyArchiveRoot "$packageName-$releaseLabel-rw$legacyVersion.zip"
-        $null = New-ReleaseArchive -Source (Join-Path $releaseVersionRoot "Legacy\$legacyVersion\$packageName") -Destination $legacyArchive
-    }
 
     $installGuide = @"
 Construction Performance Optimizer $releaseLabel
@@ -191,11 +130,7 @@ Construction Performance Optimizer $releaseLabel
 RimWorld 1.0-1.6:
 Install the ConstructionPerformanceOptimizer folder. It selects the matching build automatically.
 
-RimWorld Alpha 4-0.19:
-Open Legacy, choose your exact game version, and install the ConstructionPerformanceOptimizer folder inside it.
-Ready-to-share ZIPs for those versions are also in LegacyArchives.
-
-Multiplayer support is limited to RimWorld 1.5 and 1.6. All older builds are single-player only.
+Multiplayer support is limited to RimWorld 1.5 and 1.6. RimWorld 1.0-1.4 builds are single-player only.
 Harmony is required for every version.
 "@
     [System.IO.File]::WriteAllText((Join-Path $releaseVersionRoot 'INSTALL.txt'), $installGuide)
@@ -205,18 +140,8 @@ Harmony is required for every version.
     {
         throw "Persistent publish-folder validation failed with exit code $LASTEXITCODE."
     }
-    foreach ($legacyVersion in $legacyVersions)
-    {
-        & (Join-Path $PSScriptRoot 'Validate-Package.ps1') -PackageRoot (Join-Path $releaseVersionRoot "Legacy\$legacyVersion\$packageName") -LegacyVersion $legacyVersion -Distribution
-        if ($LASTEXITCODE -ne 0)
-        {
-            throw "Published RimWorld $legacyVersion package validation failed with exit code $LASTEXITCODE."
-        }
-    }
-
     $hash = New-ReleaseArchive -Source $publishFolder -Destination $archivePath
     Write-Output "Workshop-ready folder (RimWorld 1.0-1.6): $publishFolder"
-    Write-Output "Legacy single-version packages (Alpha 4-0.19): $(Join-Path $releaseVersionRoot 'Legacy')"
     Write-Output "Release archive: $archivePath"
     Write-Output "SHA-256: $hash"
 }

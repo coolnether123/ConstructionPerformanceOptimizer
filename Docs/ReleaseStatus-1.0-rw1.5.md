@@ -6,8 +6,8 @@ The separate `Support/1.5` package is an independently packageable,
 runtime-verified RimWorld 1.5 release candidate with verified two-client
 Multiplayer support.
 
-Alpha 4 through RimWorld 0.19 and RimWorld 1.1-1.4 remain build/API-verified
-historical targets. RimWorld 1.0 is separately runtime-verified in single-player. The
+RimWorld 1.1-1.4 remain build/API-verified historical targets. RimWorld 1.0 is
+separately runtime-verified in single-player. The
 RimWorld 1.5 package must remain separate from the public RimWorld 1.6 archive.
 
 ## Runtime evidence

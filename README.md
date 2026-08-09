@@ -146,10 +146,11 @@ powershell -ExecutionPolicy Bypass -File .\Tools\Invoke-SupportCascade.ps1 `
   -ConfirmPlanSha256 $planInfo.PlanSha256
 ```
 
-The final command must add `-AllowPush` explicitly to authorize the manifest's
-push action. The source branch is `main`, RimWorld 1.6 is owned directly by
-`main`, and there is no `Support/1.6` branch. Missing historical branches or a
-dirty checkout stop planning/execution without mutation.
+The `-AllowPush` switch is required if a reviewed manifest contains a push
+action; this CPO manifest keeps `push` false. The source branch is `main`,
+RimWorld 1.6 is owned directly by `main`, and there is no `Support/1.6` branch.
+Missing historical branches or a dirty checkout stop planning/execution without
+mutation.
 
 To create the publishable runtime archive:
 

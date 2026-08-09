@@ -128,14 +128,28 @@ To compile and API-audit the current RimWorld 1.6 source:
 powershell -ExecutionPolicy Bypass -File .\Tools\Build-AllVersions.ps1
 ```
 
-The support cascade merges changes down through existing local `Support/*` branches,
-where each branch owns its historical API source. It copies only rebuilt DLL folders
-back to `main` and never pushes unless `-Push` is explicitly supplied. RimWorld 1.6
-is owned directly by `main`; there is no `Support/1.6` branch:
+The support cascade is planned and executed by the shared RimWorld tooling
+cascade. CPO contributes only its manifest, build adapter, and metadata/payload
+hooks; generic Git sequencing, validation, journaling, and fail-closed execution
+remain centralized. The plan is nonmutating and must be reviewed before execution:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\Tools\Invoke-SupportCascade.ps1
+$planPath = 'A:\Dev\Temp\cpo-cascade-plan.json'
+$planInfo = powershell -ExecutionPolicy Bypass `
+  -File .\Tools\Invoke-SupportCascade.ps1 `
+  -OutputPath $planPath | ConvertFrom-Json
+
+powershell -ExecutionPolicy Bypass -File .\Tools\Invoke-SupportCascade.ps1 `
+  -PlanPath $planPath `
+  -Execute `
+  -JournalPath 'A:\Dev\Temp\cpo-cascade-journal.jsonl' `
+  -ConfirmPlanSha256 $planInfo.PlanSha256
 ```
+
+The final command must add `-AllowPush` explicitly to authorize the manifest's
+push action. The source branch is `main`, RimWorld 1.6 is owned directly by
+`main`, and there is no `Support/1.6` branch. Missing historical branches or a
+dirty checkout stop planning/execution without mutation.
 
 To create the publishable runtime archive:
 

@@ -10,6 +10,21 @@ param(
 $ErrorActionPreference = 'Stop'
 
 $repository = [System.IO.Path]::GetFullPath((Split-Path -Parent $PSScriptRoot))
+$topologyScript = Join-Path $repository 'Tools\Test-CascadeTopology.ps1'
+if (-not (Test-Path -LiteralPath $topologyScript -PathType Leaf))
+{
+    throw "CPO cascade topology contract is missing: $topologyScript"
+}
+
+& powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass `
+    -File $topologyScript `
+    -Repository $repository `
+    -ManifestPath (Join-Path $repository 'Tools\CascadeManifest.json')
+if ($LASTEXITCODE -ne 0)
+{
+    throw 'CPO cascade topology preflight failed.'
+}
+
 $toolingRoot = [Environment]::GetEnvironmentVariable('RWT_CASCADE_TOOLING_ROOT')
 if ([string]::IsNullOrWhiteSpace($toolingRoot))
 {

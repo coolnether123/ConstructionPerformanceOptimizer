@@ -10,6 +10,44 @@ Set-StrictMode -Version Latest
 
 $projectRoot = [System.IO.Path]::GetFullPath((Split-Path -Parent $PSScriptRoot))
 $payloadName = 'Construction Performance Optimizer.dll'
+$cascadeManifest = Get-Content -Raw -LiteralPath (
+    Join-Path $PSScriptRoot 'CascadeManifest.json') | ConvertFrom-Json
+
+function Sync-CpoPriorPayloads
+{
+    param([Parameter(Mandatory = $true)][string]$TargetVersion)
+
+    $supportVersions = @($cascadeManifest.supportVersions | ForEach-Object {
+        [string]$_
+    })
+    $targetIndex = [Array]::IndexOf($supportVersions, $TargetVersion)
+    if ($targetIndex -le 0)
+    {
+        return
+    }
+
+    $previousBranch = "Support/$($supportVersions[$targetIndex - 1])"
+    $priorVersions = @($supportVersions[0..($targetIndex - 1)])
+    foreach ($priorVersion in $priorVersions)
+    {
+        $payloadRoot = "$priorVersion/Assemblies"
+        & git -C $projectRoot checkout $previousBranch -- $payloadRoot
+        if ($LASTEXITCODE -ne 0)
+        {
+            throw (
+                "Could not propagate the rebuilt RimWorld $priorVersion " +
+                "payload from $previousBranch.")
+        }
+    }
+
+    & git -C $projectRoot add -- ($priorVersions | ForEach-Object {
+        "$_/Assemblies"
+    })
+    if ($LASTEXITCODE -ne 0)
+    {
+        throw "Could not stage propagated prior-version payloads."
+    }
+}
 
 function Set-CpoBranchMetadata
 {
@@ -115,6 +153,10 @@ function Sync-CpoBranchPayload
 
 switch ($Phase)
 {
-    'after-merge' { Set-CpoBranchMetadata -TargetVersion $Version }
+    'after-merge'
+    {
+        Sync-CpoPriorPayloads -TargetVersion $Version
+        Set-CpoBranchMetadata -TargetVersion $Version
+    }
     'before-stage' { Sync-CpoBranchPayload -TargetVersion $Version }
 }

@@ -1,6 +1,6 @@
-Version 1.0 — Release ready.
+Version 1.0 is ready for release.
 
-Introduced Construction Performance Optimizer for RimWorld 1.0–1.6, with dedicated builds for every supported game version.
+Introduced Construction Performance Optimizer for RimWorld 1.0 through 1.6, with a dedicated build for each supported game version.
 
 Reduces repeated active-construction validation and avoids an unnecessary global work search when pawns continue eligible zero-cost terrain construction.
 
@@ -8,6 +8,6 @@ Preserves vanilla construction authorization, work priorities, material delivery
 
 Includes fail-closed compatibility checks and hardened fluent transpilers that disable an optimization when its expected patch point is no longer safe.
 
-Supports single-player on RimWorld 1.0–1.6 and Multiplayer on RimWorld 1.5–1.6.
+Supports single-player on RimWorld 1.0 through 1.6 and Multiplayer on RimWorld 1.5 and 1.6.
 
 Added dedicated Construction Performance Optimizer Workshop artwork.

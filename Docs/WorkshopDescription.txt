@@ -49,12 +49,12 @@ Multiplayer uses synchronized map ticks and stable pawn IDs, so every peer makes
 [/spoiler]
 
 [hr][/hr]
-[h2]Credits & Links[/h2]
+[h2]Credits and links[/h2]
 [b]Author:[/b] CoolNether123
 [list]
 [*]Issues or ideas? Join the Discord: [url=https://discord.gg/QYBBaRkKWs]https://discord.gg/QYBBaRkKWs[/url]
 [/list]
 
-[h2]Support the Developer[/h2]
-If you enjoy my mods and want to support my work, consider leaving a small tip here:
+[h2]Support the developer[/h2]
+If you would like to support my mod development, you can leave a tip here:
 [url=https://buymeacoffee.com/coolnether123]https://buymeacoffee.com/coolnether123[/url]

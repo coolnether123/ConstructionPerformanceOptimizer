@@ -15,9 +15,9 @@
   </supportedVersions>
   <description><![CDATA[Construction Performance Optimizer helps RimWorld stay responsive when your colony has a large construction backlog.
 
-Colonies with hundreds or thousands of blueprints can spend a surprising amount of processing time repeatedly checking unfinished construction. CPO reduces that unnecessary work, allowing the game to spend more time advancing the simulation.
+Colonies with hundreds or thousands of blueprints may spend substantial processing time repeatedly checking unfinished construction. CPO reduces those checks so the game can spend more time advancing the simulation.
 
-You are most likely to notice the benefit when placing large building plans, maintaining a long construction queue, using terrain-building mods such as Tilled Soil, playing large or late-game colonies with many builders, or running at higher game speeds.
+The benefit is most noticeable with large building plans, long construction queues, terrain-building mods such as Tilled Soil, many builders, or higher game speeds.
 
 The improvement depends on how much construction is active. It may be substantial in construction-heavy colonies and barely noticeable when little is being built.
 

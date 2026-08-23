@@ -15,11 +15,9 @@ Dependencies: **Harmony**
 
 ## Scope
 
-Vanilla performs two separate jobs:
-
-1. `PlaceNoCostFrame`
-2. return to global work selection
-3. `FinishFrame`
+Vanilla uses two separate jobs for zero-cost terrain. After
+`PlaceNoCostFrame`, the pawn returns to global work selection before starting
+`FinishFrame`.
 
 This mod asks the active `ConstructFinishFrames` work giver for the next job when a
 newly placed zero-cost terrain frame remains eligible. It preserves the returned job
@@ -39,7 +37,7 @@ Tab's `Spine.Harmony` framework. It rejects missing or ambiguous call sites, val
 hook stack signatures before mutation, preserves labels and exception-block metadata,
 and lints branch targets before Harmony receives the rewritten method.
 
-The package deliberately excludes every non-construction optimization from the earlier all-in-one experiment.
+CPO excludes the non-construction optimizations from the earlier all-in-one experiment.
 
 ## Performance expectations
 

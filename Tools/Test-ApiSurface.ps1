@@ -2,7 +2,7 @@ param([string[]]$Versions)
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = [System.IO.Path]::GetFullPath((Split-Path -Parent $PSScriptRoot))
-$bwtRoot = 'A:\Dev\RimWorld\Mods\Better-Work-Tab'
+$bwtRoot = 'H:\Dev\RimWorld\Mods\Better-Work-Tab'
 $cecilPath = Join-Path $bwtRoot 'Decompiled\Tools\ilspycmd\.store\ilspycmd\9.1.0.7988\ilspycmd\9.1.0.7988\tools\net8.0\any\Mono.Cecil.dll'
 $cascadeManifest = Get-Content -Raw -LiteralPath (
     Join-Path $PSScriptRoot 'CascadeManifest.json') | ConvertFrom-Json

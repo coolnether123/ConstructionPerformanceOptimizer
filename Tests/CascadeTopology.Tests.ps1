@@ -2,7 +2,7 @@ $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 
 $projectRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
-$fixtureRoot = Join-Path 'A:\Dev\Temp' (
+$fixtureRoot = Join-Path 'H:\Dev\Temp' (
     'cpo-cascade-topology-contract-' + [Guid]::NewGuid().ToString('N'))
 $toolsRoot = Join-Path $fixtureRoot 'Tools'
 New-Item -ItemType Directory -Path $toolsRoot -Force | Out-Null
@@ -75,7 +75,7 @@ foreach ($version in @('1.5', '1.4', '1.3', '1.2', '1.1', '1.0'))
 }
 Invoke-FixtureGit checkout main
 
-$env:RWT_CASCADE_TOOLING_ROOT = 'A:\Dev\RimWorld\Worktrees\RimWorld-Tooling\phase-a'
+$env:RWT_CASCADE_TOOLING_ROOT = 'H:\Dev\RimWorld\Worktrees\RimWorld-Tooling\phase-a'
 $safePlan = Join-Path $fixtureRoot 'safe-plan.json'
 & powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass `
     -File (Join-Path $toolsRoot 'Invoke-SupportCascade.ps1') `

@@ -28,7 +28,7 @@ if ($LASTEXITCODE -ne 0)
 $toolingRoot = [Environment]::GetEnvironmentVariable('RWT_CASCADE_TOOLING_ROOT')
 if ([string]::IsNullOrWhiteSpace($toolingRoot))
 {
-    $toolingRoot = 'A:\Dev\RimWorld\Worktrees\RimWorld-Tooling\phase-a'
+    $toolingRoot = 'H:\Dev\RimWorld\Worktrees\RimWorld-Tooling\phase-a'
 }
 $centralScript = Join-Path $toolingRoot 'tools\Invoke-RimWorldCascade.ps1'
 if (-not (Test-Path -LiteralPath $centralScript -PathType Leaf))

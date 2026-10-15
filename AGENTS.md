@@ -15,6 +15,6 @@ work. Treat `Tests`, `Tools\Test-*.ps1`, and
 `Tools\Validate-Package.ps1` as the current
 verification inventory.
 
-Use the runtime workflow in `A:\Dev\RimWorld\AGENTS.md`. Transpiler safety,
+Use the runtime workflow in `H:\Dev\RimWorld\AGENTS.md`. Transpiler safety,
 foreign Harmony ownership, performance, and multiplayer claims require their
 specific runtime or paired-evidence checks; compilation alone is insufficient.
